@@ -1,5 +1,5 @@
 import "../styles/freight-required-fields.css";
-import { freightProfit, freightCost, freightCommission } from "../domain/freightCalculations.js";
+import { freightProfit, freightCost, freightCommission, freightBase } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
 import { FREIGHT_LABELS } from "../lib/freightLabels.js";
 
@@ -21,6 +21,7 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
   const calculationInput = { ...value, value: amount(value.value), discount: amount(value.discount), toll: amount(value.toll), commission: amount(value.commission), bonus: amount(value.bonus), fuelActual: amount(value.fuelActual) };
   const summary = [
     [FREIGHT_LABELS.value, money(value.value)],
+    ["Base da comissão", money(freightBase(calculationInput))],
     [FREIGHT_LABELS.commission, money(freightCommission(calculationInput))],
     ["Saldo pendente", money(Math.max(0, amount(value.value) - amount(value.received)))],
     [FREIGHT_LABELS.totalCost, money(freightCost(calculationInput))],
