@@ -51,4 +51,4 @@
 @media (max-width: 560px) { .freight-editor .fuel-grid { grid-template-columns: minmax(0, 1fr); } }
 
 /* Respiro entre o título e a primeira linha de indicadores do resumo financeiro. */
-.freight-editor .freight-summary-heading { padding-bottom: 26px; }
+.freight-editor .freight-summary-heading { padding-bottom: 40px; }
