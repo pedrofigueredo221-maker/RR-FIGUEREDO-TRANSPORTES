@@ -22,7 +22,7 @@ export default function ContasAReceber({ controller }) {
       {filteredFreights.map((freight) => {
         const balance = freightReceivableBalance(freight, number);
         const status = freightReceivableStatus(freight, number);
-        return <tr key={freight.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Dê duplo clique para editar este frete" : undefined} onDoubleClick={!readOnly ? () => startEdit("freight", freight) : undefined}>
+        return <tr key={freight.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Clique para editar este frete" : undefined} onClick={!readOnly ? (event) => { if (event.target.closest("button, a, input, select, textarea, [role=button]")) return; startEdit("freight", freight); } : undefined}>
           <td>{dateLabel(freight.date)}</td><td>{freight.customer || "—"}</td><td>{[freight.origin, freight.destination].filter(Boolean).join(" → ") || "—"}</td>
           <td className="numeric">{money(freight.value)}</td><td className="numeric">{money(freight.received)}</td><td className="numeric">{money(balance)}</td>
           <td><span className={`status-pill status-${status.toLocaleLowerCase("pt-BR")}`}>{status}</span></td>
