@@ -27,3 +27,15 @@
   font-size: 17px;
   line-height: 1.25;
 }
+
+/* Destaque financeiro: distancia o resumo dos campos anteriores em 50%
+   (24px em vez de 16px) e mantém custo/lucro lado a lado. */
+.freight-editor .freight-summary {
+  margin-top: 24px;
+}
+.freight-editor .freight-summary-cost strong {
+  color: #ff6464;
+}
+.freight-editor .freight-summary-profit strong {
+  color: #4ade80;
+}
