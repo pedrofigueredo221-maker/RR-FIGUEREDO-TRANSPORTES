@@ -26,7 +26,7 @@ export default function Fretes({ controller }) {
       {filteredFreights.map((freight) => {
 
         const balance = freightReceivableBalance(freight, number);
-        return <tr key={freight.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Dê duplo clique para editar este frete" : undefined} onDoubleClick={!readOnly ? () => startEdit("freight", freight) : undefined}>
+        return <tr key={freight.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Clique para editar este frete" : undefined} onClick={!readOnly ? (event) => { if (event.target.closest("button, a, input, select, textarea, [role=button]")) return; startEdit("freight", freight); } : undefined}>
           <td>{dateLabel(freight.date)}</td><td>{freight.driver || "—"}</td><td><RouteDisplay origin={freight.origin} destination={freight.destination} /></td>
           <td className="numeric">{money(freight.value)}</td><td className="numeric">{money(freightOperatingCosts(freight))}</td><td className="numeric">{money(freightCommission(freight))}</td><td className="numeric">{money(freightProfit(freight))}</td><td className={`freight-payment-cell ${balance <= 0 ? "is-paid" : "is-pending"}`}>{balance <= 0 ? "Pagamento realizado" : `Saldo restante: ${money(balance)}`}</td>
 
