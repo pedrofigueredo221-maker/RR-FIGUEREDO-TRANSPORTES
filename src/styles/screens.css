@@ -522,7 +522,7 @@
 
 /* Resumo financeiro do frete: fonte única de estilos para desktop e mobile. */
 .freight-editor .freight-summary {
-  margin-top: 18px;
+  margin-top: 50px;
   padding: 0;
   overflow: hidden;
   border: 1px solid #343434;
@@ -533,15 +533,15 @@
 .freight-editor .freight-summary-heading {
   display: block;
   margin: 0;
-  padding: 13px 16px 10px;
+  padding: 22px 20px 18px;
   border: 0;
 }
 .freight-editor .freight-summary-heading h4 {
   margin: 0;
   color: #fff;
-  font-size: 11px;
+  font-size: 16.5px;
   font-weight: 800;
-  letter-spacing: 1.1px;
+  letter-spacing: .7px;
   text-transform: uppercase;
 }
 .freight-editor .freight-summary-heading span {
@@ -551,17 +551,17 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0;
-  column-gap: 20px;
-  padding: 0 16px 9px;
+  column-gap: 24px;
+  padding: 0 20px 18px;
 }
 .freight-editor .freight-summary-item {
   display: flex;
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   min-width: 0;
-  padding: 11px 0;
+  padding: 18px 0;
   border: 0;
   border-top: 1px solid #444;
   border-radius: 0;
@@ -569,15 +569,15 @@
 }
 .freight-editor .freight-summary-item span {
   color: #c9c9c9;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 1.35;
+  line-height: 1.45;
 }
 .freight-editor .freight-summary-item strong {
   color: #fff;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 750;
-  line-height: 1.35;
+  line-height: 1.45;
   text-align: left;
   white-space: normal;
   overflow-wrap: anywhere;
@@ -591,7 +591,7 @@
   font-weight: 700;
 }
 .freight-editor .freight-summary-item:last-child strong {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 800;
 }
 @media (max-width: 600px) {
@@ -599,13 +599,7 @@
     column-gap: 12px;
   }
   .freight-editor .freight-summary-item {
-    padding: 10px 0;
-  }
-  .freight-editor .freight-summary-item strong {
-    font-size: 14px;
-  }
-  .freight-editor .freight-summary-item:last-child strong {
-    font-size: 17px;
+    padding: 16px 0;
   }
 }
 
