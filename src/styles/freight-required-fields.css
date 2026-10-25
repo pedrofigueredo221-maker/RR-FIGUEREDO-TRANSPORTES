@@ -24,7 +24,7 @@
   padding-block: 12px;
 }
 .freight-editor .freight-summary-grid > .freight-summary-item:first-child strong {
-  font-size: 25.5px;
+  font-size: 17px;
   line-height: 1.25;
 }
 
@@ -43,9 +43,5 @@
 .freight-editor .freight-optional-label {font-style:italic;font-weight:400;color:#686868}
 .freight-editor .freight-required-empty > textarea {background:#ffe3e3;border-color:#c55c5c}
 
-/* Tipografia ampliada somente no resumo financeiro (50%). */
+/* Apenas o título do resumo financeiro fica 50% maior. */
 .freight-editor .freight-summary .freight-summary-heading h4 {font-size:1.5em}
-.freight-editor .freight-summary .freight-summary-heading span {font-size:1.5em}
-.freight-editor .freight-summary .freight-summary-item > span {font-size:1.5em}
-.freight-editor .freight-summary .freight-summary-item > strong {font-size:1.5em}
-.freight-editor .freight-summary .freight-summary-item:first-child > strong {font-size:25.5px}
