@@ -5,13 +5,13 @@ import { FREIGHT_LABELS } from "../lib/freightLabels.js";
 
 const amount = (value) => Math.max(0, Number(value) || 0);
 
-function FreightField({ label, value, onChange, type = "text", required = false, min, step, options, placeholder, readOnly = false }) {
+function FreightField({ label, value, onChange, type = "text", required = false, min, step, options, placeholder, readOnly = false, multiline = false }) {
   return <label className={`editor-field ${type === "checkbox" ? "checkbox-field" : ""} ${required && String(value ?? "").trim() === "" ? "freight-required-empty" : ""}`}>
     <span>{label}</span>
     {options ? <select value={value ?? ""} onChange={(event) => onChange(event.target.value)} required={required} disabled={readOnly}>
       {options.map((item) => typeof item === "string" ? <option key={item} value={item}>{item}</option> : <option key={item.value} value={item.value}>{item.label}</option>)}
     </select> : type === "checkbox" ? <input type="checkbox" checked={Boolean(value)} onChange={(event) => onChange(event.target.checked)} disabled={readOnly} /> :
-    <input type={type} value={value ?? ""} onChange={(event) => onChange(event.target.value)} required={required} min={min} step={step} placeholder={placeholder} readOnly={readOnly} onWheel={type === "number" ? (event) => event.currentTarget.blur() : undefined} />}
+    multiline ? <textarea rows={4} value={value ?? ""} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} readOnly={readOnly} /> : <input type={type} value={value ?? ""} onChange={(event) => onChange(event.target.value)} required={required} min={min} step={step} placeholder={placeholder} readOnly={readOnly} onWheel={type === "number" ? (event) => event.currentTarget.blur() : undefined} />}
   </label>;
 }
 
@@ -50,11 +50,11 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     { key: "otherCosts", label: "Outros custos (R$)", type: "number", min: "0", step: "0.01" },
     { key: "currentBalance", label: "Saldo atual (R$)", type: "number", min: "0", step: "0.01" },
     { key: "received", label: "Valor de adiantamento (R$)", type: "number", min: "0", step: "0.01", readOnly: editing },
-    { key: "notes", label: "Observações", placeholder: "Informações adicionais" }
+    { key: "notes", label: "Observações", placeholder: "Informações adicionais", multiline: true }
   ];
   return <form className="record-editor freight-editor" onSubmit={(event) => { event.preventDefault(); onSubmit(); }}>
     <div className="editor-heading"><h3>FRETE</h3><button className="secondary-button" type="button" onClick={onCancel}>Cancelar</button></div>
-    <div className="editor-grid freight-fields">{fields.map((field) => <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
+    <div className="editor-grid freight-fields">{fields.map((field) => <div key={field.key} className={field.key === "notes" ? "freight-notes-field" : "freight-grid-field"}><FreightField {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} /></div>)}</div>
     <p className="receipt-sync-note">{editing ? "Recebimentos do cliente são exibidos para consulta e alterados apenas pelo histórico de recebimentos, preservando registros anteriores." : "O valor de adiantamento recebido do cliente na criação será registrado no histórico de recebimentos."}</p>
     <section className="fuel-section" aria-labelledby="fuel-section-title">
       <div className="fuel-section-heading"><h4 id="fuel-section-title">Combustível</h4><p>Estimativa automática a partir dos litros e do preço por litro.</p></div>
