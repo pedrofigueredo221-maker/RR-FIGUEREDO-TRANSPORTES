@@ -1,5 +1,5 @@
 import "../styles/freight-required-fields.css";
-import { freightProfit, freightCost, freightCommission } from "../domain/freightCalculations.js";
+import { freightProfit, freightCost, freightCommission, freightBase } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
 import { FREIGHT_LABELS } from "../lib/freightLabels.js";
 
@@ -21,9 +21,14 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
   const calculationInput = { ...value, value: amount(value.value), discount: amount(value.discount), toll: amount(value.toll), commission: amount(value.commission), bonus: amount(value.bonus), fuelActual: amount(value.fuelActual) };
   const summary = [
     [FREIGHT_LABELS.value, money(value.value)],
+    ["Base da comissão", money(freightBase(calculationInput))],
     [FREIGHT_LABELS.commission, money(freightCommission(calculationInput))],
     ["Saldo pendente", money(Math.max(0, amount(value.value) - amount(value.received)))],
+    ["Custo do combustível", money(amount(value.fuelActual))],
     [FREIGHT_LABELS.totalCost, money(freightCost(calculationInput))],
+    ["Saldo atual do frete", money(value.currentBalance === "" || value.currentBalance == null
+      ? Math.max(0, amount(value.value) - amount(value.advance) - amount(value.discount))
+      : amount(value.currentBalance))],
     [FREIGHT_LABELS.profit, money(freightProfit(calculationInput))]
   ];
   const fields = [
@@ -41,15 +46,14 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     { key: "bonus", label: "Bônus (R$)", type: "number", min: "0", step: "0.01" },
     { key: "otherCosts", label: "Outros custos (R$)", type: "number", min: "0", step: "0.01" },
     { key: "km", label: "Quilometragem", type: "number", min: "0", step: "1" },
-    { key: "advance", label: "Adiantamento ao motorista (R$)", type: "number", min: "0", step: "0.01" },
-    { key: "currentBalance", label: "Saldo atual informado (R$)", type: "number", min: "0", step: "0.01" },
-    { key: "received", label: "Recebido do cliente na viagem (R$)", type: "number", min: "0", step: "0.01", readOnly: editing },
+    { key: "currentBalance", label: "Saldo atual (R$)", type: "number", min: "0", step: "0.01" },
+    { key: "received", label: "Valor de adiantamento (R$)", type: "number", min: "0", step: "0.01", readOnly: editing },
     { key: "notes", label: "Observações", placeholder: "Informações adicionais" }
   ];
   return <form className="record-editor freight-editor" onSubmit={(event) => { event.preventDefault(); onSubmit(); }}>
     <div className="editor-heading"><h3>FRETE</h3><button className="secondary-button" type="button" onClick={onCancel}>Cancelar</button></div>
     <div className="editor-grid freight-fields">{fields.map((field) => <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
-    <p className="receipt-sync-note">{editing ? "Recebimentos do cliente são exibidos para consulta e alterados apenas pelo histórico de recebimentos, preservando registros anteriores." : "O recebimento do cliente informado na criação será registrado no histórico. Adiantamento ao motorista é um campo separado e não altera automaticamente os recebimentos."}</p>
+    <p className="receipt-sync-note">{editing ? "Recebimentos do cliente são exibidos para consulta e alterados apenas pelo histórico de recebimentos, preservando registros anteriores." : "O valor de adiantamento recebido do cliente na criação será registrado no histórico de recebimentos."}</p>
     <section className="fuel-section" aria-labelledby="fuel-section-title">
       <div className="fuel-section-heading"><h4 id="fuel-section-title">Combustível</h4><p>Estimativa automática a partir dos litros e do preço por litro.</p></div>
       <div className="fuel-grid">

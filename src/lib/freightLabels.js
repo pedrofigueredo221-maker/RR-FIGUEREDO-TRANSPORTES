@@ -5,7 +5,7 @@ export const FREIGHT_LABELS = Object.freeze({
   date: "Data",
   driver: "Motorista",
   route: "Trajeto",
-  value: "Valor",
+  value: "Valor do frete",
   totalCost: "Custo total",
   commission: "Comissão",
   profit: "Lucro",
