@@ -39,3 +39,6 @@
 .freight-editor .freight-summary-profit strong {
   color: #4ade80;
 }
+
+.freight-editor .freight-optional-label {font-style:italic;font-weight:400;color:#686868}
+.freight-editor .freight-required-empty > textarea {background:#ffe3e3;border-color:#c55c5c}
