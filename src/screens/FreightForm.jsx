@@ -28,10 +28,10 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     [FREIGHT_LABELS.commission, money(freightCommission(calculationInput))],
     ["Saldo pendente", money(Math.max(0, amount(value.value) - amount(value.received)))],
     ["Custo do combustível", money(amount(value.fuelActual))],
-    [FREIGHT_LABELS.totalCost, money(freightCost(calculationInput))],
     ["Saldo atual do frete", money(value.currentBalance === "" || value.currentBalance == null
       ? Math.max(0, amount(value.value) - amount(value.advance) - amount(value.discount))
       : amount(value.currentBalance))],
+    [FREIGHT_LABELS.totalCost, money(freightCost(calculationInput))],
     [FREIGHT_LABELS.profit, money(freightProfit(calculationInput))]
   ];
   const fields = [
@@ -73,7 +73,7 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     </div>
     <section className="freight-summary" aria-label="Resumo financeiro estimado">
       <div className="freight-summary-heading"><h4>Resumo financeiro</h4><span>Valores calculados automaticamente</span></div>
-      <div className="freight-summary-grid">{summary.map(([label, total]) => <div className="freight-summary-item" key={label}><span>{label}</span><strong>{total}</strong></div>)}</div>
+      <div className="freight-summary-grid">{summary.map(([label, total]) => <div className={`freight-summary-item ${label === FREIGHT_LABELS.totalCost ? "freight-summary-cost" : label === FREIGHT_LABELS.profit ? "freight-summary-profit" : ""}`} key={label}><span>{label}</span><strong>{total}</strong></div>)}</div>
     </section>
     <p className="receipt-sync-note">Os custos informados neste frete já entram no lucro estimado. Não lance o mesmo gasto novamente em Despesas para evitar contá-lo duas vezes.</p>
     <div className="editor-actions"><button className="primary-button" type="submit" disabled={saving}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
