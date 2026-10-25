@@ -24,7 +24,11 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     ["Base da comissão", money(freightBase(calculationInput))],
     [FREIGHT_LABELS.commission, money(freightCommission(calculationInput))],
     ["Saldo pendente", money(Math.max(0, amount(value.value) - amount(value.received)))],
+    ["Custo do combustível", money(amount(value.fuelActual))],
     [FREIGHT_LABELS.totalCost, money(freightCost(calculationInput))],
+    ["Saldo atual do frete", money(value.currentBalance === "" || value.currentBalance == null
+      ? Math.max(0, amount(value.value) - amount(value.advance) - amount(value.discount))
+      : amount(value.currentBalance))],
     [FREIGHT_LABELS.profit, money(freightProfit(calculationInput))]
   ];
   const fields = [
