@@ -69,7 +69,7 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     </section>
     <div className="toll-checkbox-row">
       <FreightField label="Descontar o pedágio da base da comissão" type="checkbox" value={value.deductToll} onChange={(next) => patch("deductToll", next)} />
-      <p>Quando marcado, o pedágio reduz a base usada para calcular a comissão. O pedágio continua contabilizado no custo do frete.</p>
+      <p>Quando marcado, o pedágio reduz a base usada para calcular a comissão</p>
     </div>
     <section className="freight-summary" aria-label="Resumo financeiro estimado">
       <div className="freight-summary-heading"><h4>Resumo financeiro</h4><span>Valores calculados automaticamente</span></div>
