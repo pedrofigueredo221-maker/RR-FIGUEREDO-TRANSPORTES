@@ -825,7 +825,7 @@ tbody tr:hover {
   color:#202020
 }
 .freight-editor .freight-fields {
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:16px 18px
 }
 .freight-editor .editor-field {
@@ -944,4 +944,21 @@ tbody tr:hover {
   padding: 10px 12px;
   gap: 12px;
   border-radius: 7px;
+}
+
+/* Cadastro de frete: três colunas em telas largas, duas em médias, uma em celulares. */
+@media (min-width: 901px) {
+  .freight-editor .freight-fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 561px) and (max-width: 900px) {
+  .freight-editor .freight-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .freight-editor .freight-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
