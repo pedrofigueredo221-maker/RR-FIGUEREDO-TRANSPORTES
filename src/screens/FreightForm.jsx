@@ -18,6 +18,9 @@ function FreightField({ label, value, onChange, type = "text", required = false,
 export default function FreightForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
   const estimatedFuel = amount(value.liters) * amount(value.dieselPrice);
+  const fuelAverage = amount(value.liters) > 0 && String(value.km ?? "").trim() !== ""
+    ? `${(amount(value.km) / amount(value.liters)).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km/L`
+    : "—";
   const calculationInput = { ...value, value: amount(value.value), discount: amount(value.discount), toll: amount(value.toll), commission: amount(value.commission), bonus: amount(value.bonus), fuelActual: amount(value.fuelActual) };
   const summary = [
     [FREIGHT_LABELS.value, money(value.value)],
@@ -40,7 +43,6 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     { key: "commission", label: `${FREIGHT_LABELS.commission} (% ou R$)`, type: "number", min: "0", step: "0.01" },
     { key: "bonus", label: "Bônus (R$)", type: "number", min: "0", step: "0.01" },
     { key: "otherCosts", label: "Outros custos (R$)", type: "number", min: "0", step: "0.01" },
-    { key: "km", label: "Quilometragem", type: "number", min: "0", step: "1" },
     { key: "advance", label: "Adiantamento ao motorista (R$)", type: "number", min: "0", step: "0.01" },
     { key: "currentBalance", label: "Saldo atual informado (R$)", type: "number", min: "0", step: "0.01" },
     { key: "received", label: "Recebido do cliente na viagem (R$)", type: "number", min: "0", step: "0.01", readOnly: editing },
@@ -53,6 +55,8 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     <section className="fuel-section" aria-labelledby="fuel-section-title">
       <div className="fuel-section-heading"><h4 id="fuel-section-title">Combustível</h4><p>Estimativa automática a partir dos litros e do preço por litro.</p></div>
       <div className="fuel-grid">
+        <FreightField label="Quilometragem (km)" type="number" min="0" step="1" value={value.km} onChange={(next) => patch("km", next)} />
+        <FreightField label="Média (km/L)" value={fuelAverage} readOnly />
         <FreightField label="Litros estimados" type="number" min="0" step="0.01" value={value.liters} onChange={(next) => patch("liters", next)} />
         <FreightField label="Preço do diesel (R$/L)" type="number" min="0" step="0.01" value={value.dieselPrice} onChange={(next) => patch("dieselPrice", next)} />
         <FreightField label="Gasto estimado (R$)" value={money(estimatedFuel)} readOnly />
