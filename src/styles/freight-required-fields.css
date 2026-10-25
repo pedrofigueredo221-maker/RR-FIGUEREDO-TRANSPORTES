@@ -24,18 +24,33 @@
   padding-block: 12px;
 }
 .freight-editor .freight-summary-grid > .freight-summary-item:first-child strong {
-  font-size: 17px;
+  font-size: 25.5px;
   line-height: 1.25;
 }
 
 /* Destaque financeiro: distancia o resumo dos campos anteriores em 50%
    (24px em vez de 16px) e mantém custo/lucro lado a lado. */
 .freight-editor .freight-summary {
-  margin-top: 24px;
+  margin-top: 48px;
 }
 .freight-editor .freight-summary-cost strong {
   color: #ff6464;
 }
 .freight-editor .freight-summary-profit strong {
   color: #4ade80;
+}
+
+/* Tipografia do resumo financeiro ampliada em 50%, sem alterar outros campos. */
+.freight-editor .freight-summary-heading h4 {
+  font-size: 1.5em;
+}
+.freight-editor .freight-summary-heading span,
+.freight-editor .freight-summary-item > span {
+  font-size: 1.5em;
+}
+.freight-editor .freight-summary-item > strong {
+  font-size: 1.5em;
+}
+.freight-editor .freight-summary-grid > .freight-summary-item:first-child strong {
+  font-size: 25.5px;
 }
