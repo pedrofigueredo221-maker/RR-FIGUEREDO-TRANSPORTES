@@ -14,8 +14,19 @@
 .freight-editor input[type="number"]::-webkit-inner-spin-button,
 .freight-editor input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-/* Resumo financeiro: seis indicadores em duas colunas e três linhas.
-   Evita o antigo primeiro item ocupando toda a largura. */
+/* Ajustes complementares: somente formulário de fretes. */
+.freight-editor .fuel-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.freight-editor .freight-notes-full { grid-column: 1 / -1; }
+.freight-editor .freight-notes-full textarea { display: block; width: 100%; min-height: 110px; resize: vertical; box-sizing: border-box; font: inherit; padding: 12px; border: 1px solid #cbd1d5; border-radius: 8px; }
+.freight-editor .freight-optional-label { font-style: italic; font-weight: 400; color: #777; }
+@media (max-width: 1100px) { .freight-editor .fuel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .freight-editor .fuel-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Resumo financeiro: cabeçalho independente da grade de indicadores.
+   Todas as linhas seguem a mesma tipografia; só os valores de custo e lucro têm cor própria. */
+.freight-editor .freight-summary { margin-top: 50px; }
+.freight-editor .freight-summary-heading { padding-bottom: 40px; }
+.freight-editor .freight-summary-heading h4 { font-size: 16.5px; }
 .freight-editor .freight-summary-grid > .freight-summary-item:first-child {
   grid-column: auto;
   text-align: left;
@@ -23,52 +34,18 @@
   justify-content: flex-start;
   padding-block: 12px;
 }
-.freight-editor .freight-summary-grid > .freight-summary-item:first-child strong {
-  font-size: 17px;
-  line-height: 1.25;
-}
-
-/* Destaque financeiro: distancia o resumo dos campos anteriores em 50%
-   (24px em vez de 16px) e mantém custo/lucro lado a lado. */
-.freight-editor .freight-summary {
-  margin-top: 24px;
-}
-.freight-editor .freight-summary-cost strong {
-  color: #ff6464;
-}
-.freight-editor .freight-summary-profit strong {
-  color: #4ade80;
-}
-
-/* Ajustes complementares: somente formulário de fretes. */
-.freight-editor .fuel-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.freight-editor .freight-notes-full { grid-column: 1 / -1; }
-.freight-editor .freight-notes-full textarea { display: block; width: 100%; min-height: 110px; resize: vertical; box-sizing: border-box; font: inherit; padding: 12px; border: 1px solid #cbd1d5; border-radius: 8px; }
-.freight-editor .freight-optional-label { font-style: italic; font-weight: 400; color: #777; }
-.freight-editor .freight-summary { margin-top: 50px; }
-.freight-editor .freight-summary-heading h4 { font-size: 16.5px; }
-@media (max-width: 1100px) { .freight-editor .fuel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .freight-editor .fuel-grid { grid-template-columns: minmax(0, 1fr); } }
-
-/* Respiro entre o título e a primeira linha de indicadores do resumo financeiro. */
-.freight-editor .freight-summary-heading { padding-bottom: 40px; }
-
-/* Todos os títulos e resultados usam a tipografia padrão da grade.
-   Somente os resultados de custo e lucro recebem cores distintas. */
-.freight-editor .freight-summary-item:last-child span,
-.freight-editor .freight-summary-cost span {
+.freight-editor .freight-summary-grid .freight-summary-item span {
   color: #c9c9c9;
   font-size: 12px;
   font-weight: 400;
 }
-.freight-editor .freight-summary-item:last-child strong,
-.freight-editor .freight-summary-cost strong {
+.freight-editor .freight-summary-grid .freight-summary-item strong {
   font-size: 16px;
   font-weight: 750;
+  line-height: 1.35;
 }
-.freight-editor .freight-summary-cost strong { color: #ff6464; }
-.freight-editor .freight-summary-profit strong { color: #4ade80; }
+.freight-editor .freight-summary-grid .freight-summary-cost strong { color: #ff6464; }
+.freight-editor .freight-summary-grid .freight-summary-profit strong { color: #4ade80; }
 @media (max-width: 600px) {
-  .freight-editor .freight-summary-item:last-child strong,
-  .freight-editor .freight-summary-cost strong { font-size: 14px; }
+  .freight-editor .freight-summary-grid .freight-summary-item strong { font-size: 14px; }
 }
