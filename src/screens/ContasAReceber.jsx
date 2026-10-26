@@ -9,7 +9,7 @@ import { freightReceivableBalance, freightReceivableStatus } from "../domain/fre
 
 export default function ContasAReceber({ controller }) {
   const [choosingFreight, setChoosingFreight] = useState(false);
-  const { data, readOnly, loading, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, form, setForm, editingId, setEditingId, startEdit, saveFreight, allFreights, number, commit } = controller;
+  const { data, readOnly, loading, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, form, setForm, editingId, setEditingId, startEdit, saveFreight, allFreights, number, commit, remove } = controller;
   const openReceipt = (freight) => {
     setForm(null);
     setEditingId(null);
@@ -28,11 +28,11 @@ export default function ContasAReceber({ controller }) {
           <td>{dateLabel(freight.date)}</td><td>{freight.customer || "—"}</td><td>{[freight.origin, freight.destination].filter(Boolean).join(" → ") || "—"}</td>
           <td className="numeric">{money(freight.value)}</td><td className="numeric">{money(freight.received)}</td><td className="numeric">{money(balance)}</td>
           <td className={`rr-account-status rr-account-status-${status.toLocaleLowerCase("pt-BR")}`}>{status}</td>
-          {!readOnly && <td><AccountActions onEdit={() => startEdit("freight", freight)} onPayment={balance > 0 ? () => openReceipt(freight) : null} paymentLabel="Registrar recebimento parcial ou total" disabled={saving} /></td>}
+          {!readOnly && <td><AccountActions onDelete={() => remove("freights", freight)} onEdit={() => startEdit("freight", freight)} onPayment={balance > 0 ? () => openReceipt(freight) : null} paymentLabel="Registrar recebimento parcial ou total" disabled={saving} /></td>}
         </tr>;
       })}
     </tbody></table></div>
     {filteredFreights.length === 0 && <div className="empty-state">Nenhuma conta a receber encontrada para os filtros selecionados.</div>}
-    {!readOnly && payment?.kind === "receive" && <FreightReceiptPanel freight={allFreights.find((item) => item.id === payment.record.id) || payment.record} data={data} number={number} money={money} saving={saving} onSave={(next) => commit(next)} onCancel={() => setPayment(null)} />}
+    {!readOnly && payment?.kind === "receive" && <FormDialog label="Registrar recebimento" onClose={() => setPayment(null)}><FreightReceiptPanel freight={allFreights.find((item) => item.id === payment.record.id) || payment.record} data={data} number={number} money={money} saving={saving} onSave={(next) => commit(next)} onCancel={() => setPayment(null)} /></FormDialog>}
   </section>;
 }
