@@ -33,7 +33,7 @@ export default function FreightReceiptPanel({ freight, data, number, money, savi
     <div className="editor-grid receipt-fields">
       <label className="editor-field">Valor recebido (R$)<input aria-label="Valor recebido em reais" type="number" min="0.01" max={balance.toFixed(2)} step="0.01" value={amount} onChange={(event) => { setAmount(event.target.value); setError(""); }} required /></label>
       <label className="editor-field">Data do recebimento<input aria-label="Data do recebimento" type="date" value={date} onChange={(event) => setDate(event.target.value)} required /></label>
-      <label className="editor-field">Forma de recebimento<select aria-label="Forma de recebimento" value={method} onChange={(event) => setMethod(event.target.value)}><option>PIX</option><option>Transferência</option><option>Dinheiro</option><option>Boleto</option><option>Adiantamento inicial</option><option>Outro</option></select></label>
+      <label className="editor-field">Forma de recebimento<select aria-label="Forma de recebimento" value={method} onChange={(event) => setMethod(event.target.value)}><option>PIX</option><option>Dinheiro</option><option>Crédito</option><option>Débito</option><option>TED</option><option>Boleto</option></select></label>
     </div>
     <p className="receipt-sync-note">Ao salvar, o recebimento será vinculado a este frete. Quando o saldo chegar a zero, o status do frete também será atualizado para Pago.</p>
     <div className="editor-actions"><button className="primary-button" type="button" disabled={saving || balance <= 0} onClick={submit}>{saving ? "Salvando…" : balance > 0 && Number(amount) >= balance ? "Confirmar pagamento total" : "Salvar recebimento"}</button></div>
