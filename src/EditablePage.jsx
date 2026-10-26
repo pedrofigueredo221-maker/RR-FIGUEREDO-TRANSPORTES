@@ -145,6 +145,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
       value.toll = number(form.emptyTrip.toll) + number(form.loadedTrip.toll);
       value.dieselPrice = value.liters > 0 ? value.fuelActual / value.liters : 0;
     }
+    if (hasStages) value.currentBalance = Math.max(0, freightValue - number(form.discount) - receivedAtTrip);
     value.fuelEstimated = number(value.liters) * number(value.dieselPrice);
     if (original) {
       value.receipts = Array.isArray(original.receipts) ? original.receipts : [];
