@@ -121,7 +121,6 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
 
   const saveFreight = () => {
     const original = editingId ? allFreights.find((freight) => freight.id === editingId) : null;
-    // Etapas independentes, mantendo os campos agregados legados para relatórios e recebíveis.
     const hasStages = Boolean(form.emptyTrip && form.loadedTrip);
     if (hasStages) {
       const trips = [form.emptyTrip, form.loadedTrip];

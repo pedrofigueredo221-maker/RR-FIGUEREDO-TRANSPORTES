@@ -1,5 +1,5 @@
 import MunicipalityField from "../components/MunicipalityField.jsx";
-import { freightBase, freightCommission, freightCost, freightProfit } from "../domain/freightCalculations.js";
+import { freightCommission, freightCost, freightProfit } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
 import "../styles/freight-stages.css";
 
