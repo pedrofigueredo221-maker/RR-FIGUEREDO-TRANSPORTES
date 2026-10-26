@@ -49,6 +49,8 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
   const calculation = { ...value, fuelActual: totalFuel, toll: totalToll };
   const costStage = (key) => n(value[key]?.fuelTotal) + n(value[key]?.toll);
   const summary = [
+    ["Valor do frete", n(value.value)],
+    ["Adiantamento do cliente", n(value.received)],
     ["Custo viagem vazia", costStage("emptyTrip")],
     ["Custo viagem carregada", costStage("loadedTrip")],
     ["Comissão estimada", freightCommission(calculation)],
