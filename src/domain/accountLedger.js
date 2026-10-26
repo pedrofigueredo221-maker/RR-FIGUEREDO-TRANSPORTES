@@ -13,7 +13,7 @@ export function addMovement(total, movements, entry) {
   const totals = accountTotals(total, movements);
   if (totals.closed) throw new Error("CONTA FECHADA — Não é possível alterar.");
   if (!PAYMENT_METHODS.includes(entry.method)) throw new Error("Selecione um meio de pagamento válido.");
-  if (!entry.date || !/^\\d{4}-\\d{2}-\\d{2}$/.test(entry.date)) throw new Error("Informe a data da baixa.");
+  if (!entry.date || !/^\d{4}-\d{2}-\d{2}$/.test(entry.date)) throw new Error("Informe a data da baixa.");
   if (!Number.isFinite(value) || value <= 0) throw new Error("Informe um valor de baixa maior que zero.");
   if (value > cents(totals.balance)) throw new Error("A baixa não pode ultrapassar o saldo restante.");
   return [...movements, { ...entry, amount: value / 100 }];
@@ -25,7 +25,11 @@ export function cardInstallments(total, count, startDate) {
   return Array.from({length:count}, (_, index) => {
     const due = new Date(startDate + "T12:00:00");
     if (Number.isNaN(due.getTime())) throw new Error("Data inválida.");
+    const originalDay = due.getDate();
+    due.setDate(1);
     due.setMonth(due.getMonth() + index);
+    const lastDay = new Date(due.getFullYear(), due.getMonth() + 1, 0).getDate();
+    due.setDate(Math.min(originalDay, lastDay));
     return { date: due.toISOString().slice(0,10), amount: (base + (index === count - 1 ? totalCents - base * count : 0)) / 100, method: "Crédito" };
   });
 }
