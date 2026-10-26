@@ -44,7 +44,7 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     { key: "value", label: `${FREIGHT_LABELS.value} (R$)`, type: "number", min: "0", step: "0.01", required: true },
     { key: "discount", label: "Descontos gerais (R$)", type: "number", min: "0", step: "0.01", optional: true },
     { key: "toll", label: "Pedágio (R$)", type: "number", min: "0", step: "0.01", required: true },
-    { key: "commissionType", label: "Tipo de comissão", options: [{ value: "percent", label: "Percentual", required: true }, { value: "fixed", label: "Valor fixo" }] },
+    { key: "commissionType", label: "Tipo de comissão", required: true, options: [{ value: "", label: "Selecione o tipo de comissão" }, { value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] },
     { key: "commission", label: `${FREIGHT_LABELS.commission} (% ou R$)`, type: "number", min: "0", step: "0.01", required: true },
     { key: "bonus", label: "Bônus (R$)", type: "number", min: "0", step: "0.01", optional: true },
     { key: "otherCosts", label: "Outros custos (R$)", type: "number", min: "0", step: "0.01", optional: true },
