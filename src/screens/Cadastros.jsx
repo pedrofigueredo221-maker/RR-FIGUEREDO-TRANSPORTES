@@ -30,6 +30,7 @@ export default function Cadastros({ controller }) {
     ...(form?.role === "Motorista" ? [{ key: "truckId", label: "Caminhão vinculado", options: [{ value: "", label: "Não vinculado" }, ...(data.trucks || []).map((truck) => ({ value: truck.id, label: truck.name }))] }] : []),
     { key: "commissionType", label: "Tipo de comissão", options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] },
     { key: "commissionValue", label: "Comissão (% ou R$)", type: "number", min: "0", step: "0.01" },
+    ...(form?.role === "Motorista" ? [{ key: "deductToll", label: "Descontar pedágio da comissão por padrão", type: "checkbox" }] : []),
     { key: "active", label: "Funcionário ativo", type: "checkbox" }
   ];
   const truckFields = [
