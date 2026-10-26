@@ -1,3 +1,4 @@
+import MunicipalityField from "../components/MunicipalityField.jsx";
 import { freightBase, freightCommission, freightCost, freightProfit } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
 import "../styles/freight-stages.css";
@@ -20,8 +21,8 @@ function Stage({ stage, title, update }) {
     <h4>{title}</h4>
     <div className="freight-stage-grid">
       {inputField("Data", stage.date, patch("date"), { type: "date", required: true })}
-      {inputField("Origem", stage.origin, patch("origin"), { required: true, placeholder: "Cidade - UF" })}
-      {inputField("Destino", stage.destination, patch("destination"), { required: true, placeholder: "Cidade - UF" })}
+      <MunicipalityField label="Origem" value={stage.origin} onChange={patch("origin")} required placeholder="Cidade - UF" />
+      <MunicipalityField label="Destino" value={stage.destination} onChange={patch("destination")} required placeholder="Cidade - UF" />
       {inputField("KM inicial", stage.kmStart, patch("kmStart"), { type: "number", required: true })}
       {inputField("KM final", stage.kmEnd, patch("kmEnd"), { type: "number", required: true })}
       {inputField("KM rodado", km === null ? "" : String(km), () => {}, { readOnly: true })}
