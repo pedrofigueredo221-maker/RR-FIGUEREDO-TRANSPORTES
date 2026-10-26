@@ -1,3 +1,4 @@
+import MunicipalityField from "../components/MunicipalityField.jsx";
 import "../styles/freight-required-fields.css";
 import { freightProfit, freightCost, freightCommission, freightBase } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
@@ -54,7 +55,10 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
   ];
   return <form className="record-editor freight-editor" onSubmit={(event) => { event.preventDefault(); onSubmit(); }}>
     <div className="editor-heading"><h3>FRETE</h3><button className="secondary-button" type="button" onClick={onCancel}>Cancelar</button></div>
-    <div className="editor-grid freight-fields">{fields.map((field) => <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
+    <div className="editor-grid freight-fields">{fields.map((field) => field.key === "origin" || field.key === "destination"
+      ? <MunicipalityField key={field.key} label={field.label} required={field.required} placeholder={field.placeholder}
+          value={value[field.key]} onChange={(next) => patch(field.key, next)} />
+      : <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
     <p className="receipt-sync-note">{editing ? "Recebimentos do cliente são exibidos para consulta e alterados apenas pelo histórico de recebimentos, preservando registros anteriores." : "O valor de adiantamento recebido do cliente na criação será registrado no histórico de recebimentos."}</p>
     <section className="fuel-section" aria-labelledby="fuel-section-title">
       <div className="fuel-section-heading"><h4 id="fuel-section-title">Combustível</h4><p>Estimativa automática a partir dos litros e do preço por litro.</p></div>
