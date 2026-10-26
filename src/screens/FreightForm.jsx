@@ -1,45 +1,10 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import MunicipalityField from "../components/MunicipalityField.jsx";
 import "../styles/freight-required-fields.css";
 import { freightProfit, freightCost, freightCommission, freightBase } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
 import { FREIGHT_LABELS } from "../lib/freightLabels.js";
 
 const amount = (value) => Math.max(0, Number(value) || 0);
-
-const IBGE_URL = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios";
-let cityCache = null;
-let cityRequest = null;
-function loadCities() {
-  if (cityCache) return Promise.resolve(cityCache);
-  if (!cityRequest) cityRequest = fetch(IBGE_URL)
-    .then((response) => { if (!response.ok) throw new Error("IBGE indisponível"); return response.json(); })
-    .then((items) => {
-      if (!Array.isArray(items)) throw new Error("Resposta inválida");
-      cityCache = items.map((item) => {
-        const uf = item.microrregiao?.mesorregiao?.UF?.sigla ?? item["regiao-imediata"]?.["regiao-intermediaria"]?.UF?.sigla;
-        return uf ? `${item.nome} - ${uf}` : null;
-      }).filter(Boolean).sort((a, b) => a.localeCompare(b, "pt-BR"));
-      return cityCache;
-    }).catch((error) => { cityRequest = null; throw error; });
-  return cityRequest;
-}
-const normalizeCity = (text) => String(text ?? "").normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLocaleLowerCase("pt-BR");
-function MunicipalityField({ label, value, onChange, required, placeholder, cities, loading, failed }) {
-  const listId = useId();
-  const suggestions = useMemo(() => {
-    const search = normalizeCity(value).trim();
-    if (search.length < 2) return [];
-    return cities.filter((city) => normalizeCity(city).includes(search)).slice(0, 35);
-  }, [cities, value]);
-  return <label className={`editor-field ${required && !String(value ?? "").trim() ? "freight-required-empty" : ""}`}>
-    <span>{label}</span>
-    <input type="text" value={value ?? ""} onChange={(event) => onChange(event.target.value)}
-      placeholder={placeholder} required={required} list={listId} autoComplete="off" />
-    <datalist id={listId}>{suggestions.map((city) => <option key={city} value={city} />)}</datalist>
-    {failed && <small>Lista do IBGE indisponível. Digite manualmente.</small>}
-    {loading && <small>Carregando municípios do IBGE…</small>}
-  </label>;
-}
 
 function FreightField({ label, value, onChange, type = "text", required = false, min, step, options, placeholder, readOnly = false, multiline = false, optional = false, className = "" }) {
   return <label className={`editor-field ${type === "checkbox" ? "checkbox-field" : ""} ${className} ${required && String(value ?? "").trim() === "" ? "freight-required-empty" : ""}`}>
@@ -53,15 +18,6 @@ function FreightField({ label, value, onChange, type = "text", required = false,
 
 export default function FreightForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
-  const [cities, setCities] = useState(cityCache ?? []);
-  const [citiesLoading, setCitiesLoading] = useState(!cityCache);
-  const [citiesFailed, setCitiesFailed] = useState(false);
-  useEffect(() => {
-    let active = true;
-    loadCities().then((items) => { if (active) { setCities(items); setCitiesLoading(false); } })
-      .catch(() => { if (active) { setCitiesFailed(true); setCitiesLoading(false); } });
-    return () => { active = false; };
-  }, []);
   const estimatedFuel = amount(value.liters) * amount(value.dieselPrice);
   const fuelAverage = amount(value.liters) > 0 && String(value.km ?? "").trim() !== ""
     ? `${(amount(value.km) / amount(value.liters)).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km/L`
@@ -101,8 +57,7 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     <div className="editor-heading"><h3>FRETE</h3><button className="secondary-button" type="button" onClick={onCancel}>Cancelar</button></div>
     <div className="editor-grid freight-fields">{fields.map((field) => field.key === "origin" || field.key === "destination"
       ? <MunicipalityField key={field.key} label={field.label} required={field.required} placeholder={field.placeholder}
-          value={value[field.key]} onChange={(next) => patch(field.key, next)} cities={cities}
-          loading={citiesLoading} failed={citiesFailed} />
+          value={value[field.key]} onChange={(next) => patch(field.key, next)} />
       : <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
     <p className="receipt-sync-note">{editing ? "Recebimentos do cliente são exibidos para consulta e alterados apenas pelo histórico de recebimentos, preservando registros anteriores." : "O valor de adiantamento recebido do cliente na criação será registrado no histórico de recebimentos."}</p>
     <section className="fuel-section" aria-labelledby="fuel-section-title">
