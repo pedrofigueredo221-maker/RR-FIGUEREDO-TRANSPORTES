@@ -48,7 +48,8 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       ...current,
       driver: driverName,
       commissionType: employee?.commissionType === "percent" || employee?.commissionType === "fixed" ? employee.commissionType : "",
-      commission: employee?.commissionValue === "" || employee?.commissionValue == null ? "" : String(employee.commissionValue)
+      commission: employee?.commissionValue === "" || employee?.commissionValue == null ? "" : String(employee.commissionValue),
+      deductToll: employee?.deductToll === true
     }));
   };
   const updateStage = (key) => (field, next) => setValue((current) => ({ ...current, [key]: { ...current[key], [field]: next } }));
