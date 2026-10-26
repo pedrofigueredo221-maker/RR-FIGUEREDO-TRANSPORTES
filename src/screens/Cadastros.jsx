@@ -121,10 +121,13 @@ export default function Cadastros({ controller }) {
 
       {toolbar}
       {tab === "employees" && (
-        <div className="table-scroll"><table><thead><tr><th>Nome</th><th>Função</th><th>Telefone</th><th>Comissão</th><th>Status</th>{!readOnly && <th>Ações</th>}</tr></thead>
+        <div className="table-scroll"><table><thead><tr><th>Nome</th><th>Função</th><th>Telefone</th><th>Caminhão vinculado</th><th>Tipo de comissão</th><th>Comissão (% ou R$)</th><th>Descontar pedágio</th><th>Status</th>{!readOnly && <th>Ações</th>}</tr></thead>
           <tbody>{rows.map((employee) => <tr key={employee.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Clique para editar este cadastro" : undefined} onClick={!readOnly ? (event) => { if (event.target.closest("button, a, input, select, textarea, [role=button]")) return; startEdit("employee", employee); } : undefined}>
             <td>{employee.name}</td><td>{employee.role || "Motorista"}</td><td>{employee.phone || "—"}</td>
-            <td>{employee.commissionType === "fixed" ? money(employee.commissionValue) : employee.commissionValue === "" || employee.commissionValue == null ? "—" : `${number(employee.commissionValue)}%`}</td>
+            <td>{employee.role === "Motorista" ? ((data.trucks || []).find((truck) => truck.driverId === employee.id)?.name || "Não vinculado") : "—"}</td>
+            <td>{employee.role === "Motorista" ? (employee.commissionType === "fixed" ? "Valor fixo" : employee.commissionType === "percent" ? "Percentual" : "—") : "—"}</td>
+            <td>{employee.role !== "Motorista" || employee.commissionValue === "" || employee.commissionValue == null ? "—" : employee.commissionType === "fixed" ? money(employee.commissionValue) : employee.commissionType === "percent" ? `${number(employee.commissionValue)}%` : "—"}</td>
+            <td>{employee.role === "Motorista" ? (employee.deductToll === true ? "Sim" : "Não") : "—"}</td>
             <td>{employee.active === false ? "Inativo" : "Ativo"}</td>
             {!readOnly && <td><Actions onEdit={() => startEdit("employee", employee)} onDelete={() => remove("employees", employee)} /></td>}
           </tr>)}</tbody>
