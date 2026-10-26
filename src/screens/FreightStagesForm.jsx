@@ -49,8 +49,6 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
   const calculation = { ...value, fuelActual: totalFuel, toll: totalToll };
   const costStage = (key) => n(value[key]?.fuelTotal) + n(value[key]?.toll);
   const summary = [
-    ["Valor do frete", n(value.value)],
-    ["Adiantamento do cliente", n(value.received)],
     ["Custo viagem vazia", costStage("emptyTrip")],
     ["Custo viagem carregada", costStage("loadedTrip")],
     ["Comissão estimada", freightCommission(calculation)],
@@ -89,7 +87,7 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       {inputField("Saldo atual (R$)", value.currentBalance, (v) => patch("currentBalance", v), { type: "number" })}
       <label className="editor-field freight-stage-checkbox"><span>Descontar pedágio da base da comissão</span><input type="checkbox" checked={Boolean(value.deductToll)} onChange={(e) => patch("deductToll", e.target.checked)} /></label>
     </div></section>
-    <section className="freight-stage-summary"><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-grid">{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{money(amount)}</strong></div>)}</div></section>
+    <section className="freight-stage-summary"><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-top"><div><span>Valor do frete</span><strong>{money(n(value.value))}</strong></div><div><span>Adiantamento do cliente</span><strong>{money(n(value.received))}</strong></div></div><div className="freight-stage-summary-grid">{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{money(amount)}</strong></div>)}</div></section>
     <p className="receipt-sync-note">Uma operação, um recebível e uma comissão. Os custos das duas etapas são somados uma única vez.</p>
     <div className="editor-actions"><button type="submit" className="primary-button" disabled={saving || !validStages || !validDates}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
   </form>;
