@@ -21,3 +21,11 @@ test("centavos de parcelas de crédito fecham o valor exato",()=>{
   assert.equal(entries.length,3);
   assert.equal(accountTotals(100,entries).balance,0);
 });
+
+test("valida datas e preserva vencimentos no fim do mês",()=>{
+  const entry=addMovement(50,[],{date:"2026-10-26",method:"PIX",amount:10});
+  assert.equal(entry[0].date,"2026-10-26");
+  assert.throws(()=>addMovement(50,[],{date:"26/10/2026",method:"PIX",amount:10}),/data/);
+  const installments=cardInstallments(300,3,"2026-01-31");
+  assert.deepEqual(installments.map(x=>x.date),["2026-01-31","2026-02-28","2026-03-31"]);
+});
