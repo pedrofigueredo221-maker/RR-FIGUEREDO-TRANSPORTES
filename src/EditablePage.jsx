@@ -14,7 +14,8 @@ const uid = () => globalThis.crypto?.randomUUID?.() || `rr-${Date.now().toString
 const number = (value) => Math.max(0, Number(value) || 0);
 const money = (value) => formatMoney(number(value));
 const defaultCategories = ["Combustível", "Pedágio", "Óleo e lubrificantes", "Mecânico", "Oficina", "Pneus", "Elétrica", "Peças", "Documentação", "Seguro", "Lavagem", "Manutenção", "Despesas gerais", "Outros"];
-const blankFreight = () => ({ date: "", customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "", toll: "", deductToll: false, commissionType: "", commission: "", bonus: "", km: "", liters: "", dieselPrice: "", fuelActual: "", otherCosts: "", notes: "", received: "", advance: "", currentBalance: "" });
+const blankStage = () => ({ date: "", origin: "", destination: "", kmStart: "", kmEnd: "", liters: "", fuelTotal: "", toll: "" });
+const blankFreight = () => ({ emptyTrip: blankStage(), loadedTrip: blankStage(), date: "", customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "", toll: "", deductToll: false, commissionType: "", commission: "", bonus: "", km: "", liters: "", dieselPrice: "", fuelActual: "", otherCosts: "", notes: "", received: "", advance: "", currentBalance: "" });
 const blankExpense = () => ({ created: today(), description: "", category: "Despesas gerais", truck: "", supplier: "", value: "", due: today(), installmentsCount: "1", notes: "" });
 const blankEmployee = () => ({ name: "", role: "Motorista", phone: "", commissionType: "percent", commissionValue: "13", active: true });
 const blankTruck = () => ({ name: "", plate: "", driverId: "", active: true });
@@ -120,6 +121,13 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
 
   const saveFreight = () => {
     const original = editingId ? allFreights.find((freight) => freight.id === editingId) : null;
+    const hasStages = Boolean(form.emptyTrip && form.loadedTrip);
+    if (hasStages) {
+      const trips = [form.emptyTrip, form.loadedTrip];
+      const invalid = trips.some((s) => !["date", "origin", "destination", "kmStart", "kmEnd", "liters", "fuelTotal", "toll"].every((k) => String(s[k] ?? "").trim() !== "") || number(s.kmEnd) < number(s.kmStart) || number(s.liters) <= 0);
+      if (invalid || form.loadedTrip.date < form.emptyTrip.date) { setError("Confira as datas, quilômetros e abastecimentos das duas viagens."); return; }
+      if (!form.driver || !form.truck || !form.commissionType || form.commission === "" || form.value === "" || form.received === "") { setError("Preencha todos os campos financeiros obrigatórios."); return; }
+    }
     const freightValue = number(form.value);
     const receivedAtTrip = original ? number(original.received) : number(form.received);
     if (receivedAtTrip > freightValue + 0.009) {
@@ -127,6 +135,16 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
       return;
     }
     const value = { ...form, id: editingId || uid(), value: freightValue, discount: number(form.discount), toll: number(form.toll), bonus: number(form.bonus), commission: number(form.commission), received: receivedAtTrip, km: number(form.km), liters: number(form.liters), dieselPrice: number(form.dieselPrice), fuelActual: number(form.fuelActual), otherCosts: number(form.otherCosts), advance: form.advance === "" || form.advance == null ? null : number(form.advance), currentBalance: form.currentBalance === "" || form.currentBalance == null ? null : number(form.currentBalance) };
+    if (hasStages) {
+      value.date = form.loadedTrip.date;
+      value.origin = form.emptyTrip.origin;
+      value.destination = form.loadedTrip.destination;
+      value.km = [form.emptyTrip, form.loadedTrip].reduce((sum, s) => sum + number(s.kmEnd) - number(s.kmStart), 0);
+      value.liters = number(form.emptyTrip.liters) + number(form.loadedTrip.liters);
+      value.fuelActual = number(form.emptyTrip.fuelTotal) + number(form.loadedTrip.fuelTotal);
+      value.toll = number(form.emptyTrip.toll) + number(form.loadedTrip.toll);
+      value.dieselPrice = value.liters > 0 ? value.fuelActual / value.liters : 0;
+    }
     value.fuelEstimated = number(value.liters) * number(value.dieselPrice);
     if (original) {
       value.receipts = Array.isArray(original.receipts) ? original.receipts : [];
