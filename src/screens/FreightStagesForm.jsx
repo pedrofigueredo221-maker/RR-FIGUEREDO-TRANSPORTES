@@ -36,6 +36,10 @@ function Stage({ stage, title, update }) {
     {stage.kmStart !== "" && stage.kmEnd !== "" && n(stage.kmEnd) < n(stage.kmStart) && <p className="freight-stage-error">O KM final não pode ser menor que o inicial.</p>}
   </section>;
 }
+function validCostInputs(value) {
+  return ["emptyTrip", "loadedTrip"].every((key) => value[key] && value[key].fuelTotal !== "" && value[key].toll !== "")
+    && value.value !== "" && value.commissionType !== "" && value.commission !== "";
+}
 export default function FreightStagesForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
   const updateStage = (key) => (field, next) => setValue((current) => ({ ...current, [key]: { ...current[key], [field]: next } }));
@@ -73,13 +77,14 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
     <div className="freight-stages-pair">{stages.map(({ key, title }) => <Stage key={key} title={title} stage={value[key] || {}} update={updateStage(key)} />)}</div>
     {!validDates && <p className="freight-stage-error">A data da viagem carregada não pode ser anterior à data da viagem vazia.</p>}
     <section className="freight-stage-finance"><h4>Dados financeiros</h4><div className="freight-stage-finance-grid">
-      {inputField("Custo total da viagem (R$)", freightCost(calculation).toFixed(2), () => {}, { readOnly: true })}
+      {inputField("Custo total da viagem (R$)", validCostInputs(value) ? freightCost(calculation).toFixed(2) : "", () => {}, { readOnly: true })}
       {inputField("Descontos gerais (R$)", value.discount, (v) => patch("discount", v), { type: "number" })}
       {inputField("Tipo de comissão", value.commissionType, (v) => patch("commissionType", v), { required: true, options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] })}
       {inputField("Comissão (% ou R$)", value.commission, (v) => patch("commission", v), { type: "number", required: true })}
       {inputField("Bônus (R$)", value.bonus, (v) => patch("bonus", v), { type: "number" })}
       {inputField("Outros custos (R$)", value.otherCosts, (v) => patch("otherCosts", v), { type: "number" })}
-      {inputField("Valor de adiantamento (R$)", value.received, (v) => patch("received", v), { type: "number", required: true })}
+      {inputField("Valor recebido do cliente (R$)", value.received, (v) => patch("received", v), { type: "number", required: true })}
+      {inputField("Adiantamento ao motorista (R$)", value.advance, (v) => patch("advance", v), { type: "number" })}
       {inputField("Saldo atual (R$)", value.currentBalance, (v) => patch("currentBalance", v), { type: "number" })}
       <label className="editor-field freight-stage-checkbox"><span>Descontar pedágio da base da comissão</span><input type="checkbox" checked={Boolean(value.deductToll)} onChange={(e) => patch("deductToll", e.target.checked)} /></label>
     </div></section>
