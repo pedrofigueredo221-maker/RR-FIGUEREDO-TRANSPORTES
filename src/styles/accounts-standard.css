@@ -1,0 +1,9 @@
+/* Contas a pagar e receber: apresentação corporativa consistente, sem pílulas. */
+.rr-accounts .rr-account-status{font-weight:700;text-align:center;vertical-align:middle;white-space:nowrap;border-left:1px solid #d6dce0;border-right:1px solid #d6dce0}
+.rr-accounts .rr-account-status-pago,.rr-accounts .rr-account-status-paga,.rr-accounts .rr-account-status-recebida,
+.rr-accounts tbody tr:hover .rr-account-status-pago,.rr-accounts tbody tr:hover .rr-account-status-paga{background:#e8f5ec;color:#24653c}
+.rr-accounts .rr-account-status-parcial,.rr-accounts tbody tr:hover .rr-account-status-parcial{background:#fff4db;color:#815b19}
+.rr-accounts .rr-account-status-pendente,.rr-accounts .rr-account-status-em-aberto,
+.rr-accounts tbody tr:hover .rr-account-status-pendente,.rr-accounts tbody tr:hover .rr-account-status-em-aberto{background:#fff0ef;color:#963b35}
+.rr-accounts .rr-account-actions{display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.rr-accounts .rr-account-actions button{width:34px;min-width:34px;height:32px;padding:0;font-size:17px;line-height:1;border-radius:5px}
