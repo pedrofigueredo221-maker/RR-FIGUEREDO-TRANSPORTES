@@ -184,7 +184,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     const value = number(form.value);
     if (!form.description?.trim() || value <= 0 || !form.created || !form.due) { setError("Preencha descrição, valor e datas da conta a receber."); return; }
     const count = Math.max(1, Math.min(120, Math.floor(number(form.installmentsCount) || 1)));
-    const records = data.manualReceivables || [];
+    const records = data.receivables || [];
     const old = records.find((item) => item.id === editingId);
     let installments = old?.installments || [];
     if (!old || count !== installments.length || value !== number(old.value)) {
@@ -201,7 +201,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     }
     const record = {...form,id:editingId||uid(),value,installments};
     delete record.due; delete record.installmentsCount;
-    return commit({...data,manualReceivables:editingId?records.map(item=>item.id===editingId?record:item):[record,...records]});
+    return commit({...data,receivables:editingId?records.map(item=>item.id===editingId?record:item):[record,...records]});
   };
 
   const toolbar = <div className="page-filters"><input aria-label="Buscar registros" placeholder="Buscar registros" value={query} onChange={(e) => setQuery(e.target.value)} /><PeriodRangeFilter startDate={startDate} endDate={endDate} onStartDateChange={setStartDate} onEndDateChange={setEndDate} /><button className="secondary-button" onClick={() => { setQuery(""); setStartDate(""); setEndDate(""); }} type="button">Limpar filtros</button><RefreshButton onRefresh={onRefresh} loading={loading} /></div>;
