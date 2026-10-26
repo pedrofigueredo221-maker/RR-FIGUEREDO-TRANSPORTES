@@ -51,7 +51,7 @@ export default function Cadastros({ controller }) {
       const selectedTruckId = truckId === undefined
         ? (data.trucks || []).find((truck) => truck.driverId === employeeId)?.id || ""
         : truckId;
-      const row = { ...employeeForm, id: employeeId, commissionValue: number(form.commissionValue) };
+      const row = { ...employeeForm, id: employeeId, commissionValue: form.commissionValue === "" || form.commissionValue == null ? "" : number(form.commissionValue) };
       // Referência canônica do vínculo: truck.driverId.
       const nextTrucks = (data.trucks || []).map((truck) => {
         if (truck.driverId === employeeId && (row.role !== "Motorista" || truck.id !== selectedTruckId)) return { ...truck, driverId: "" };
@@ -124,7 +124,7 @@ export default function Cadastros({ controller }) {
         <div className="table-scroll"><table><thead><tr><th>Nome</th><th>Função</th><th>Telefone</th><th>Comissão</th><th>Status</th>{!readOnly && <th>Ações</th>}</tr></thead>
           <tbody>{rows.map((employee) => <tr key={employee.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Clique para editar este cadastro" : undefined} onClick={!readOnly ? (event) => { if (event.target.closest("button, a, input, select, textarea, [role=button]")) return; startEdit("employee", employee); } : undefined}>
             <td>{employee.name}</td><td>{employee.role || "Motorista"}</td><td>{employee.phone || "—"}</td>
-            <td>{employee.commissionType === "fixed" ? money(employee.commissionValue) : `${number(employee.commissionValue ?? 13)}%`}</td>
+            <td>{employee.commissionType === "fixed" ? money(employee.commissionValue) : employee.commissionValue === "" || employee.commissionValue == null ? "—" : `${number(employee.commissionValue)}%`}</td>
             <td>{employee.active === false ? "Inativo" : "Ativo"}</td>
             {!readOnly && <td><Actions onEdit={() => startEdit("employee", employee)} onDelete={() => remove("employees", employee)} /></td>}
           </tr>)}</tbody>
