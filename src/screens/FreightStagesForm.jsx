@@ -35,7 +35,7 @@ function Stage({ stage, title, update }) {
     {stage.kmStart !== "" && stage.kmEnd !== "" && n(stage.kmEnd) < n(stage.kmStart) && <p className="freight-stage-error">O KM final não pode ser menor que o inicial.</p>}
   </section>;
 }
-export default function FreightStagesForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [] }) {
+export default function FreightStagesForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
   const updateStage = (key) => (field, next) => setValue((current) => ({ ...current, [key]: { ...current[key], [field]: next } }));
   const truck = trucks.find((item) => item.name === value.truck);
@@ -62,7 +62,7 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
   });
   const validDates = !value.emptyTrip?.date || !value.loadedTrip?.date || value.loadedTrip.date >= value.emptyTrip.date;
   return <form className="record-editor freight-editor freight-stages-editor" onSubmit={(e) => { e.preventDefault(); if (validStages && validDates) onSubmit(); }}>
-    <div className="editor-heading"><h3>NOVO FRETE</h3><button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button></div>
+    <div className="editor-heading"><h3>{editing ? "EDITAR FRETE" : "ADICIONAR FRETE"}</h3><button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button></div>
     <div className="freight-stage-top">
       {inputField("Motorista", value.driver, (v) => patch("driver", v), { required: true, options: drivers })}
       {inputField("Caminhão", value.truck, (v) => patch("truck", v), { required: true, options: truckOptions })}
