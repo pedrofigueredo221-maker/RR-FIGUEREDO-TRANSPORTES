@@ -13,7 +13,7 @@ export function addMovement(total, movements, entry) {
   const totals = accountTotals(total, movements);
   if (totals.closed) throw new Error("CONTA FECHADA — Não é possível alterar.");
   if (!PAYMENT_METHODS.includes(entry.method)) throw new Error("Selecione um meio de pagamento válido.");
-  if (!entry.date || !/^\\d{4}-\\d{2}-\\d{2}$/.test(entry.date)) throw new Error("Informe a data da baixa.");
+  if (!entry.date || !/^\d{4}-\d{2}-\d{2}$/.test(entry.date)) throw new Error("Informe a data da baixa.");
   if (!Number.isFinite(value) || value <= 0) throw new Error("Informe um valor de baixa maior que zero.");
   if (value > cents(totals.balance)) throw new Error("A baixa não pode ultrapassar o saldo restante.");
   return [...movements, { ...entry, amount: value / 100 }];
