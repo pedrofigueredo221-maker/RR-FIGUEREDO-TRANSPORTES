@@ -17,7 +17,7 @@ const defaultCategories = ["Combustível", "Pedágio", "Óleo e lubrificantes", 
 const blankStage = () => ({ date: "", origin: "", destination: "", kmStart: "", kmEnd: "", liters: "", fuelTotal: "", toll: "" });
 const blankFreight = () => ({ emptyTrip: blankStage(), loadedTrip: blankStage(), date: "", customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "", toll: "", deductToll: false, commissionType: "", commission: "", bonus: "", km: "", liters: "", dieselPrice: "", fuelActual: "", otherCosts: "", notes: "", received: "", advance: "", currentBalance: "" });
 const blankExpense = () => ({ created: today(), description: "", category: "Despesas gerais", truck: "", supplier: "", value: "", due: today(), installmentsCount: "1", notes: "" });
-const blankEmployee = () => ({ name: "", role: "Motorista", phone: "", commissionType: "percent", commissionValue: "13", active: true });
+const blankEmployee = () => ({ name: "", role: "Motorista", phone: "", commissionType: "percent", commissionValue: "", deductToll: false, active: true });
 const blankTruck = () => ({ name: "", plate: "", driverId: "", active: true });
 
 function Field({ label, value, onChange, type = "text", required = false, min, step, options, placeholder }) {
