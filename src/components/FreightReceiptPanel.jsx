@@ -8,6 +8,7 @@ export default function FreightReceiptPanel({ freight, data, number, money, savi
   const [date, setDate] = useState(todayISO());
   const [method, setMethod] = useState("PIX");
   const [error, setError] = useState("");
+  const [notes,setNotes]=useState("");
 
   const submit = () => {
     const current = (data.freights || []).find((item) => item.id === freight.id);
@@ -18,7 +19,7 @@ export default function FreightReceiptPanel({ freight, data, number, money, savi
     if (receivedAmount > open + 0.009) { setError("O valor informado ultrapassa o saldo em aberto. Confira o saldo antes de salvar."); return; }
     if (!date) { setError("Informe a data do recebimento."); return; }
 
-    const receipt = { id: globalThis.crypto?.randomUUID?.() || `receipt-${Date.now()}`, date, amount: Math.round(receivedAmount * 100) / 100, method };
+    const receipt = { id: globalThis.crypto?.randomUUID?.() || `receipt-${Date.now()}`, date, amount: Math.round(receivedAmount * 100) / 100, method, notes: notes.trim() };
     try {
       const freights = applyFreightReceipt(data.freights || [], current.id, receipt, number);
       onSave({ ...data, freights });
@@ -35,6 +36,7 @@ export default function FreightReceiptPanel({ freight, data, number, money, savi
       <label className="editor-field">Data do recebimento<input aria-label="Data do recebimento" type="date" value={date} onChange={(event) => setDate(event.target.value)} required /></label>
       <label className="editor-field">Forma de recebimento<select aria-label="Forma de recebimento" value={method} onChange={(event) => setMethod(event.target.value)}><option>PIX</option><option>Dinheiro</option><option>Crédito</option><option>Débito</option><option>TED</option><option>Boleto</option></select></label>
     </div>
+    <label className="editor-field">Observações da baixa (Opcional)<textarea rows={3} value={notes} onChange={event=>setNotes(event.target.value)}/></label>
     <p className="receipt-sync-note">Ao salvar, o recebimento será vinculado a este frete. Quando o saldo chegar a zero, o status do frete também será atualizado para Pago.</p>
     <div className="editor-actions"><button className="primary-button" type="button" disabled={saving || balance <= 0} onClick={submit}>{saving ? "Salvando…" : balance > 0 && Number(amount) >= balance ? "Confirmar pagamento total" : "Salvar recebimento"}</button></div>
   </section>;
