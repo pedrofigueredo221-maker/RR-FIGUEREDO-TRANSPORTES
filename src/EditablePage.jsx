@@ -17,7 +17,7 @@ const defaultCategories = ["Combustível", "Pedágio", "Óleo e lubrificantes", 
 const blankStage = () => ({ date: "", origin: "", destination: "", kmStart: "", kmEnd: "", liters: "", fuelTotal: "", toll: "" });
 const blankFreight = () => ({ emptyTrip: blankStage(), loadedTrip: blankStage(), date: "", customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "", toll: "", deductToll: false, commissionType: "", commission: "", bonus: "", km: "", liters: "", dieselPrice: "", fuelActual: "", otherCosts: "", notes: "", received: "", advance: "", currentBalance: "" });
 const blankExpense = () => ({ created: today(), description: "", category: "Despesas gerais", truck: "", supplier: "", value: "", due: today(), installmentsCount: "1", notes: "" });
-const blankEmployee = () => ({ name: "", role: "Motorista", phone: "", commissionType: "percent", commissionValue: "13", active: true });
+const blankEmployee = () => ({ name: "", role: "Motorista", phone: "", commissionType: "percent", commissionValue: "", deductToll: false, active: true });
 const blankTruck = () => ({ name: "", plate: "", driverId: "", active: true });
 
 function Field({ label, value, onChange, type = "text", required = false, min, step, options, placeholder }) {
@@ -145,6 +145,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
       value.toll = number(form.emptyTrip.toll) + number(form.loadedTrip.toll);
       value.dieselPrice = value.liters > 0 ? value.fuelActual / value.liters : 0;
     }
+    if (hasStages) value.currentBalance = Math.max(0, freightValue - number(form.discount) - receivedAtTrip);
     value.fuelEstimated = number(value.liters) * number(value.dieselPrice);
     if (original) {
       value.receipts = Array.isArray(original.receipts) ? original.receipts : [];

@@ -31,7 +31,7 @@ function Stage({ stage, title, update }) {
       {inputField("Média (km/L)", average === null ? "" : average.toFixed(2), () => {}, { readOnly: true })}
       {inputField("Pedágio (R$)", stage.toll, patch("toll"), { type: "number", required: true })}
       {inputField("Preço do diesel (R$/L)", price === null ? "" : price.toFixed(2), () => {}, { readOnly: true })}
-      {inputField(title === "Viagem Carregada" ? "Custo Viagem Carregada (R$)" : "Custo Viagem Vazia (R$)", stage.fuelTotal === "" || stage.toll === "" ? "" : (n(stage.fuelTotal) + n(stage.toll)).toFixed(2), () => {}, { readOnly: true })}
+      {inputField(title === "Viagem Carregada" ? "Custo Viagem Carregada" : "Custo Viagem Vazia", stage.fuelTotal === "" || stage.toll === "" ? "" : (n(stage.fuelTotal) + n(stage.toll)).toFixed(2), () => {}, { readOnly: true })}
     </div>
     {stage.kmStart !== "" && stage.kmEnd !== "" && n(stage.kmEnd) < n(stage.kmStart) && <p className="freight-stage-error">O KM final não pode ser menor que o inicial.</p>}
   </section>;
@@ -42,6 +42,16 @@ function validCostInputs(value) {
 }
 export default function FreightStagesForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
+  const selectDriver = (driverName) => {
+    const employee = employees.find((item) => item.name === driverName && item.role === "Motorista");
+    setValue((current) => ({
+      ...current,
+      driver: driverName,
+      commissionType: employee?.commissionType === "percent" || employee?.commissionType === "fixed" ? employee.commissionType : "",
+      commission: employee?.commissionValue === "" || employee?.commissionValue == null ? "" : String(employee.commissionValue),
+      deductToll: employee?.deductToll === true
+    }));
+  };
   const updateStage = (key) => (field, next) => setValue((current) => ({ ...current, [key]: { ...current[key], [field]: next } }));
   const truck = trucks.find((item) => item.name === value.truck);
   const totalFuel = stages.reduce((sum, item) => sum + n(value[item.key]?.fuelTotal), 0);
@@ -69,7 +79,7 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
   return <form className="record-editor freight-editor freight-stages-editor" onSubmit={(e) => { e.preventDefault(); if (validStages && validDates) onSubmit(); }}>
     <div className="editor-heading"><h3>{editing ? "EDITAR FRETE" : "ADICIONAR FRETE"}</h3><button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button></div>
     <div className="freight-stage-top">
-      {inputField("Motorista", value.driver, (v) => patch("driver", v), { required: true, options: drivers })}
+      {inputField("Motorista", value.driver, selectDriver, { required: true, options: drivers })}
       {inputField("Valor do frete (R$)", value.value, (v) => patch("value", v), { type: "number", required: true })}
       {inputField("Caminhão", value.truck, (v) => patch("truck", v), { required: true, options: truckOptions })}
       {inputField("Placa", truck?.plate || "", () => {}, { readOnly: true })}
@@ -84,10 +94,10 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       {inputField("Bônus (R$)", value.bonus, (v) => patch("bonus", v), { type: "number" })}
       {inputField("Outros custos (R$)", value.otherCosts, (v) => patch("otherCosts", v), { type: "number" })}
       {inputField("Adiantamento do cliente (R$)", value.received, (v) => patch("received", v), { type: "number", required: true })}
-      {inputField("Saldo atual (R$)", value.currentBalance, (v) => patch("currentBalance", v), { type: "number" })}
+      {inputField("Saldo restante (R$)", value.value === "" || value.received === "" ? "" : Math.max(0, n(value.value) - n(value.discount) - n(value.received)).toFixed(2), () => {}, { readOnly: true })}
       <label className="editor-field freight-stage-checkbox"><span>Descontar pedágio da base da comissão</span><input type="checkbox" checked={Boolean(value.deductToll)} onChange={(e) => patch("deductToll", e.target.checked)} /></label>
     </div></section>
-    <section className="freight-stage-summary"><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-grid">{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{money(amount)}</strong></div>)}</div></section>
+    <section className="freight-stage-summary"><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-top"><div><span>Valor do frete</span><strong>{money(n(value.value))}</strong></div><div><span>Adiantamento do cliente</span><strong>{money(n(value.received))}</strong></div></div><div className="freight-stage-summary-grid">{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{money(amount)}</strong></div>)}</div></section>
     <p className="receipt-sync-note">Uma operação, um recebível e uma comissão. Os custos das duas etapas são somados uma única vez.</p>
     <div className="editor-actions"><button type="submit" className="primary-button" disabled={saving || !validStages || !validDates}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
   </form>;
