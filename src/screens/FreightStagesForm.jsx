@@ -31,6 +31,7 @@ function Stage({ stage, title, update }) {
       {inputField("Média (km/L)", average === null ? "" : average.toFixed(2), () => {}, { readOnly: true })}
       {inputField("Pedágio (R$)", stage.toll, patch("toll"), { type: "number", required: true })}
       {inputField("Preço do diesel (R$/L)", price === null ? "" : price.toFixed(2), () => {}, { readOnly: true })}
+      {inputField(`Custo ${title} (R$)`, stage.fuelTotal === "" || stage.toll === "" ? "" : (n(stage.fuelTotal) + n(stage.toll)).toFixed(2), () => {}, { readOnly: true })}
     </div>
     {stage.kmStart !== "" && stage.kmEnd !== "" && n(stage.kmEnd) < n(stage.kmStart) && <p className="freight-stage-error">O KM final não pode ser menor que o inicial.</p>}
   </section>;
@@ -65,13 +66,14 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
     <div className="editor-heading"><h3>{editing ? "EDITAR FRETE" : "ADICIONAR FRETE"}</h3><button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button></div>
     <div className="freight-stage-top">
       {inputField("Motorista", value.driver, (v) => patch("driver", v), { required: true, options: drivers })}
+      {inputField("Valor do frete (R$)", value.value, (v) => patch("value", v), { type: "number", required: true })}
       {inputField("Caminhão", value.truck, (v) => patch("truck", v), { required: true, options: truckOptions })}
       {inputField("Placa", truck?.plate || "", () => {}, { readOnly: true })}
     </div>
     <div className="freight-stages-pair">{stages.map(({ key, title }) => <Stage key={key} title={title} stage={value[key] || {}} update={updateStage(key)} />)}</div>
     {!validDates && <p className="freight-stage-error">A data da viagem carregada não pode ser anterior à data da viagem vazia.</p>}
     <section className="freight-stage-finance"><h4>Dados financeiros</h4><div className="freight-stage-finance-grid">
-      {inputField("Valor do frete (R$)", value.value, (v) => patch("value", v), { type: "number", required: true })}
+      {inputField("Custo total da viagem (R$)", freightCost(calculation).toFixed(2), () => {}, { readOnly: true })}
       {inputField("Descontos gerais (R$)", value.discount, (v) => patch("discount", v), { type: "number" })}
       {inputField("Tipo de comissão", value.commissionType, (v) => patch("commissionType", v), { required: true, options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] })}
       {inputField("Comissão (% ou R$)", value.commission, (v) => patch("commission", v), { type: "number", required: true })}
