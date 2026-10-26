@@ -16,6 +16,7 @@ const money = (value) => formatMoney(number(value));
 const defaultCategories = ["Combustível", "Pedágio", "Óleo e lubrificantes", "Mecânico", "Oficina", "Pneus", "Elétrica", "Peças", "Documentação", "Seguro", "Lavagem", "Manutenção", "Despesas gerais", "Outros"];
 const blankStage = () => ({ date: "", origin: "", destination: "", kmStart: "", kmEnd: "", liters: "", fuelTotal: "", toll: "" });
 const blankFreight = () => ({ emptyTrip: blankStage(), loadedTrip: blankStage(), date: "", customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "", toll: "", deductToll: false, commissionType: "", commission: "", bonus: "", km: "", liters: "", dieselPrice: "", fuelActual: "", otherCosts: "", notes: "", received: "", advance: "", currentBalance: "" });
+const blankReceivable = () => ({ created: today(), description: "", category: "Outros", truck: "", value: "", due: today(), installmentsCount: "1", notes: "" });
 const blankExpense = () => ({ created: today(), description: "", category: "Despesas gerais", truck: "", supplier: "", value: "", due: today(), installmentsCount: "1", notes: "" });
 const blankEmployee = () => ({ name: "", role: "Motorista", phone: "", commissionType: "percent", commissionValue: "", deductToll: false, active: true });
 const blankTruck = () => ({ name: "", plate: "", driverId: "", active: true });
@@ -68,11 +69,11 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
 
   const startCreate = (kind) => {
     if (readOnly) return;
-    setError(""); setEditingId(null); setFormVersion(version); setForm(kind === "freight" ? blankFreight() : kind === "expense" ? blankExpense() : kind === "employee" ? blankEmployee() : kind === "truck" ? blankTruck() : { name: "" });
+    setError(""); setEditingId(null); setFormVersion(version); setForm(kind === "freight" ? blankFreight() : kind === "expense" ? blankExpense() : kind === "receivable" ? blankReceivable() : kind === "employee" ? blankEmployee() : kind === "truck" ? blankTruck() : { name: "" });
   };
   const startEdit = (kind, record) => {
     if (readOnly) return;
-    setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0), advance: String(record.advance ?? ""), currentBalance: String(record.currentBalance ?? "") } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
+    setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0), advance: String(record.advance ?? ""), currentBalance: String(record.currentBalance ?? "") } : (kind === "expense" || kind === "receivable") ? { ...(kind === "expense" ? blankExpense() : blankReceivable()), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
   };
   // Ao chegar por duplo clique em outra tela, localiza o registro original
   // e abre o mesmo formulário de edição já utilizado pela listagem.
@@ -179,12 +180,36 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     return commit({ ...data, expenses: editingId ? allExpenses.map((e) => e.id === editingId ? expense : e) : [expense, ...allExpenses] });
   };
 
+  const saveReceivable = () => {
+    const value = number(form.value);
+    if (!form.description?.trim() || value <= 0 || !form.created || !form.due) { setError("Preencha descrição, valor e datas da conta a receber."); return; }
+    const count = Math.max(1, Math.min(120, Math.floor(number(form.installmentsCount) || 1)));
+    const records = data.manualReceivables || [];
+    const old = records.find((item) => item.id === editingId);
+    let installments = old?.installments || [];
+    if (!old || count !== installments.length || value !== number(old.value)) {
+      if (old?.installments?.some((item) => number(item.paid) > 0 || (item.payments || []).length > 0)) { setError("Esta conta já possui recebimentos. Não altere o valor ou o parcelamento."); return; }
+      const part = Math.round(value / count * 100) / 100;
+      let assigned = 0;
+      installments = Array.from({length:count}, (_,index) => {
+        const due = new Date(`${form.due}T12:00:00`);
+        due.setMonth(due.getMonth() + index);
+        const amount = index === count-1 ? Math.round((value-assigned)*100)/100 : part;
+        assigned += amount;
+        return {due:due.toISOString().slice(0,10),value:amount,paid:0,payments:[]};
+      });
+    }
+    const record = {...form,id:editingId||uid(),value,installments};
+    delete record.due; delete record.installmentsCount;
+    return commit({...data,manualReceivables:editingId?records.map(item=>item.id===editingId?record:item):[record,...records]});
+  };
+
   const toolbar = <div className="page-filters"><input aria-label="Buscar registros" placeholder="Buscar registros" value={query} onChange={(e) => setQuery(e.target.value)} /><PeriodRangeFilter startDate={startDate} endDate={endDate} onStartDateChange={setStartDate} onEndDateChange={setEndDate} /><button className="secondary-button" onClick={() => { setQuery(""); setStartDate(""); setEndDate(""); }} type="button">Limpar filtros</button><RefreshButton onRefresh={onRefresh} loading={loading} /></div>;
   const showError = error && <div className="error-banner" role="alert">{error}</div>;
 
   const controller = {
     page, data, readOnly, loading, saving, form, setForm, editingId, setEditingId,
-    startCreate, startEdit, saveFreight, saveExpense, showError, toolbar,
+    startCreate, startEdit, saveFreight, saveExpense, saveReceivable, showError, toolbar,
     filteredFreights, filteredExpenses, dateLabel, money, Actions, RecordForm, Field,
     remove, payment, setPayment, allFreights, allExpenses, number, commit, setError,
     categories, employees, trucks, tab, setTab, query, uid, today
