@@ -14,7 +14,7 @@ const uid = () => globalThis.crypto?.randomUUID?.() || `rr-${Date.now().toString
 const number = (value) => Math.max(0, Number(value) || 0);
 const money = (value) => formatMoney(number(value));
 const defaultCategories = ["Combustível", "Pedágio", "Óleo e lubrificantes", "Mecânico", "Oficina", "Pneus", "Elétrica", "Peças", "Documentação", "Seguro", "Lavagem", "Manutenção", "Despesas gerais", "Outros"];
-const blankFreight = () => ({ date: today(), customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "0", toll: "0", deductToll: false, commissionType: "percent", commission: "13", bonus: "0", km: "", liters: "", dieselPrice: "", fuelActual: "0", otherCosts: "0", notes: "", received: "0", advance: "", currentBalance: "" });
+const blankFreight = () => ({ date: "", customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "", toll: "", deductToll: false, commissionType: "", commission: "", bonus: "", km: "", liters: "", dieselPrice: "", fuelActual: "", otherCosts: "", notes: "", received: "", advance: "", currentBalance: "" });
 const blankExpense = () => ({ created: today(), description: "", category: "Despesas gerais", truck: "", supplier: "", value: "", due: today(), installmentsCount: "1", notes: "" });
 const blankEmployee = () => ({ name: "", role: "Motorista", phone: "", commissionType: "percent", commissionValue: "13", active: true });
 const blankTruck = () => ({ name: "", plate: "", driverId: "", active: true });
