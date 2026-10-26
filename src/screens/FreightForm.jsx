@@ -19,7 +19,7 @@ function FreightField({ label, value, onChange, type = "text", required = false,
 
 export default function FreightForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
-  if (value.emptyTrip && value.loadedTrip) return <FreightStagesForm value={value} setValue={setValue} onSubmit={onSubmit} onCancel={onCancel} saving={saving} employees={employees} trucks={trucks} />;
+  if (value.emptyTrip && value.loadedTrip) return <FreightStagesForm value={value} setValue={setValue} onSubmit={onSubmit} onCancel={onCancel} saving={saving} employees={employees} trucks={trucks} editing={editing} />;
   const estimatedFuel = amount(value.liters) * amount(value.dieselPrice);
   const fuelAverage = amount(value.liters) > 0 && String(value.km ?? "").trim() !== ""
     ? `${(amount(value.km) / amount(value.liters)).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km/L`
