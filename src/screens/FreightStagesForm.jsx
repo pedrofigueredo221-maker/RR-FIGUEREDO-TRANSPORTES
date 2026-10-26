@@ -29,8 +29,8 @@ function Stage({ stage, title, update }) {
       {inputField("Diesel (litros)", stage.liters, patch("liters"), { type: "number", required: true })}
       {inputField("Valor abastecido (R$)", stage.fuelTotal, patch("fuelTotal"), { type: "number", required: true })}
       {inputField("Média (km/L)", average === null ? "" : average.toFixed(2), () => {}, { readOnly: true })}
-      {inputField("Preço do diesel (R$/L)", price === null ? "" : price.toFixed(2), () => {}, { readOnly: true })}
       {inputField("Pedágio (R$)", stage.toll, patch("toll"), { type: "number", required: true })}
+      {inputField("Preço do diesel (R$/L)", price === null ? "" : price.toFixed(2), () => {}, { readOnly: true })}
     </div>
     {stage.kmStart !== "" && stage.kmEnd !== "" && n(stage.kmEnd) < n(stage.kmStart) && <p className="freight-stage-error">O KM final não pode ser menor que o inicial.</p>}
   </section>;
