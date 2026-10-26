@@ -31,7 +31,7 @@ function Stage({ stage, title, update }) {
       {inputField("Média (km/L)", average === null ? "" : average.toFixed(2), () => {}, { readOnly: true })}
       {inputField("Pedágio (R$)", stage.toll, patch("toll"), { type: "number", required: true })}
       {inputField("Preço do diesel (R$/L)", price === null ? "" : price.toFixed(2), () => {}, { readOnly: true })}
-      {inputField(`Custo ${title} (R$)`, stage.fuelTotal === "" || stage.toll === "" ? "" : (n(stage.fuelTotal) + n(stage.toll)).toFixed(2), () => {}, { readOnly: true })}
+      {inputField(title === "Viagem Carregada" ? "Custo Viagem Carregada (R$)" : "Custo Viagem Vazia (R$)", stage.fuelTotal === "" || stage.toll === "" ? "" : (n(stage.fuelTotal) + n(stage.toll)).toFixed(2), () => {}, { readOnly: true })}
     </div>
     {stage.kmStart !== "" && stage.kmEnd !== "" && n(stage.kmEnd) < n(stage.kmStart) && <p className="freight-stage-error">O KM final não pode ser menor que o inicial.</p>}
   </section>;
@@ -83,8 +83,7 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       {inputField("Comissão (% ou R$)", value.commission, (v) => patch("commission", v), { type: "number", required: true })}
       {inputField("Bônus (R$)", value.bonus, (v) => patch("bonus", v), { type: "number" })}
       {inputField("Outros custos (R$)", value.otherCosts, (v) => patch("otherCosts", v), { type: "number" })}
-      {inputField("Valor recebido do cliente (R$)", value.received, (v) => patch("received", v), { type: "number", required: true })}
-      {inputField("Adiantamento ao motorista (R$)", value.advance, (v) => patch("advance", v), { type: "number" })}
+      {inputField("Adiantamento do cliente (R$)", value.received, (v) => patch("received", v), { type: "number", required: true })}
       {inputField("Saldo atual (R$)", value.currentBalance, (v) => patch("currentBalance", v), { type: "number" })}
       <label className="editor-field freight-stage-checkbox"><span>Descontar pedágio da base da comissão</span><input type="checkbox" checked={Boolean(value.deductToll)} onChange={(e) => patch("deductToll", e.target.checked)} /></label>
     </div></section>
