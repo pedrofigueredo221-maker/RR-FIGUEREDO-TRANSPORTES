@@ -42,6 +42,15 @@ function validCostInputs(value) {
 }
 export default function FreightStagesForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
+  const selectDriver = (driverName) => {
+    const employee = employees.find((item) => item.name === driverName && item.role === "Motorista");
+    setValue((current) => ({
+      ...current,
+      driver: driverName,
+      commissionType: employee?.commissionType === "percent" || employee?.commissionType === "fixed" ? employee.commissionType : "",
+      commission: employee?.commissionValue === "" || employee?.commissionValue == null ? "" : String(employee.commissionValue)
+    }));
+  };
   const updateStage = (key) => (field, next) => setValue((current) => ({ ...current, [key]: { ...current[key], [field]: next } }));
   const truck = trucks.find((item) => item.name === value.truck);
   const totalFuel = stages.reduce((sum, item) => sum + n(value[item.key]?.fuelTotal), 0);
@@ -69,7 +78,7 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
   return <form className="record-editor freight-editor freight-stages-editor" onSubmit={(e) => { e.preventDefault(); if (validStages && validDates) onSubmit(); }}>
     <div className="editor-heading"><h3>{editing ? "EDITAR FRETE" : "ADICIONAR FRETE"}</h3><button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button></div>
     <div className="freight-stage-top">
-      {inputField("Motorista", value.driver, (v) => patch("driver", v), { required: true, options: drivers })}
+      {inputField("Motorista", value.driver, selectDriver, { required: true, options: drivers })}
       {inputField("Valor do frete (R$)", value.value, (v) => patch("value", v), { type: "number", required: true })}
       {inputField("Caminhão", value.truck, (v) => patch("truck", v), { required: true, options: truckOptions })}
       {inputField("Placa", truck?.plate || "", () => {}, { readOnly: true })}
