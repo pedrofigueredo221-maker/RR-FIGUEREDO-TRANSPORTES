@@ -168,14 +168,13 @@ export default function ReceivableAccountDialog({
                   <input type="number" min="0.01" step="0.01" value={entry.amount} onChange={(event) => setEntry((previous) => ({ ...previous, amount: event.target.value }))} />
                 </label>
               </div>}
-              {entryOpen && <button type="button" className="secondary-button rr-receivable-confirm" disabled={saving} onClick={addEntry}>
-                Confirmar lançamento
-              </button>}
+
           </>
         </div>
         <div className="editor-actions rr-receivable-actions">
-          <button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button>
-          <button type="submit" className="primary-button rr-receivable-save" disabled={saving}>{saving ? "Salvando…" : "SALVAR CONTA"}</button>
+          <button type="button" className="secondary-button rr-receivable-cancel" onClick={onCancel}>CANCELAR</button>
+          {entryOpen && <button type="button" className="secondary-button rr-receivable-confirm" disabled={saving} onClick={addEntry}>CONFIRMAR LANÇAMENTO</button>}
+          <button type="submit" className="primary-button rr-receivable-save" disabled={saving}>{saving ? "SALVANDO…" : "SALVAR CONTA"}</button>
         </div>
       </form>
     </FormDialog>
