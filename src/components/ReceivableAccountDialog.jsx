@@ -20,6 +20,7 @@ const emptyAccount = () => ({
 export default function ReceivableAccountDialog({
   account,
   freightLinked = false,
+  payable = false,
   saving,
   money,
   dateLabel,
@@ -61,7 +62,7 @@ export default function ReceivableAccountDialog({
     setError("");
     if (count === 1) {
       if (draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
-        setError("Não é possível remover parcelas que já foram recebidas.");
+        setError(payable ? "Não é possível remover parcelas que já foram pagas." : "Não é possível remover parcelas que já foram recebidas.");
         return;
       }
       setInstallmentCount(1);
@@ -70,7 +71,7 @@ export default function ReceivableAccountDialog({
       return;
     }
     if (draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
-      setError("Não é possível alterar a quantidade após receber uma parcela.");
+      setError(payable ? "Não é possível alterar a quantidade após pagar uma parcela." : "Não é possível alterar a quantidade após receber uma parcela.");
       return;
     }
     try {
@@ -102,7 +103,7 @@ export default function ReceivableAccountDialog({
   const toggleRecalculateInstallments = (checked) => {
     if (!checked) { setRecalculateInstallments(false); return; }
     if (draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
-      setError("Não é possível recalcular parcelas que já possuem recebimentos.");
+      setError(payable ? "Não é possível recalcular parcelas que já possuem pagamentos." : "Não é possível recalcular parcelas que já possuem recebimentos.");
       return;
     }
     try {
@@ -157,7 +158,7 @@ export default function ReceivableAccountDialog({
   };
   const addEntry = () => {
     try {
-      if (hasCreditPlan) throw new Error("Parcelas de crédito são recebidas automaticamente no vencimento.");
+      if (hasCreditPlan) throw new Error(payable ? "Parcelas de crédito são pagas automaticamente no vencimento." : "Parcelas de crédito são recebidas automaticamente no vencimento.");
       const receipts = addMovement(Number(draft.value) - legacyPaid, draft.receipts, {
         id: globalThis.crypto?.randomUUID?.() || String(Date.now()),
         date: entry.date,
@@ -197,7 +198,7 @@ export default function ReceivableAccountDialog({
       }
     }
     if (totals.paid > effectiveTotal) {
-      setError("O valor total não pode ser inferior aos lançamentos já recebidos.");
+      setError(payable ? "O valor total não pode ser inferior aos pagamentos já registrados." : "O valor total não pode ser inferior aos lançamentos já recebidos.");
       return;
     }
     try {
@@ -246,11 +247,11 @@ export default function ReceivableAccountDialog({
           <h4>RESUMO FINANCEIRO</h4>
           <div className={`rr-receivable-summary${freightLinked ? " rr-receivable-summary-freight" : ""}`}>
             <div className="rr-receivable-metric"><span>Valor total</span><strong>{money(Number(draft.value) || 0)}</strong></div>
-            <div className="rr-receivable-metric"><span>Recebido</span><strong className="rr-receivable-paid">{money(totals.paid)}</strong></div>
+            <div className="rr-receivable-metric"><span>{payable ? "Pago" : "Recebido"}</span><strong className="rr-receivable-paid">{money(totals.paid)}</strong></div>
             <div className="rr-receivable-metric"><span>Saldo pendente</span><strong className="rr-receivable-balance">{money(totals.balance)}</strong></div>
             {freightLinked && <p className="rr-receivable-linked-note">Conta vinculada ao frete: o valor total e a data da viagem são controlados no cadastro do frete.</p>}
           </div>
-          <div className="rr-receivable-history-heading"><h4>LANÇAMENTOS RECEBIDOS</h4><span>{draft.receipts.length} lançamento(s)</span></div>
+          <div className="rr-receivable-history-heading"><h4>{payable ? "LANÇAMENTOS PAGOS" : "LANÇAMENTOS RECEBIDOS"}</h4><span>{draft.receipts.length} lançamento(s)</span></div>
           {legacyPaid > 0 && <p className="rr-receivable-legacy-note">Recebimentos anteriores ao histórico detalhado: {money(legacyPaid)}</p>}
           <div className="rr-receivable-history">
             <table>
@@ -270,13 +271,13 @@ export default function ReceivableAccountDialog({
           </div>
         </div>);
   return (
-    <FormDialog label="Conta a Receber" onClose={onCancel}>
-      <form ref={dialogFormRef} className="record-editor rr-receivable-dialog" onSubmit={save}>
-        <h3 className="rr-receivable-heading">Conta a Receber</h3>
+    <FormDialog label={payable ? "Conta a Pagar" : "Conta a Receber"} onClose={onCancel}>
+      <form ref={dialogFormRef} className={`record-editor rr-receivable-dialog${payable ? " rr-payable-dialog" : ""}`} onSubmit={save}>
+        <h3 className="rr-receivable-heading">{payable ? "Conta a Pagar" : "Conta a Receber"}</h3>
         {error && <p className="error-banner" role="alert">{error}</p>}
         <div className="editor-grid rr-receivable-fields">
           <label className="editor-field rr-receivable-title">
-            Título da conta a receber
+            {payable ? "Título da conta a pagar" : "Título da conta a receber"}
             <input required value={draft.title} onChange={(event) => change("title", event.target.value)} />
           </label>
           <label className="editor-field">
@@ -296,7 +297,7 @@ export default function ReceivableAccountDialog({
             <select value={draft.paymentMethod} onChange={(event) => {
                 const method = event.target.value;
                 if (!isCredit(method) && draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
-                  setError("Não é possível remover um parcelamento com parcelas recebidas.");
+                  setError(payable ? "Não é possível remover um parcelamento com parcelas pagas." : "Não é possível remover um parcelamento com parcelas recebidas.");
                   return;
                 }
                 setInstallmentCount(isCredit(method) ? (draft.creditInstallments.length || 1) : 1);
@@ -383,7 +384,7 @@ export default function ReceivableAccountDialog({
           <button type="submit" className="primary-button rr-receivable-save" disabled={saving}>{saving ? "SALVANDO…" : "SALVAR CONTA"}</button>
         </div>
       </form>
-      {sidebarAvailable && createPortal(<aside ref={sidebarRef} className="rr-receivable-detached-panel" aria-label="Resumo financeiro e lançamentos recebidos">{financialSidebar}</aside>, document.body)}
+      {sidebarAvailable && createPortal(<aside ref={sidebarRef} className={`rr-receivable-detached-panel${payable ? " rr-payable-detached-panel" : ""}`} aria-label={payable ? "Resumo financeiro e lançamentos pagos" : "Resumo financeiro e lançamentos recebidos"}>{financialSidebar}</aside>, document.body)}
     </FormDialog>
   );
 }

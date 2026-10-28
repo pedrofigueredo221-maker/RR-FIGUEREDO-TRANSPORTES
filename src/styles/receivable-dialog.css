@@ -1160,3 +1160,112 @@
     margin:0;
   }
 }
+
+
+/* CONTAS A PAGAR reutiliza integralmente TELAS LATERAIS e TABELAS.
+   O total pago é uma saída, não um recebimento. */
+.rr-payable-dialog .rr-receivable-paid { color: #bd282e; }
+
+.rr-payable-detached-panel .rr-receivable-metric .rr-receivable-paid {color:#bd282e;}
+
+
+/* TELAS LATERAIS: painel financeiro com altura mínima fixa, mantendo rolagem interna. */
+.rr-receivable-detached-panel {
+  min-height: 440px;
+  height: 440px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* Os dois controles de parcelas ficam juntos, lado a lado, na mesma linha. */
+.rr-receivable-dialog .rr-credit-plan-heading {
+  grid-template-columns: minmax(0, 2.5fr) minmax(0, 1.5fr) minmax(220px, 2fr);
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions .rr-credit-adjust-future {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  white-space: normal;
+}
+@media (max-width: 1000px) {
+  .rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+}
+
+
+/* Indicadores do parcelamento no padrão dos cards do Balanço Geral. */
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > span {
+  background: #fff;
+  border: 1px solid #d9dce0;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.035);
+  padding: 18px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > span > span {
+  color: #171717;
+  font-size: 12px;
+  font-weight: 500;
+}
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > span > strong {
+  font-size: 22px;
+  line-height: 1.2;
+  color: #142b4c;
+  font-weight: 700;
+}
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > .rr-credit-interest > strong {
+  color: #c62828;
+}
+
+
+/* Parcelas de crédito: altura fixa de 20px para qualquer quantidade (receber e pagar). */
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row {
+  height: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  box-sizing: border-box;
+  padding: 0 5px;
+  gap: 0;
+  overflow: hidden;
+  align-items: center;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > strong,
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > .editor-field,
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > .rr-credit-amount-cell {
+  height: 19px;
+  min-height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  align-self: center;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row input[type="date"],
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row input[type="number"] {
+  height: 19px;
+  min-height: 19px;
+  max-height: 19px;
+  box-sizing: border-box;
+  padding: 0 3px;
+  line-height: 19px;
+  font-size: 11px;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-index {
+  font-size: 11px;
+  line-height: 19px;
+}
