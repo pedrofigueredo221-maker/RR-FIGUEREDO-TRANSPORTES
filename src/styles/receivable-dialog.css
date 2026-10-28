@@ -577,3 +577,60 @@
 @media (max-width: 680px) {
   .rr-receivable-dialog .rr-credit-adjust-future { grid-column: 2; }
 }
+
+
+/* Resumo e histórico externos ao modal, encostados à direita e alinhados ao topo. */
+.rr-receivable-detached-panel {
+  position: fixed;
+  z-index: 10050;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #f8f9fa;
+  border: 1px solid #d5d9dd;
+  border-radius: 0 9px 9px 0;
+  box-shadow: 10px 12px 28px #0003;
+  padding: 12px;
+  font-family: Calibri, Carlito, Arial, sans-serif;
+}
+.rr-receivable-detached-panel .rr-account-ledger {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.rr-receivable-detached-panel .rr-receivable-summary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.rr-receivable-detached-panel .rr-receivable-metric {
+  padding: 10px 12px;
+  min-width: 0;
+}
+.rr-receivable-detached-panel .rr-receivable-history-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+.rr-receivable-detached-panel .rr-receivable-history {
+  max-height: 45vh;
+  overflow: auto;
+}
+.rr-receivable-detached-panel .rr-receivable-history table {
+  width: 100%;
+  table-layout: fixed;
+  font-size: 12px;
+}
+.rr-receivable-detached-panel .rr-receivable-history th,
+.rr-receivable-detached-panel .rr-receivable-history td {
+  padding: 8px 5px;
+  overflow-wrap: anywhere;
+}
+.rr-receivable-detached-panel .rr-receivable-history td.numeric {
+  white-space: nowrap;
+  font-size: 12px;
+}

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import FormDialog from "./FormDialog.jsx";
 import { PAYMENT_METHODS, accountTotals, addMovement, cents } from "../domain/accountLedger.js";
 import { createCreditPlan, creditPlanTotals, validateCreditPlan, installmentPaid, isCredit, withDueCreditReceipts } from "../domain/creditInstallments.js";
@@ -198,9 +199,63 @@ export default function ReceivableAccountDialog({
     }
   };
 
+  const dialogFormRef = useRef(null);
+  const sidebarRef = useRef(null);
+  const [sidebarAvailable, setSidebarAvailable] = useState(() => typeof window !== "undefined" && window.innerWidth >= 1500);
+  useLayoutEffect(() => {
+    const form = dialogFormRef.current;
+    const panel = sidebarRef.current;
+    if (!form || !panel || !sidebarAvailable) return undefined;
+    const dialog = form.closest(".form-dialog");
+    if (!dialog) return undefined;
+    const position = () => {
+      const rect = dialog.getBoundingClientRect();
+      panel.style.top = `${Math.max(8, rect.top)}px`;
+      panel.style.left = `${rect.right}px`;
+      panel.style.width = `${Math.min(360, Math.max(0, window.innerWidth - rect.right - 12))}px`;
+      panel.style.maxHeight = `${Math.max(180, window.innerHeight - Math.max(8, rect.top) - 12)}px`;
+    };
+    position();
+    const observer = new ResizeObserver(position);
+    observer.observe(dialog);
+    window.addEventListener("resize", position);
+    return () => { observer.disconnect(); window.removeEventListener("resize", position); };
+  }, [sidebarAvailable]);
+  useLayoutEffect(() => {
+    const onResize = () => setSidebarAvailable(window.innerWidth >= 1500);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  const financialSidebar = (        <div className="rr-account-ledger rr-receivable-ledger">
+          <h4>RESUMO FINANCEIRO</h4>
+          <div className="rr-receivable-summary">
+            <div className="rr-receivable-metric"><span>Valor total</span><strong>{money(Number(draft.value) || 0)}</strong></div>
+            <div className="rr-receivable-metric"><span>Recebido</span><strong className="rr-receivable-paid">{money(totals.paid)}</strong></div>
+            <div className="rr-receivable-metric"><span>Saldo pendente</span><strong className="rr-receivable-balance">{money(totals.balance)}</strong></div>
+          </div>
+          {freightLinked && <p className="rr-receivable-linked-note">Conta vinculada ao frete: o valor total e a data da viagem são controlados no cadastro do frete.</p>}
+          <div className="rr-receivable-history-heading"><h4>LANÇAMENTOS RECEBIDOS</h4><span>{draft.receipts.length} lançamento(s)</span></div>
+          {legacyPaid > 0 && <p className="rr-receivable-legacy-note">Recebimentos anteriores ao histórico detalhado: {money(legacyPaid)}</p>}
+          <div className="rr-receivable-history">
+            <table>
+              <thead><tr><th>Data</th><th>Meio</th><th>Valor</th></tr></thead>
+              <tbody>
+                {draft.receipts.length === 0 ? (
+                  <tr><td colSpan={3}>Nenhum lançamento registrado.</td></tr>
+                ) : draft.receipts.map((receipt, index) => (
+                  <tr key={receipt.id || index}>
+                    <td>{dateLabel(receipt.date)}</td>
+                    <td>{receipt.method || "Não informado"}</td>
+                    <td className="numeric">{money(receipt.amount)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>);
   return (
     <FormDialog label="Conta a Receber" onClose={onCancel}>
-      <form className="record-editor rr-receivable-dialog" onSubmit={save}>
+      <form ref={dialogFormRef} className="record-editor rr-receivable-dialog" onSubmit={save}>
         <h3 className="rr-receivable-heading">Conta a Receber</h3>
         {error && <p className="error-banner" role="alert">{error}</p>}
         <div className="editor-grid rr-receivable-fields">
@@ -276,32 +331,8 @@ export default function ReceivableAccountDialog({
             {freightLinked && planTotals.interest > 0 && <p className="error-banner">Em fretes vinculados, registre primeiro o acréscimo no valor do frete para permitir o recebimento com juros.</p>}
           </>}
         </section>}
-        <div className="rr-account-ledger rr-receivable-ledger">
-          <h4>RESUMO FINANCEIRO</h4>
-          <div className="rr-receivable-summary">
-            <div className="rr-receivable-metric"><span>Valor total</span><strong>{money(Number(draft.value) || 0)}</strong></div>
-            <div className="rr-receivable-metric"><span>Recebido</span><strong className="rr-receivable-paid">{money(totals.paid)}</strong></div>
-            <div className="rr-receivable-metric"><span>Saldo pendente</span><strong className="rr-receivable-balance">{money(totals.balance)}</strong></div>
-          </div>
-          {freightLinked && <p className="rr-receivable-linked-note">Conta vinculada ao frete: o valor total e a data da viagem são controlados no cadastro do frete.</p>}
-          <div className="rr-receivable-history-heading"><h4>LANÇAMENTOS RECEBIDOS</h4><span>{draft.receipts.length} lançamento(s)</span></div>
-          {legacyPaid > 0 && <p className="rr-receivable-legacy-note">Recebimentos anteriores ao histórico detalhado: {money(legacyPaid)}</p>}
-          <div className="rr-receivable-history">
-            <table>
-              <thead><tr><th>Data</th><th>Meio</th><th>Valor</th></tr></thead>
-              <tbody>
-                {draft.receipts.length === 0 ? (
-                  <tr><td colSpan={3}>Nenhum lançamento registrado.</td></tr>
-                ) : draft.receipts.map((receipt, index) => (
-                  <tr key={receipt.id || index}>
-                    <td>{dateLabel(receipt.date)}</td>
-                    <td>{receipt.method || "Não informado"}</td>
-                    <td className="numeric">{money(receipt.amount)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        {!sidebarAvailable && financialSidebar}
+        <div className="rr-receivable-entry-section">
           <>
               {!hasCreditPlan && <button type="button" className="primary-button rr-receivable-add" disabled={saving} aria-expanded={entryOpen} onClick={() => { setEntryOpen((open) => !open); setError(""); }}>
                 {entryOpen ? "Cancelar lançamento" : "+ Adicionar lançamento"}
@@ -324,6 +355,7 @@ export default function ReceivableAccountDialog({
               </div>}
 
           </>
+
         </div>
         <div className="editor-actions rr-receivable-actions">
           <button type="button" className="secondary-button rr-receivable-cancel" onClick={onCancel}>CANCELAR</button>
@@ -331,6 +363,7 @@ export default function ReceivableAccountDialog({
           <button type="submit" className="primary-button rr-receivable-save" disabled={saving}>{saving ? "SALVANDO…" : "SALVAR CONTA"}</button>
         </div>
       </form>
+      {sidebarAvailable && createPortal(<aside ref={sidebarRef} className="rr-receivable-detached-panel" aria-label="Resumo financeiro e lançamentos recebidos">{financialSidebar}</aside>, document.body)}
     </FormDialog>
   );
 }
