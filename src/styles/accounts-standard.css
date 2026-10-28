@@ -89,24 +89,6 @@
 }
 
 
-/* Contas a Receber: cartões em azul-claro, mantendo as cores financeiras. */
-.rr-receivable-dialog .rr-receivable-metric {
-  background: #dceefa;
-  border-color: #b6d5e9;
-}
-.rr-receivable-dialog .rr-receivable-metric span {
-  color: #253a49;
-}
-.rr-receivable-dialog .rr-receivable-metric strong {
-  color: #172c3b;
-}
-.rr-receivable-dialog .rr-receivable-metric .rr-receivable-paid {
-  color: #147a43;
-}
-.rr-receivable-dialog .rr-receivable-metric .rr-receivable-balance {
-  color: #bd282e;
-}
-
 /* Cabeçalho das tabelas: mesmo grafite, divisórias e borda preta das demais telas. */
 .content-area .rr-accounts .table-scroll table thead th {
   background: #262626;
