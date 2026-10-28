@@ -401,3 +401,13 @@
     color: #4ade80;
   }
 }
+
+/* TELAS LATERAIS: cinza-claro. */
+@media (min-width: 1500px) {
+.freight-detached-summary .freight-stage-summary { background:#d6dade; color:#171717; border-color:#c0c6cb; }
+.freight-detached-summary .freight-stage-summary h4, .freight-detached-summary .freight-stage-summary-grid strong {color:#171717;}
+.freight-detached-summary .freight-stage-summary-grid span {color:#41464a;}
+.freight-detached-summary .freight-stage-summary-grid > div {border-top-color:#b3bac0;}
+.freight-detached-summary .freight-stage-summary-grid strong.freight-stage-cost {color:#bd282e;}
+.freight-detached-summary .freight-stage-summary-grid strong.freight-stage-profit {color:#147a43;}
+}
