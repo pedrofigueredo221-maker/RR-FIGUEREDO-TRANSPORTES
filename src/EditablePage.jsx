@@ -7,7 +7,6 @@ import { money as formatMoney, dateLabel, todayISO as today } from "./lib/format
 import Fretes from "./screens/Fretes.jsx";
 import Despesas from "./screens/Despesas.jsx";
 import ContasAReceber from "./screens/ContasAReceber.jsx";
-import ContasAPagar from "./screens/ContasAPagar.jsx";
 import Cadastros from "./screens/Cadastros.jsx";
 
 const uid = () => globalThis.crypto?.randomUUID?.() || `rr-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
@@ -191,7 +190,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   };
   if (page === "freights") return <Fretes controller={controller} />;
   if (page === "expenses") return <Despesas controller={controller} />;
-  if (page === "payments") return <ContasAPagar controller={controller} />;
+  if (page === "payments") return <Despesas controller={controller} />;
   if (page === "receivables") return <ContasAReceber controller={controller} />;
   if (page === "cadastros") return <Cadastros controller={controller} />;
   return <section className="panel"><h3>Área não editável</h3><p>Esta área é apenas para consulta nesta etapa.</p></section>;
