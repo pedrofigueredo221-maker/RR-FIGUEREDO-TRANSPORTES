@@ -51,3 +51,33 @@ export function validateCreditPlan(principal, installments) {
 export function installmentPaid(installment, receipts) {
   return receipts.some((receipt) => receipt.installmentId === installment.id);
 }
+
+
+/**
+ * Recebimentos automáticos de cartão no vencimento.
+ * Id determinístico evita duplicidade entre renderizações e reaberturas.
+ * O total não ultrapassa o valor parcelado; parcelas já baixadas são ignoradas.
+ * Recebimentos previstos para datas futuras não entram no saldo.
+ */
+export function creditReceiptsDue(account, asOf = new Date().toLocaleDateString("en-CA")) {
+  const installments = account.creditInstallments || account.receivableCreditInstallments || [];
+  const existing = account.receipts || [];
+  if (!isCredit(account.paymentMethod || account.receivablePaymentMethod) || !Array.isArray(installments) || installments.length < 2) return [];
+  const due = installments.filter((item) => item.due && item.due <= asOf && !installmentPaid(item, existing));
+  return due.map((item) => ({
+    id: `auto-credit-${item.id}`,
+    installmentId: item.id,
+    date: item.due,
+    method: "Crédito",
+    amount: Number(item.amount),
+    automatic: true,
+  }));
+}
+
+export function withDueCreditReceipts(account, asOf) {
+  const added = creditReceiptsDue(account, asOf);
+  if (!added.length) return account;
+  const receipts = [...(account.receipts || []), ...added];
+  const received = Math.round(receipts.reduce((sum, receipt) => sum + cents(receipt.amount), 0)) / 100;
+  return { ...account, receipts, received: Math.max(Number(account.received || 0), received) };
+}
