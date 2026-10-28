@@ -1,5 +1,24 @@
 /* Estilo reutilizável para trajetos em tabelas e relatórios internos. */
-.content-area .rr-route { display: inline-flex; align-items: center; flex-wrap: wrap; column-gap: 12px; row-gap: 5px; line-height: 1.5; }
-.content-area .rr-route-place { font-weight: 600; color: #262626; }
-.content-area .rr-route-arrow { display: inline-flex; align-items: center; justify-content: center; min-width: 14px; color: #555; font-size: 1em; font-weight: 600; line-height: inherit; }
+.content-area .rr-route {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 12px;
+  row-gap: 5px;
+  line-height: 1.5;
+}
+.content-area .rr-route-place {
+  font-weight: 600;
+  color: #262626;
+}
+.content-area .rr-route-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 14px;
+  color: #555;
+  font-size: 1em;
+  font-weight: 600;
+  line-height: inherit;
+}
 @media (max-width: 720px) { .content-area .rr-route { column-gap: 8px; } }
