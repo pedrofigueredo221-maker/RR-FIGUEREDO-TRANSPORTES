@@ -957,3 +957,38 @@
   color:#303234;
   overflow-wrap:anywhere;
 }
+
+
+/* Parcelamento: resumo com metade da largura anterior; grid aproveita o restante. */
+@media (min-width: 851px) {
+  .rr-receivable-dialog .rr-credit-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    align-items: stretch;
+  }
+  .rr-receivable-dialog .rr-credit-layout > .rr-credit-totals {
+    height: 100%;
+    justify-content: space-between;
+  }
+  .rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > span {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .rr-receivable-dialog .rr-credit-table-side {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+  }
+  .rr-receivable-dialog .rr-credit-rows {
+    flex: 1 1 auto;
+  }
+}
+/* Remover setinhas de incremento/decremento dos valores das parcelas. */
+.rr-receivable-dialog .rr-credit-amount-cell input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.rr-receivable-dialog .rr-credit-amount-cell input[type="number"]::-webkit-inner-spin-button,
+.rr-receivable-dialog .rr-credit-amount-cell input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
