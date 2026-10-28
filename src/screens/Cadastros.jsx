@@ -94,7 +94,7 @@ export default function Cadastros({ controller }) {
   return (
     <section className="panel">
       <div className="panel-heading">
-        <div><h3>Cadastros da empresa</h3><p>Gerencie funcionários, caminhões e categorias.</p></div>
+        <div><h3>CADASTROS DA EMPRESA</h3><p>Gerencie funcionários, caminhões e categorias.</p></div>
         {!readOnly && <AddRecordButton disabled={saving} onClick={() => startCreate(kind)} title={`Adicionar ${tab === "employees" ? "funcionário" : tab === "trucks" ? "caminhão" : "categoria"}`} />}
       </div>
       {showError}
