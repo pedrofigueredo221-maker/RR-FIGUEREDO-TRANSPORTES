@@ -13,8 +13,12 @@
   font-size: 15px;
   white-space: nowrap;
 }
-.content-area .table-scroll table thead th:first-child { border-left-color: #666666; }
-.content-area .table-scroll table thead th:last-child { border-right-color: #666666; }
+.content-area .table-scroll table thead th:first-child {
+  border-left-color: #666666;
+}
+.content-area .table-scroll table thead th:last-child {
+  border-right-color: #666666;
+}
 
 /* Padrão compartilhado dos filtros de todas as telas internas.
    Mantém as funções existentes e não interfere nas telas congeladas. */
@@ -88,8 +92,12 @@
   color: #ffffff;
 }
 @media (max-width: 720px) {
-  .content-area .page-filters { padding: 0; }
-  .content-area .welcome-panel:has(.month-picker) { padding: 14px; }
+  .content-area .page-filters {
+    padding: 0;
+  }
+  .content-area .welcome-panel:has(.month-picker) {
+    padding: 14px;
+  }
   .content-area .page-filters > input,
   .content-area .page-filters label,
   .content-area .page-filters .secondary-button {
@@ -128,14 +136,37 @@
   color: #1764c0;
   cursor: pointer;
 }
-.content-area .rr-refresh-button:hover:not(:disabled) { background: #edf4ff; border-color: #a9c7ec; }
-.content-area .rr-refresh-button:focus-visible { outline: 2px solid #1764c0; outline-offset: 2px; }
-.content-area .rr-refresh-button:disabled { opacity: .5; cursor: wait; }
-.content-area .rr-refresh-control { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.content-area .rr-refresh-button:hover:not(:disabled) {
+  background: #edf4ff;
+  border-color: #a9c7ec;
+}
+.content-area .rr-refresh-button:focus-visible {
+  outline: 2px solid #1764c0;
+  outline-offset: 2px;
+}
+.content-area .rr-refresh-button:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+.content-area .rr-refresh-control {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
 
 /* Rodapé institucional: canto inferior direito da área interna, sem sobrepor conteúdo. */
-.content-area { display: flex; flex-direction: column; min-height: calc(100dvh - 88px); }
-.content-area > .app-footer { margin-top: auto; align-self: flex-end; max-width: 100%; padding-top: 24px; text-align: right; }
+.content-area {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 88px);
+}
+.content-area > .app-footer {
+  margin-top: auto;
+  align-self: flex-end;
+  max-width: 100%;
+  padding-top: 24px;
+  text-align: right;
+}
 @media (max-width: 720px) { .content-area > .app-footer { font-size: 11px; } }
 
 /* Padrão de cores do cabeçalho: mesmo grafite do menu lateral (#262626).
@@ -155,12 +186,26 @@
   font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif;
   font-weight: 300;
 }
-.content-area .page-filters label { font-size: 10px; }
+.content-area .page-filters label {
+  font-size: 10px;
+}
 .content-area .page-filters input,
 .content-area .page-filters select,
-.content-area .page-filters button { font-size: 12px; }
-.content-area .welcome-panel .balance-range .balance-period-label { font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif; font-weight: 300; font-size: 9px; }
-.content-area .welcome-panel .balance-range .balance-period-input input[type="date"] { font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif; font-weight: 300; font-size: 12px; }
+.content-area .page-filters button {
+  font-size: 12px;
+}
+.content-area .welcome-panel .balance-range .balance-period-label {
+  font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 9px;
+}
+.content-area .welcome-panel .balance-range .balance-period-input input[type="date"] {
+  font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+}
 
 /* Cabeçalhos das grades: tipografia regular em todas as telas internas. */
-.content-area .table-scroll table thead th { font-weight: 400; }
+.content-area .table-scroll table thead th {
+  font-weight: 400;
+}
