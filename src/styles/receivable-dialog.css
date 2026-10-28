@@ -1269,3 +1269,72 @@
   font-size: 11px;
   line-height: 19px;
 }
+
+
+/* Ajustes compartilhados do parcelamento: receber e pagar. */
+.rr-receivable-dialog .rr-credit-plan-heading {
+  grid-template-columns: minmax(0, 2.5fr) minmax(0, 1.5fr) minmax(220px, 2fr);
+  padding-right: 32px;
+  margin-bottom: 30px;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions {
+  justify-content: center;
+  gap: 18px;
+}
+.rr-receivable-dialog .rr-credit-layout {
+  margin-top: 30px;
+}
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > .rr-credit-total-equal > strong,
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > .rr-credit-no-interest > strong {
+  color: #147a43;
+}
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > .rr-credit-total-different > strong,
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > .rr-credit-interest > strong {
+  color: #bd282e;
+}
+/* Cada parcela ocupa 30px, sem expansão da lista ou espaços cinza entre linhas. */
+.rr-receivable-dialog .rr-credit-rows {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row {
+  flex: 0 0 30px;
+  height: 30px;
+  min-height: 30px;
+  max-height: 30px;
+  padding: 0 5px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > strong,
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > .editor-field,
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > .rr-credit-amount-cell {
+  height: 29px;
+  min-height: 0;
+  max-height: 29px;
+  box-sizing: border-box;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row input[type="date"],
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row input[type="number"] {
+  height: 28px;
+  min-height: 28px;
+  max-height: 28px;
+  line-height: 28px;
+  font-size: 12px;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-index {
+  line-height: 28px;
+  font-size: 12px;
+}
+@media (max-width: 1000px) {
+  .rr-receivable-dialog .rr-credit-plan-heading {
+    padding-right: 12px;
+  }
+  .rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions {
+    justify-content: flex-start;
+  }
+}
