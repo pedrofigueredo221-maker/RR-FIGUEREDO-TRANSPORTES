@@ -87,3 +87,27 @@
   margin-top: 40px;
   margin-bottom: 40px;
 }
+
+
+/* Situação financeira: cor em toda a célula, sem pílulas, botões ou bordas arredondadas.
+   Mantém tipografia e divisórias já existentes nas tabelas de pagar/receber. */
+.content-area .rr-accounts .table-scroll > table > tbody > tr > td.rr-account-status-pendente,
+.content-area .rr-accounts .table-scroll > table > tbody > tr:hover > td.rr-account-status-pendente,
+.content-area .rr-accounts .table-scroll > table > tbody > tr > td.rr-account-status-em-aberto,
+.content-area .rr-accounts .table-scroll > table > tbody > tr:hover > td.rr-account-status-em-aberto {
+  background-color: #f8d7da;
+}
+.content-area .rr-accounts .table-scroll > table > tbody > tr > td.rr-account-status-parcial,
+.content-area .rr-accounts .table-scroll > table > tbody > tr:hover > td.rr-account-status-parcial {
+  background-color: #fff4db;
+}
+.content-area .rr-accounts .table-scroll > table > tbody > tr > td.rr-account-status-recebida,
+.content-area .rr-accounts .table-scroll > table > tbody > tr:hover > td.rr-account-status-recebida,
+.content-area .rr-accounts .table-scroll > table > tbody > tr > td.rr-account-status-fechada,
+.content-area .rr-accounts .table-scroll > table > tbody > tr:hover > td.rr-account-status-fechada,
+.content-area .rr-accounts .table-scroll > table > tbody > tr > td.rr-account-status-pago,
+.content-area .rr-accounts .table-scroll > table > tbody > tr:hover > td.rr-account-status-pago,
+.content-area .rr-accounts .table-scroll > table > tbody > tr > td.rr-account-status-paga,
+.content-area .rr-accounts .table-scroll > table > tbody > tr:hover > td.rr-account-status-paga {
+  background-color: #d4edda;
+}
