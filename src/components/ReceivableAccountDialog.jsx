@@ -114,6 +114,30 @@ export default function ReceivableAccountDialog({
     setError("");
   };
 
+  const changeEntryMethod = (method) => {
+    setEntry((previous) => ({ ...previous, method }));
+    if (!isCredit(method)) return;
+    if (outstandingPrincipal <= 0) {
+      setError("Não há saldo pendente para parcelar no cartão.");
+      return;
+    }
+    try {
+      const count = draft.creditInstallments.length > 1 ? draft.creditInstallments.length : 2;
+      const installments = createCreditPlan(outstandingPrincipal, count, entry.date || draft.due);
+      setDraft((previous) => ({
+        ...previous,
+        paymentMethod: method,
+        creditInstallments: installments,
+        installmentPrincipal: outstandingPrincipal,
+      }));
+      setInstallmentCount(count);
+      setAdjustFutureInstallments(false);
+      setEntryOpen(false);
+      setError("");
+    } catch (cause) {
+      setError(cause.message);
+    }
+  };
   const addEntry = () => {
     try {
       if (hasCreditPlan) throw new Error("Parcelas de crédito são recebidas automaticamente no vencimento.");
@@ -289,7 +313,7 @@ export default function ReceivableAccountDialog({
                 </label>
                 <label className="editor-field">
                   Meio de pagamento do lançamento
-                  <select value={entry.method} onChange={(event) => setEntry((previous) => ({ ...previous, method: event.target.value }))}>
+                  <select value={entry.method} onChange={(event) => changeEntryMethod(event.target.value)}>
                     {PAYMENT_METHODS.map((method) => <option key={method} value={method}>{method}</option>)}
                   </select>
                 </label>
