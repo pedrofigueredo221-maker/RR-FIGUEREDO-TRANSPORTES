@@ -34,7 +34,7 @@ export function validateCreditPlan(principal, installments) {
   for (const item of installments) {
     if (!item.id || ids.has(item.id)) throw new Error("Identificação duplicada de parcela.");
     ids.add(item.id);
-    if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(item.due) || Number.isNaN(Date.parse(item.due + "T12:00:00"))) {
+    if (!new RegExp("^\\d{4}-\\d{2}-\\d{2}$").test(item.due) || Number.isNaN(Date.parse(item.due + "T12:00:00"))) {
       throw new Error("Informe uma data válida para cada parcela.");
     }
     if (!Number.isFinite(Number(item.amount)) || cents(item.amount) <= 0) {
