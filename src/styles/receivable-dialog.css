@@ -1203,3 +1203,32 @@
     justify-content: flex-start;
   }
 }
+
+
+/* Indicadores do parcelamento no padrão dos cards do Balanço Geral. */
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > span {
+  background: #fff;
+  border: 1px solid #d9dce0;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.035);
+  padding: 18px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > span > span {
+  color: #171717;
+  font-size: 12px;
+  font-weight: 500;
+}
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > span > strong {
+  font-size: 22px;
+  line-height: 1.2;
+  color: #142b4c;
+  font-weight: 700;
+}
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > .rr-credit-interest > strong {
+  color: #c62828;
+}
