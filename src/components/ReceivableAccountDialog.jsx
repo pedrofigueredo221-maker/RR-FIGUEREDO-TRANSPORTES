@@ -1,6 +1,7 @@
 import { useState } from "react";
 import FormDialog from "./FormDialog.jsx";
-import { PAYMENT_METHODS, accountTotals, addMovement } from "../domain/accountLedger.js";
+import { PAYMENT_METHODS, accountTotals, addMovement, cents } from "../domain/accountLedger.js";
+import { createCreditPlan, creditPlanTotals, validateCreditPlan, installmentPaid, isCredit } from "../domain/creditInstallments.js";
 import "../styles/accounts-standard.css";
 import "../styles/receivable-dialog.css";
 
@@ -34,16 +35,78 @@ export default function ReceivableAccountDialog({
     created: account?.created || account?.date || today(),
     paymentMethod: account?.paymentMethod || account?.receivablePaymentMethod || "PIX",
     receipts: [...(account?.receipts || [])],
+    creditInstallments: [...(account?.creditInstallments || account?.receivableCreditInstallments || [])],
+    installmentPrincipal: account?.installmentPrincipal ?? account?.receivableInstallmentPrincipal ?? null,
   }));
   const [entry, setEntry] = useState({ date: today(), method: "PIX", amount: "" });
   const [error, setError] = useState("");
   const [entryOpen, setEntryOpen] = useState(false);
+  const [installmentCount, setInstallmentCount] = useState(() => account?.creditInstallments?.length || account?.receivableCreditInstallments?.length || 1);
   const existingPaid = freightLinked ? Math.round(Number(account?.received || 0) * 100) / 100 : 0;
   const receiptSum = draft.receipts.reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100;
   const legacyPaid = freightLinked ? Math.max(0, Math.round((existingPaid - (account?.receipts || []).reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100) * 100) / 100) : 0;
+  const paid = Math.round((legacyPaid + receiptSum) * 100) / 100;
+  const hasCreditPlan = isCredit(draft.paymentMethod) && draft.creditInstallments.length > 1;
+  const outstandingPrincipal = Math.max(0, (cents(draft.value || 0) - cents(paid)) / 100);
+  const planPrincipal = draft.installmentPrincipal == null ? outstandingPrincipal : Number(draft.installmentPrincipal);
+  const planTotals = hasCreditPlan ? creditPlanTotals(planPrincipal, draft.creditInstallments) : { planned: 0, interest: 0, interestPercent: 0 };
+  const effectiveTotal = (cents(draft.value || 0) + cents(planTotals.interest)) / 100;
   const totals = freightLinked
-    ? { paid: Math.round((legacyPaid + receiptSum) * 100) / 100, balance: Math.max(0, Math.round((Number(draft.value || 0) - legacyPaid - receiptSum) * 100) / 100) }
-    : accountTotals(Number(draft.value) || 0, draft.receipts);
+    ? { paid, balance: Math.max(0, (cents(effectiveTotal) - cents(paid)) / 100) }
+    : accountTotals(effectiveTotal, draft.receipts);
+  const setCreditCount = (count) => {
+    setInstallmentCount(count);
+    setError("");
+    if (count === 1) {
+      if (draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
+        setError("Não é possível remover parcelas que já foram recebidas.");
+        return;
+      }
+      setDraft((previous) => ({ ...previous, creditInstallments: [], installmentPrincipal: null }));
+      return;
+    }
+    if (draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
+      setError("Não é possível alterar a quantidade após receber uma parcela.");
+      return;
+    }
+    try {
+      const principal = outstandingPrincipal;
+      const items = createCreditPlan(principal, count, draft.due);
+      setDraft((previous) => ({ ...previous, creditInstallments: items, installmentPrincipal: principal }));
+    } catch (cause) {
+      setError(cause.message);
+    }
+  };
+  const updateInstallment = (id, field, value) => {
+    setDraft((previous) => ({
+      ...previous,
+      creditInstallments: previous.creditInstallments.map((item) =>
+        item.id === id && !installmentPaid(item, previous.receipts) ? { ...item, [field]: value } : item
+      ),
+    }));
+    setError("");
+  };
+  const receiveInstallment = (item) => {
+    try {
+      if (installmentPaid(item, draft.receipts)) throw new Error("Parcela já recebida.");
+      validateCreditPlan(planPrincipal, draft.creditInstallments);
+      if (freightLinked && planTotals.interest > 0) {
+        throw new Error("Juros em fretes vinculados precisam ser registrados no frete antes da baixa.");
+      }
+      const receipt = {
+        id: globalThis.crypto?.randomUUID?.() || String(Date.now()),
+        installmentId: item.id,
+        date: today(),
+        method: "Crédito",
+        amount: Number(item.amount),
+      };
+      const receipts = addMovement(effectiveTotal - legacyPaid, draft.receipts, receipt);
+      setDraft((previous) => ({ ...previous, receipts }));
+      setError("");
+    } catch (cause) {
+      setError(cause.message);
+    }
+  };
   const change = (field, value) => {
     setDraft((previous) => ({ ...previous, [field]: value }));
     setError("");
@@ -51,6 +114,7 @@ export default function ReceivableAccountDialog({
 
   const addEntry = () => {
     try {
+      if (hasCreditPlan) throw new Error("Use RECEBER PARCELA para registrar os pagamentos do parcelamento.");
       const receipts = addMovement(Number(draft.value) - legacyPaid, draft.receipts, {
         id: globalThis.crypto?.randomUUID?.() || String(Date.now()),
         date: entry.date,
@@ -77,7 +141,19 @@ export default function ReceivableAccountDialog({
       setError("Selecione um meio de pagamento válido.");
       return;
     }
-    if (totals.paid > value) {
+    if (hasCreditPlan) {
+      try {
+        validateCreditPlan(planPrincipal, draft.creditInstallments);
+      } catch (cause) {
+        setError(cause.message);
+        return;
+      }
+      if (freightLinked && planTotals.interest > 0) {
+        setError("Juros em conta vinculada ao frete exigem ajuste do valor no cadastro do frete.");
+        return;
+      }
+    }
+    if (totals.paid > effectiveTotal) {
       setError("O valor total não pode ser inferior aos lançamentos já recebidos.");
       return;
     }
@@ -87,6 +163,9 @@ export default function ReceivableAccountDialog({
         value,
         received: totals.paid,
         receipts: draft.receipts,
+        interest: planTotals.interest,
+        creditInstallments: hasCreditPlan ? draft.creditInstallments : [],
+        installmentPrincipal: hasCreditPlan ? planPrincipal : null,
       });
     } catch (cause) {
       setError(cause.message || "Não foi possível salvar a conta.");
@@ -117,11 +196,57 @@ export default function ReceivableAccountDialog({
           </label>
           <label className="editor-field">
             Meio de pagamento
-            <select value={draft.paymentMethod} onChange={(event) => change("paymentMethod", event.target.value)}>
+            <select value={draft.paymentMethod} onChange={(event) => {
+                const method = event.target.value;
+                if (!isCredit(method) && draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
+                  setError("Não é possível remover um parcelamento com parcelas recebidas.");
+                  return;
+                }
+                setInstallmentCount(isCredit(method) ? (draft.creditInstallments.length || 1) : 1);
+                setDraft((previous) => ({ ...previous, paymentMethod: method, creditInstallments: isCredit(method) ? previous.creditInstallments : [], installmentPrincipal: isCredit(method) ? previous.installmentPrincipal : null }));
+                setError("");
+              }}>
               {PAYMENT_METHODS.map((method) => <option key={method} value={method}>{method}</option>)}
             </select>
           </label>
         </div>
+        {isCredit(draft.paymentMethod) && <section className="rr-credit-plan">
+          <h4>PARCELAMENTO NO CRÉDITO</h4>
+          <label className="editor-field rr-credit-count">
+            Quantidade de parcelas
+            <select value={installmentCount} onChange={(event) => setCreditCount(Number(event.target.value))}>
+              {Array.from({ length: 18 }, (_, index) => index + 1).map((count) =>
+                <option key={count} value={count}>{count}x</option>
+              )}
+            </select>
+          </label>
+          {installmentCount === 1 && <p>Pagamento em 1x: utilize o lançamento normal de data e valor.</p>}
+          {hasCreditPlan && <>
+            <p>As parcelas ficam pendentes até você confirmar o recebimento de cada uma.</p>
+            <div className="rr-credit-rows">
+              {draft.creditInstallments.map((item, index) => {
+                const received = installmentPaid(item, draft.receipts);
+                return <div className="rr-credit-row" key={item.id}>
+                  <strong>{index + 1}/{draft.creditInstallments.length}</strong>
+                  <label className="editor-field">Vencimento
+                    <input type="date" value={item.due} disabled={received} onChange={(event) => updateInstallment(item.id, "due", event.target.value)} />
+                  </label>
+                  <label className="editor-field">Valor (R$)
+                    <input type="number" min="0.01" step="0.01" value={item.amount} disabled={received} onChange={(event) => updateInstallment(item.id, "amount", event.target.value)} />
+                  </label>
+                  <button type="button" className="secondary-button rr-credit-receive" disabled={received || saving} onClick={() => receiveInstallment(item)}>
+                    {received ? "RECEBIDA" : "RECEBER PARCELA"}
+                  </button>
+                </div>;
+              })}
+            </div>
+            <div className="rr-credit-totals">
+              <span>Total das parcelas: <strong>{money(planTotals.planned)}</strong></span>
+              <span>Juros: <strong>{money(planTotals.interest)} ({planTotals.interestPercent.toFixed(2).replace(".", ",")}%)</strong></span>
+            </div>
+            {freightLinked && planTotals.interest > 0 && <p className="error-banner">Em fretes vinculados, registre primeiro o acréscimo no valor do frete para permitir o recebimento com juros.</p>}
+          </>}
+        </section>}
         <div className="rr-account-ledger rr-receivable-ledger">
           <h4>RESUMO FINANCEIRO</h4>
           <div className="rr-receivable-summary">
@@ -149,10 +274,10 @@ export default function ReceivableAccountDialog({
             </table>
           </div>
           <>
-              <button type="button" className="primary-button rr-receivable-add" disabled={saving} aria-expanded={entryOpen} onClick={() => { setEntryOpen((open) => !open); setError(""); }}>
+              {!hasCreditPlan && <button type="button" className="primary-button rr-receivable-add" disabled={saving} aria-expanded={entryOpen} onClick={() => { setEntryOpen((open) => !open); setError(""); }}>
                 {entryOpen ? "Cancelar lançamento" : "+ Adicionar lançamento"}
-              </button>
-              {entryOpen && <div className="editor-grid rr-receivable-entry-fields">
+              </button>}
+              {!hasCreditPlan && entryOpen && <div className="editor-grid rr-receivable-entry-fields">
                 <label className="editor-field">
                   Data do lançamento
                   <input type="date" value={entry.date} onChange={(event) => setEntry((previous) => ({ ...previous, date: event.target.value }))} />
@@ -173,7 +298,7 @@ export default function ReceivableAccountDialog({
         </div>
         <div className="editor-actions rr-receivable-actions">
           <button type="button" className="secondary-button rr-receivable-cancel" onClick={onCancel}>CANCELAR</button>
-          {entryOpen && <button type="button" className="secondary-button rr-receivable-confirm" disabled={saving} onClick={addEntry}>CONFIRMAR LANÇAMENTO</button>}
+          {!hasCreditPlan && entryOpen && <button type="button" className="secondary-button rr-receivable-confirm" disabled={saving} onClick={addEntry}>CONFIRMAR LANÇAMENTO</button>}
           <button type="submit" className="primary-button rr-receivable-save" disabled={saving}>{saving ? "SALVANDO…" : "SALVAR CONTA"}</button>
         </div>
       </form>
