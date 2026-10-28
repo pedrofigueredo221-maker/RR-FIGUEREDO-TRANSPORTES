@@ -148,7 +148,7 @@ export default function ReceivableAccountDialog({
               </tbody>
             </table>
           </div>
-          {totals.balance > 0 && (
+          {
             <>
               <button type="button" className="primary-button rr-receivable-add" disabled={saving} aria-expanded={entryOpen} onClick={() => { setEntryOpen((open) => !open); setError(""); }}>
                 {entryOpen ? "Cancelar lançamento" : "+ Adicionar lançamento"}
