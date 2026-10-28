@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { withDueCreditReceipts } from "../domain/creditInstallments.js";
+import { useEffect, useRef, useState } from "react";
+import { creditReceiptsDue, withDueCreditReceipts } from "../domain/creditInstallments.js";
 import "../styles/accounts-standard.css";
 import AccountActions from "../components/AccountActions.jsx";
 import AddRecordButton from "../components/AddRecordButton.jsx";
@@ -15,6 +15,31 @@ export default function ContasAReceber({ controller }) {
   const [accountOriginFilter,setAccountOriginFilter]=useState("Todas");
   const [paidNotes,setPaidNotes]=useState("");
   const { data, readOnly, saving, showError, toolbar, filteredFreights, dateLabel, money, allFreights, number, commit, remove } = controller;
+  const autoCreditSync = useRef(false);
+  useEffect(() => {
+    if (readOnly || saving || autoCreditSync.current) return;
+    const asOf = new Date().toLocaleDateString("en-CA");
+    const manual = (data.receivables || []).map((item) => withDueCreditReceipts(item, asOf));
+    const manualChanged = manual.some((item, index) => item !== (data.receivables || [])[index]);
+    let freights = data.freights || [];
+    let freightChanged = false;
+    for (const freight of freights.slice()) {
+      const due = creditReceiptsDue({
+        ...freight,
+        paymentMethod: freight.receivablePaymentMethod,
+        creditInstallments: freight.receivableCreditInstallments,
+      }, asOf);
+      for (const receipt of due) {
+        freights = applyFreightReceipt(freights, freight.id, receipt, number);
+        freightChanged = true;
+      }
+    }
+    if (!manualChanged && !freightChanged) return;
+    autoCreditSync.current = true;
+    Promise.resolve(commit({ ...data, receivables: manual, freights }))
+      .catch((error) => { console.error("Falha ao sincronizar parcelas vencidas:", error); })
+      .finally(() => { autoCreditSync.current = false; });
+  }, [data, readOnly, saving, commit, number]);
   const openFreightEditor = (freight) => setFreightEditor(freight);
   return <section className="panel rr-accounts">
     <div className="panel-heading"><div><h3>CONTROLE DE RECEBIMENTOS</h3><p>Cada frete gera um recebível vinculado ao mesmo registro. O status é atualizado conforme os pagamentos.</p></div>{!readOnly && <AddRecordButton disabled={saving} onClick={() => setManualEditor(null)} title="Adicionar conta a receber" />}</div>
