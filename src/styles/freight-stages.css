@@ -128,7 +128,7 @@
     top: 50%;
     left: calc(50% + 520px);
     transform: translateY(calc(-50% - 180px));
-    width: min(330px, calc((100vw - 1040px) / 2 - 12px));
+    width: min(360px, calc((100vw - 1040px) / 2 - 12px));
     max-height: min(92vh, 980px);
     overflow-y: auto;
     box-sizing: border-box;
@@ -139,6 +139,9 @@
     margin: 0;
     padding: 14px;
     box-shadow: 0 12px 36px #0005;
+  }
+  .freight-detached-summary .freight-stage-summary h4 {
+    margin-bottom: 22px;
   }
   .freight-detached-summary .freight-stage-summary-grid {
     display: grid;
