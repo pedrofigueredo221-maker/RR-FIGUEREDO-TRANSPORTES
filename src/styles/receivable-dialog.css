@@ -1232,3 +1232,40 @@
 .rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > .rr-credit-interest > strong {
   color: #c62828;
 }
+
+
+/* Parcelas de crédito: altura fixa de 20px para qualquer quantidade (receber e pagar). */
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row {
+  height: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  box-sizing: border-box;
+  padding: 0 5px;
+  gap: 0;
+  overflow: hidden;
+  align-items: center;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > strong,
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > .editor-field,
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > .rr-credit-amount-cell {
+  height: 19px;
+  min-height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  align-self: center;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row input[type="date"],
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row input[type="number"] {
+  height: 19px;
+  min-height: 19px;
+  max-height: 19px;
+  box-sizing: border-box;
+  padding: 0 3px;
+  line-height: 19px;
+  font-size: 11px;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-index {
+  font-size: 11px;
+  line-height: 19px;
+}
