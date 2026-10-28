@@ -1408,3 +1408,25 @@
 .rr-receivable-dialog .rr-credit-rows .rr-credit-index {
   line-height: 40px;
 }
+
+
+/* Crédito: tabela ocupa 60% da largura, mantendo os cards na largura atual.
+   A coluna intermediária reserva o espaço livre, sem ampliar os cards. */
+@media (min-width: 1001px) {
+  .rr-receivable-dialog .rr-credit-layout {
+    grid-template-columns: minmax(0, 25%) minmax(0, 15%) minmax(0, 60%);
+    column-gap: 0;
+  }
+  .rr-receivable-dialog .rr-credit-layout > .rr-credit-totals {
+    grid-column: 1;
+  }
+  .rr-receivable-dialog .rr-credit-layout > .rr-credit-table-side {
+    grid-column: 3;
+  }
+}
+/* Os dois checkboxes usam a mesma tipografia, 1px maior. */
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions .rr-credit-adjust-future,
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions .rr-credit-adjust-future span {
+  font-size: 14px;
+  line-height: 1.2;
+}
