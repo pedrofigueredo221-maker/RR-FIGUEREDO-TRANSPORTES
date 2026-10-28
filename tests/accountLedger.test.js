@@ -29,3 +29,37 @@ test("valida datas e preserva vencimentos no fim do mês",()=>{
   const installments=cardInstallments(300,3,"2026-01-31");
   assert.deepEqual(installments.map(x=>x.date),["2026-01-31","2026-02-28","2026-03-31"]);
 });
+
+
+import { createCreditPlan, creditPlanTotals, validateCreditPlan, installmentPaid } from "../src/domain/creditInstallments.js";
+
+test("crédito em 3x gera parcelas mensais pendentes, sem recebimentos automáticos", () => {
+  const installments = createCreditPlan(1800, 3, "2026-10-28");
+  assert.deepEqual(installments.map((item) => item.due), ["2026-10-28", "2026-11-28", "2026-12-28"]);
+  assert.deepEqual(installments.map((item) => item.amount), [600, 600, 600]);
+  assert.equal(accountTotals(1800, []).paid, 0);
+  assert.equal(installmentPaid(installments[0], []), false);
+});
+
+test("juros são calculados sobre a diferença e não registrados como baixa", () => {
+  const installments = createCreditPlan(1800, 3, "2026-10-28");
+  installments[0].amount = 780;
+  const totals = validateCreditPlan(1800, installments);
+  assert.equal(totals.planned, 1980);
+  assert.equal(totals.interest, 180);
+  assert.equal(totals.interestPercent, 10);
+  const receipt = { installmentId: installments[0].id, amount: 780, date: "2026-10-28", method: "Crédito" };
+  assert.equal(installmentPaid(installments[0], [receipt]), true);
+  assert.equal(installmentPaid(installments[1], [receipt]), false);
+});
+
+test("parcelamento limita 18x e exige datas e valores válidos", () => {
+  assert.equal(createCreditPlan(1800, 18, "2026-01-31").length, 18);
+  assert.throws(() => createCreditPlan(1800, 19, "2026-01-31"), /18 parcelas/);
+  const installments = createCreditPlan(100, 2, "2026-10-28");
+  installments[0].amount = -1;
+  assert.throws(() => validateCreditPlan(100, installments), /positivo/);
+  installments[0].amount = 50;
+  installments[0].due = "28/10/2026";
+  assert.throws(() => validateCreditPlan(100, installments), /data válida/);
+});
