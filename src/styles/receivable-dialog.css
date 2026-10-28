@@ -824,3 +824,21 @@
   .rr-receivable-dialog .rr-credit-list-heading { display: none; }
   .rr-receivable-dialog .rr-credit-row { border-bottom: 1px solid #d6dade; }
 }
+
+/* TELAS LATERAIS: cinza-claro. Cabeçalhos de tabelas seguem grafite. */
+.rr-receivable-detached-panel {background:#d6dade;color:#171717;border-color:#c0c6cb;}
+.rr-receivable-detached-panel .rr-receivable-ledger > h4,
+.rr-receivable-detached-panel .rr-receivable-history-heading h4,
+.rr-receivable-detached-panel .rr-receivable-metric strong,
+.rr-receivable-detached-panel .rr-receivable-linked-note,
+.rr-receivable-detached-panel .rr-receivable-history-heading > span,
+.rr-receivable-detached-panel .rr-receivable-legacy-note {color:#171717;}
+.rr-receivable-detached-panel .rr-receivable-metric span {color:#41464a;}
+.rr-receivable-detached-panel .rr-receivable-ledger > h4,
+.rr-receivable-detached-panel .rr-receivable-summary,
+.rr-receivable-detached-panel .rr-receivable-metric,
+.rr-receivable-detached-panel .rr-receivable-metric:nth-child(odd),
+.rr-receivable-detached-panel .rr-receivable-linked-note,
+.rr-receivable-detached-panel .rr-receivable-history-heading {border-color:#b3bac0;}
+.rr-receivable-detached-panel .rr-receivable-metric .rr-receivable-paid {color:#147a43;}
+.rr-receivable-detached-panel .rr-receivable-metric .rr-receivable-balance {color:#bd282e;}
