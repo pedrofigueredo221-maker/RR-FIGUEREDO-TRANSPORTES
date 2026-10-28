@@ -1,17 +1,36 @@
 /* Padrão compartilhado: Trajeto mais estreito, com espaço reservado às colunas financeiras. */
-.content-area .table-scroll table.rr-freight-table { width: 100%; table-layout: auto; }
+.content-area .table-scroll table.rr-freight-table {
+  width: 100%;
+  table-layout: auto;
+}
 .content-area .table-scroll table.rr-freight-table th:nth-child(3),
-.content-area .table-scroll table.rr-freight-table td:nth-child(3) { width: 22%; max-width: 235px; }
-.content-area .table-scroll table.rr-freight-table td:nth-child(3) .rr-route { column-gap: 8px; row-gap: 3px; }
-.content-area .table-scroll table.rr-freight-table td:nth-child(3) .rr-route-place { overflow-wrap: anywhere; }
+.content-area .table-scroll table.rr-freight-table td:nth-child(3) {
+  width: 22%;
+  max-width: 235px;
+}
+.content-area .table-scroll table.rr-freight-table td:nth-child(3) .rr-route {
+  column-gap: 8px;
+  row-gap: 3px;
+}
+.content-area .table-scroll table.rr-freight-table td:nth-child(3) .rr-route-place {
+  overflow-wrap: anywhere;
+}
 @media (max-width: 720px) {
-  .content-area .table-scroll table.rr-freight-table { min-width: 850px; }
+  .content-area .table-scroll table.rr-freight-table {
+    min-width: 850px;
+  }
   .content-area .table-scroll table.rr-freight-table th:nth-child(3),
-  .content-area .table-scroll table.rr-freight-table td:nth-child(3) { min-width: 155px; max-width: 195px; }
+  .content-area .table-scroll table.rr-freight-table td:nth-child(3) {
+    min-width: 155px;
+    max-width: 195px;
+  }
 }
 
 /* Três ações alinhadas na última coluna, com dimensões consistentes. */
-.content-area .rr-freight-table td.freight-actions-cell { text-align: center; white-space: nowrap; }
+.content-area .rr-freight-table td.freight-actions-cell {
+  text-align: center;
+  white-space: nowrap;
+}
 .content-area .rr-freight-table td.freight-actions-cell .record-actions {
   display: flex;
   align-items: center;
@@ -34,4 +53,9 @@
 }
 
 /* Feedback discreto da pesquisa de viagens. */
-.content-area .freight-search-count { margin: 8px 0 12px; color: #59616b; font-size: 12px; font-weight: 600; }
+.content-area .freight-search-count {
+  margin: 8px 0 12px;
+  color: #59616b;
+  font-size: 12px;
+  font-weight: 600;
+}

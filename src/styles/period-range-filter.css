@@ -64,7 +64,9 @@
   min-height: 42px;
   margin: 0;
 }
-.content-area .page-filters > .rr-refresh-button { width: 42px; }
+.content-area .page-filters > .rr-refresh-button {
+  width: 42px;
+}
 @media (max-width: 720px) {
   .content-area .page-filters > .secondary-button {
     width: auto;

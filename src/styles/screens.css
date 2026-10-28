@@ -724,14 +724,19 @@
   object-fit: contain;
   image-rendering: auto;
 }
-.sidebar nav { gap: 7px; }
+.sidebar nav {
+  gap: 7px;
+}
 .nav-item {
   min-height: 48px;
   padding: 12px 13px;
   border: 1px solid transparent;
   transition: background-color .15s ease, border-color .15s ease;
 }
-.nav-item:hover { background: #383838; border-color: #505050; }
+.nav-item:hover {
+  background: #383838;
+  border-color: #505050;
+}
 
 .nav-item .nav-icon {
   display: inline-flex;
@@ -773,8 +778,12 @@
   margin: 0;
 }
 @media (max-width: 720px) {
-  .form-dialog-backdrop { padding: 8px; }
-  .form-dialog { max-height: 96vh; }
+  .form-dialog-backdrop {
+    padding: 8px;
+  }
+  .form-dialog {
+    max-height: 96vh;
+  }
 }
 
 /* Identidade oficial: marca branca e laranja sobre o menu escuro. */
@@ -786,14 +795,18 @@
   border-radius: 0;
   background: transparent;
 }
-.sidebar-brand { min-height: 113px; }
+.sidebar-brand {
+  min-height: 113px;
+}
 /* Seleção neutra, sem faixa verde. */
 .sidebar .nav-item.active {
   background: #484848;
   border-color: #575757;
   box-shadow: none;
 }
-.sidebar .nav-item:hover { background: #393939; }
+.sidebar .nav-item:hover {
+  background: #393939;
+}
 /* Marca branca deve contrastar também na tela de login. */
 .login-card .login-logo {
   display: block;
@@ -838,7 +851,9 @@
   color: #20252b;
   vertical-align: middle;
 }
-.table-scroll table tbody tr:hover td { background: #f8fafc; }
+.table-scroll table tbody tr:hover td {
+  background: #f8fafc;
+}
 .table-scroll table tbody td .record-actions {
   display: flex;
   justify-content: flex-start;
@@ -861,9 +876,15 @@
   border-color: #e2d1d1;
   background: #fffafa;
 }
-.table-scroll .record-actions button:hover { background: #edf0f3; }
-.table-scroll .record-actions .danger-button:hover { background: #fff0f0; }
-.table-scroll table tbody tr[hidden] { display: none; }
+.table-scroll .record-actions button:hover {
+  background: #edf0f3;
+}
+.table-scroll .record-actions .danger-button:hover {
+  background: #fff0f0;
+}
+.table-scroll table tbody tr[hidden] {
+  display: none;
+}
 
 
 /* Rodapé do menu: usuário e saída compacta, sem indicador de sessão. */
@@ -895,8 +916,13 @@
   font-size: 11px;
   font-weight: 600;
 }
-.sidebar .sidebar-logout:hover { background: #484848; }
-.sidebar .sidebar-logout:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.sidebar .sidebar-logout:hover {
+  background: #484848;
+}
+.sidebar .sidebar-logout:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
 
 /* Login: fundo cinza claro, cartão escuro e espaçamento ampliado.
    Escopo limitado à tela de autenticação; não altera outros formulários. */
