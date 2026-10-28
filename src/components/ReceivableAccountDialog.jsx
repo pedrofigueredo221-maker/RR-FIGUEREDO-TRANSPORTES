@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FormDialog from "./FormDialog.jsx";
 import { PAYMENT_METHODS, accountTotals, addMovement, cents } from "../domain/accountLedger.js";
-import { createCreditPlan, creditPlanTotals, validateCreditPlan, installmentPaid, isCredit } from "../domain/creditInstallments.js";
+import { createCreditPlan, creditPlanTotals, validateCreditPlan, installmentPaid, isCredit, withDueCreditReceipts } from "../domain/creditInstallments.js";
 import "../styles/accounts-standard.css";
 import "../styles/receivable-dialog.css";
 
@@ -25,7 +25,7 @@ export default function ReceivableAccountDialog({
   onCancel,
   onSave,
 }) {
-  const [draft, setDraft] = useState(() => ({
+  const [draft, setDraft] = useState(() => withDueCreditReceipts({
     ...emptyAccount(),
     ...account,
     value: account ? String(account.value) : "",
@@ -42,6 +42,7 @@ export default function ReceivableAccountDialog({
   const [error, setError] = useState("");
   const [entryOpen, setEntryOpen] = useState(false);
   const [installmentCount, setInstallmentCount] = useState(() => account?.creditInstallments?.length || account?.receivableCreditInstallments?.length || 1);
+  const [adjustFutureInstallments, setAdjustFutureInstallments] = useState(false);
   const existingPaid = freightLinked ? Math.round(Number(account?.received || 0) * 100) / 100 : 0;
   const receiptSum = draft.receipts.reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100;
   const legacyPaid = freightLinked ? Math.max(0, Math.round((existingPaid - (account?.receipts || []).reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100) * 100) / 100) : 0;
@@ -62,6 +63,7 @@ export default function ReceivableAccountDialog({
         return;
       }
       setInstallmentCount(1);
+      setAdjustFutureInstallments(false);
       setDraft((previous) => ({ ...previous, creditInstallments: [], installmentPrincipal: null }));
       return;
     }
@@ -73,49 +75,72 @@ export default function ReceivableAccountDialog({
       const principal = outstandingPrincipal;
       const items = createCreditPlan(principal, count, draft.due);
       setInstallmentCount(count);
+      setAdjustFutureInstallments(false);
       setDraft((previous) => ({ ...previous, creditInstallments: items, installmentPrincipal: principal }));
     } catch (cause) {
       setError(cause.message);
     }
   };
   const updateInstallment = (id, field, value) => {
-    setDraft((previous) => ({
-      ...previous,
-      creditInstallments: previous.creditInstallments.map((item) =>
-        item.id === id && !installmentPaid(item, previous.receipts) ? { ...item, [field]: value } : item
-      ),
-    }));
+    setDraft((previous) => {
+      const first = previous.creditInstallments[0];
+      const propagate = adjustFutureInstallments && field === "amount" && first?.id === id;
+      return {
+        ...previous,
+        creditInstallments: previous.creditInstallments.map((item, index) => {
+          if (installmentPaid(item, previous.receipts)) return item;
+          if (item.id === id || (propagate && index > 0)) return { ...item, [field]: value };
+          return item;
+        }),
+      };
+    });
     setError("");
   };
-  const receiveInstallment = (item) => {
-    try {
-      if (installmentPaid(item, draft.receipts)) throw new Error("Parcela já recebida.");
-      validateCreditPlan(planPrincipal, draft.creditInstallments);
-      if (freightLinked && planTotals.interest > 0) {
-        throw new Error("Juros em fretes vinculados precisam ser registrados no frete antes da baixa.");
-      }
-      const receipt = {
-        id: globalThis.crypto?.randomUUID?.() || String(Date.now()),
-        installmentId: item.id,
-        date: today(),
-        method: "Crédito",
-        amount: Number(item.amount),
-      };
-      const receipts = addMovement(effectiveTotal - legacyPaid, draft.receipts, receipt);
-      setDraft((previous) => ({ ...previous, receipts }));
-      setError("");
-    } catch (cause) {
-      setError(cause.message);
+  const toggleAdjustFutureInstallments = (checked) => {
+    if (checked && draft.creditInstallments[0] && !installmentPaid(draft.creditInstallments[0], draft.receipts)) {
+      const firstAmount = draft.creditInstallments[0].amount;
+      setDraft((previous) => ({
+        ...previous,
+        creditInstallments: previous.creditInstallments.map((item, index) =>
+          index > 0 && !installmentPaid(item, previous.receipts) ? { ...item, amount: firstAmount } : item
+        ),
+      }));
     }
+    setAdjustFutureInstallments(checked);
+    setError("");
   };
   const change = (field, value) => {
     setDraft((previous) => ({ ...previous, [field]: value }));
     setError("");
   };
 
+  const changeEntryMethod = (method) => {
+    setEntry((previous) => ({ ...previous, method }));
+    if (!isCredit(method)) return;
+    if (outstandingPrincipal <= 0) {
+      setError("Não há saldo pendente para parcelar no cartão.");
+      return;
+    }
+    try {
+      const count = draft.creditInstallments.length > 1 ? draft.creditInstallments.length : 2;
+      const installments = createCreditPlan(outstandingPrincipal, count, entry.date || draft.due);
+      setDraft((previous) => ({
+        ...previous,
+        paymentMethod: method,
+        creditInstallments: installments,
+        installmentPrincipal: outstandingPrincipal,
+      }));
+      setInstallmentCount(count);
+      setAdjustFutureInstallments(false);
+      setEntryOpen(false);
+      setError("");
+    } catch (cause) {
+      setError(cause.message);
+    }
+  };
   const addEntry = () => {
     try {
-      if (hasCreditPlan) throw new Error("Use RECEBER PARCELA para registrar os pagamentos do parcelamento.");
+      if (hasCreditPlan) throw new Error("Parcelas de crédito são recebidas automaticamente no vencimento.");
       const receipts = addMovement(Number(draft.value) - legacyPaid, draft.receipts, {
         id: globalThis.crypto?.randomUUID?.() || String(Date.now()),
         date: entry.date,
@@ -204,6 +229,7 @@ export default function ReceivableAccountDialog({
                   return;
                 }
                 setInstallmentCount(isCredit(method) ? (draft.creditInstallments.length || 1) : 1);
+                setAdjustFutureInstallments(false);
                 setDraft((previous) => ({ ...previous, paymentMethod: method, creditInstallments: isCredit(method) ? previous.creditInstallments : [], installmentPrincipal: isCredit(method) ? previous.installmentPrincipal : null }));
                 setError("");
               }}>
@@ -223,8 +249,7 @@ export default function ReceivableAccountDialog({
           </label>
           {installmentCount === 1 && <p>Pagamento em 1x: utilize o lançamento normal de data e valor.</p>}
           {hasCreditPlan && <>
-            <div className="rr-credit-notice"><strong>PARCELAS PENDENTES</strong><span>O parcelamento não registra recebimento automático. Confirme cada parcela somente quando o pagamento ocorrer.</span></div>
-            <div className="rr-credit-list-heading"><span>PARCELA</span><span>VENCIMENTO</span><span>VALOR</span><span>RECEBIMENTO</span></div>
+            <div className="rr-credit-list-heading"><span>PARCELA</span><span>VENCIMENTO</span><span>VALOR</span></div>
             <div className="rr-credit-rows">
               {draft.creditInstallments.map((item, index) => {
                 const received = installmentPaid(item, draft.receipts);
@@ -236,9 +261,10 @@ export default function ReceivableAccountDialog({
                   <label className="editor-field">Valor (R$)
                     <input type="number" min="0.01" step="0.01" value={item.amount} disabled={received} onChange={(event) => updateInstallment(item.id, "amount", event.target.value)} />
                   </label>
-                  <button type="button" className="secondary-button rr-credit-receive" disabled={received || saving} onClick={() => receiveInstallment(item)}>
-                    {received ? "RECEBIDA" : "RECEBER PARCELA"}
-                  </button>
+                  {index === 0 && <label className="rr-credit-adjust-future">
+                    <input type="checkbox" checked={adjustFutureInstallments} disabled={received} onChange={(event) => toggleAdjustFutureInstallments(event.target.checked)} />
+                    <span>Ajustar futuras parcelas</span>
+                  </label>}
                 </div>;
               })}
             </div>
@@ -287,7 +313,7 @@ export default function ReceivableAccountDialog({
                 </label>
                 <label className="editor-field">
                   Meio de pagamento do lançamento
-                  <select value={entry.method} onChange={(event) => setEntry((previous) => ({ ...previous, method: event.target.value }))}>
+                  <select value={entry.method} onChange={(event) => changeEntryMethod(event.target.value)}>
                     {PAYMENT_METHODS.map((method) => <option key={method} value={method}>{method}</option>)}
                   </select>
                 </label>
