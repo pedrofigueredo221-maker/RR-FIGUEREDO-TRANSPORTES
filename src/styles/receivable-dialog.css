@@ -1160,3 +1160,8 @@
     margin:0;
   }
 }
+
+
+/* CONTAS A PAGAR reutiliza integralmente TELAS LATERAIS e TABELAS.
+   O total pago é uma saída, não um recebimento. */
+.rr-payable-dialog .rr-receivable-paid { color: #bd282e; }
