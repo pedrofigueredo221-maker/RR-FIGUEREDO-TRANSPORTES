@@ -634,3 +634,97 @@
   white-space: nowrap;
   font-size: 12px;
 }
+
+
+/* Painel lateral de recebimentos: linguagem visual do resumo de Fretes,
+   com fundo branco solicitado, divisórias e cantos arredondados. */
+.rr-receivable-detached-panel {
+  background: #fff;
+  border: 1px solid #cfd3d7;
+  border-radius: 14px;
+  padding: 16px;
+}
+.rr-receivable-detached-panel .rr-receivable-ledger > h4 {
+  margin: 0;
+  padding: 0 0 12px;
+  border-bottom: 1px solid #d6dade;
+  color: #252525;
+  font-size: 15px;
+  font-weight: 700;
+}
+.rr-receivable-detached-panel .rr-receivable-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  padding: 0 0 14px;
+  margin: 0;
+  border-bottom: 1px solid #d6dade;
+}
+.rr-receivable-detached-panel .rr-receivable-metric {
+  min-width: 0;
+  min-height: 78px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 9px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #d6dade;
+  border-radius: 0;
+  box-shadow: none;
+}
+.rr-receivable-detached-panel .rr-receivable-metric:nth-child(odd) {
+  border-right: 1px solid #d6dade;
+}
+.rr-receivable-detached-panel .rr-receivable-metric:nth-child(3) {
+  grid-column: 1 / -1;
+  border-right: 0;
+  border-bottom: 0;
+}
+.rr-receivable-detached-panel .rr-receivable-metric span {
+  font-size: 12px;
+  color: #525252;
+}
+.rr-receivable-detached-panel .rr-receivable-metric strong {
+  font-size: 17px;
+  line-height: 1.25;
+}
+.rr-receivable-detached-panel .rr-receivable-metric .rr-receivable-paid { color: #147a43; }
+.rr-receivable-detached-panel .rr-receivable-metric .rr-receivable-balance { color: #bd282e; }
+.rr-receivable-detached-panel .rr-receivable-linked-note {
+  padding: 12px 0;
+  margin: 0;
+  border-bottom: 1px solid #d6dade;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.rr-receivable-detached-panel .rr-receivable-history-heading {
+  margin: 16px 0 10px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #d6dade;
+}
+.rr-receivable-detached-panel .rr-receivable-history-heading h4 {
+  font-size: 13px;
+  color: #252525;
+}
+.rr-receivable-detached-panel .rr-receivable-history {
+  border: 1px solid #d6dade;
+  border-radius: 9px;
+  overflow: auto;
+}
+.rr-receivable-detached-panel .rr-receivable-history table {
+  border-collapse: collapse;
+  background: #fff;
+}
+.rr-receivable-detached-panel .rr-receivable-history thead th {
+  background: #303234;
+  color: #fff;
+  font-size: 11px;
+}
+.rr-receivable-detached-panel .rr-receivable-history tbody td {
+  border-bottom: 1px solid #e2e4e6;
+}
+.rr-receivable-detached-panel .rr-receivable-history tbody tr:last-child td {
+  border-bottom: 0;
+}
