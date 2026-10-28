@@ -5,9 +5,12 @@ import "../styles/corporate-table-headings.css";
 import { useMemo, useState } from "react";
 import { freightCommission, freightOperatingCosts, freightProfit } from "../domain/freightCalculations.js";
 import { money, dateLabel, currentMonth } from "../lib/formatters.js";
-import StatCard from "../components/StatCard.jsx";
 import BalanceDetailDialog from "../components/BalanceDetailDialog.jsx";
 import "../styles/balanco-geral.css";
+
+function StatCard({ label, value, hint, tone = "" }) {
+  return <article className={`stat-card ${tone}`}><span>{label}</span><strong>{value}</strong><small>{hint}</small></article>;
+}
 
 export default function PainelInicial({ data, onRefresh, loading, onOpenRecord }) {
   const [startDate, setStartDate] = useState(() => `${currentMonth()}-01`);
