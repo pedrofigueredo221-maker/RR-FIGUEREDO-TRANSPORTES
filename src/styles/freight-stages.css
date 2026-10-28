@@ -113,3 +113,56 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+
+/* Painel financeiro independente: fora do modal, fixo no canto superior esquerdo.
+   O formulário continua funcional em resoluções sem espaço lateral suficiente. */
+.freight-detached-summary {
+  display: none;
+}
+@media (min-width: 1500px) {
+  .freight-detached-summary {
+    display: block;
+    position: fixed;
+    z-index: 102;
+    top: max(20px, 4vh);
+    left: max(12px, calc((100vw - 1040px) / 2 - 350px));
+    width: 330px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+  .freight-detached-summary .freight-stage-summary {
+    background: #262626;
+    color: #fff;
+    margin: 0;
+    padding: 14px;
+    box-shadow: 0 12px 36px #0005;
+  }
+  .freight-detached-summary .freight-stage-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 12px;
+  }
+  .freight-detached-summary .freight-stage-summary-grid > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 10px 0;
+    min-width: 0;
+    border-top: 1px solid #555;
+  }
+  .freight-detached-summary .freight-stage-summary-grid span {
+    font-size: 12px;
+    color: #ccc;
+  }
+  .freight-detached-summary .freight-stage-summary-grid strong {
+    font-size: 16px;
+    color: #fff;
+    overflow-wrap: anywhere;
+  }
+  .freight-detached-summary .freight-stage-summary-grid .freight-stage-cost { color: #ff6464; }
+  .freight-detached-summary .freight-stage-summary-grid .freight-stage-profit { color: #4ade80; }
+  .freight-stages-editor .freight-stage-summary-inline { display: none; }
+}
