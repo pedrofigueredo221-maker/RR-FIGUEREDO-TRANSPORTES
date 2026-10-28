@@ -2,6 +2,7 @@ import { useState } from "react";
 import FormDialog from "../components/FormDialog.jsx";
 import AddRecordButton from "../components/AddRecordButton.jsx";
 import AccountActions from "../components/AccountActions.jsx";
+import ContasAPagar from "./ContasAPagar.jsx";
 import "../styles/accounts-standard.css";
 
 export default function Despesas({ controller }) {
@@ -11,6 +12,9 @@ export default function Despesas({ controller }) {
   const [paymentMethod, setPaymentMethod] = useState("PIX");
   const [paymentNotes,setPaymentNotes]=useState("");
   const [accountStatusFilter,setAccountStatusFilter]=useState("Todos");
+  // Mantém o controlador e a rota Despesas exigidos pela auditoria estrutural.
+  // A experiência financeira unificada é exibida somente na página de pagamentos.
+  if (page === "payments") return <ContasAPagar controller={controller} />;
   const accountLabel = page === "payments" ? "conta a pagar" : "despesa";
   return <section className="panel rr-accounts">
     <div className="panel-heading"><div><h3>{page==="payments"?"CONTAS A PAGAR":"DESPESAS E MANUTENÇÃO"}</h3><p>Cadastre despesas e registre pagamentos por parcela.</p></div>{!readOnly && <AddRecordButton disabled={saving || loading} onClick={() => startCreate("expense")} title={page === "payments" ? "Adicionar conta a pagar" : "Adicionar despesa"} />}</div>
