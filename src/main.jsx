@@ -1,17 +1,3 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App.jsx";
-import "./styles.css";
-import "./styles/screens.css";
+import { mountApplication } from "./app/bootstrap.jsx";
 
-const rootElement = document.getElementById("react-root");
-
-if (!rootElement) {
-  throw new Error('Elemento raiz do React "#react-root" não encontrado.');
-}
-
-createRoot(rootElement).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+mountApplication(document.getElementById("react-root"));
