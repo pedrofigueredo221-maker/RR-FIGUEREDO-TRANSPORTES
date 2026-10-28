@@ -140,3 +140,9 @@
   .rr-receivable-dialog .rr-receivable-history th,
   .rr-receivable-dialog .rr-receivable-history td { padding: 12px 9px; }
 }
+
+/* Rótulos de todos os campos: +2px e preto, sem alterar o texto digitado. */
+.rr-receivable-dialog label.editor-field {
+  color: #000;
+  font-size: 14px;
+}
