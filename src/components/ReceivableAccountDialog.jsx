@@ -148,8 +148,7 @@ export default function ReceivableAccountDialog({
               </tbody>
             </table>
           </div>
-          {totals.balance > 0 && (
-            <>
+          <>
               <button type="button" className="primary-button rr-receivable-add" disabled={saving} aria-expanded={entryOpen} onClick={() => { setEntryOpen((open) => !open); setError(""); }}>
                 {entryOpen ? "Cancelar lançamento" : "+ Adicionar lançamento"}
               </button>
@@ -172,12 +171,11 @@ export default function ReceivableAccountDialog({
               {entryOpen && <button type="button" className="secondary-button rr-receivable-confirm" disabled={saving} onClick={addEntry}>
                 Confirmar lançamento
               </button>}
-            </>
-          )}
+          </>
         </div>
         <div className="editor-actions rr-receivable-actions">
           <button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button>
-          <button type="submit" className="primary-button rr-receivable-save" disabled={saving}>{saving ? "Salvando…" : "Salvar Conta"}</button>
+          <button type="submit" className="primary-button rr-receivable-save" disabled={saving}>{saving ? "Salvando…" : "SALVAR CONTA"}</button>
         </div>
       </form>
     </FormDialog>

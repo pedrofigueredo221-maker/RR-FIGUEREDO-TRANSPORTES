@@ -33,7 +33,7 @@
 @media (max-width: 420px) { .rr-receivable-dialog .rr-receivable-actions { grid-template-columns: auto 1fr auto; } }
 
 /* Cabeçalho único para inclusão e edição. */
-.rr-receivable-dialog .rr-receivable-heading { text-align: center; font-size: calc(1em + 2px); margin-bottom: 10px; }
+.rr-receivable-dialog .rr-receivable-heading { text-align: center; font-size: calc(1em + 10px); color: #262626; margin-bottom: 10px; }
 .rr-receivable-dialog .rr-receivable-title { margin-top: 25px; }
 
 
@@ -145,4 +145,17 @@
 .rr-receivable-dialog label.editor-field {
   color: #000;
   font-size: 14px;
+}
+
+/* Botão Salvar Conta com o mesmo cinza do título e menu lateral. */
+.rr-receivable-dialog .rr-receivable-save,
+.rr-receivable-dialog .rr-receivable-save:hover {
+  background-color: #262626;
+  border-color: #262626;
+  color: #fff;
+}
+
+/* Espaço entre o botão Cancelar lançamento e os dois rótulos da linha seguinte. */
+.rr-receivable-dialog .rr-receivable-entry-fields {
+  margin-top: 10px;
 }
