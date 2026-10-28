@@ -317,14 +317,15 @@ export default function ReceivableAccountDialog({
                 <option key={count} value={count}>{count}x</option>
               )}
             </select>
-          </label></div>
+          </label>
+          {hasCreditPlan && <div className="rr-credit-table-actions">
+            <label className="rr-credit-adjust-future"><input type="checkbox" checked={adjustFutureInstallments} disabled={installmentPaid(draft.creditInstallments[0], draft.receipts)} onChange={(event) => toggleAdjustFutureInstallments(event.target.checked)} /><span>Ajustar<br/>Parcelas</span></label>
+            <label className="rr-credit-adjust-future"><input type="checkbox" checked={recalculateInstallments} disabled={draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))} onChange={(event) => toggleRecalculateInstallments(event.target.checked)} /><span>Recalcular<br/>Parcelas</span></label>
+          </div>}
+          </div>
           {installmentCount === 1 && <p>Pagamento em 1x: utilize o lançamento normal de data e valor.</p>}
           {hasCreditPlan && <div className="rr-credit-layout">
             <div className="rr-credit-table-side">
-            <div className="rr-credit-table-actions">
-              <label className="rr-credit-adjust-future"><input type="checkbox" checked={adjustFutureInstallments} disabled={installmentPaid(draft.creditInstallments[0], draft.receipts)} onChange={(event) => toggleAdjustFutureInstallments(event.target.checked)} /><span>Ajustar futuras parcelas</span></label>
-              <label className="rr-credit-adjust-future"><input type="checkbox" checked={recalculateInstallments} disabled={draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))} onChange={(event) => toggleRecalculateInstallments(event.target.checked)} /><span>Recalcular as parcelas (0% juros)</span></label>
-            </div>
             <div className="rr-credit-list-heading"><span>PARCELA</span><span>VENCIMENTO</span><span>VALOR</span></div>
             <div className="rr-credit-rows">
               {draft.creditInstallments.map((item, index) => {
