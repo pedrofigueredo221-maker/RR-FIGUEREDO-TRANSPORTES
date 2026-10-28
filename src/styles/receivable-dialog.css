@@ -842,3 +842,91 @@
 .rr-receivable-detached-panel .rr-receivable-history-heading {border-color:#b3bac0;}
 .rr-receivable-detached-panel .rr-receivable-metric .rr-receivable-paid {color:#147a43;}
 .rr-receivable-detached-panel .rr-receivable-metric .rr-receivable-balance {color:#bd282e;}
+
+/* Parcelamento: indicadores na metade esquerda e grid na metade direita. */
+.rr-receivable-dialog .rr-credit-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  margin-top: 12px;
+}
+.rr-receivable-dialog .rr-credit-table-side { grid-column: 2; min-width: 0; }
+.rr-receivable-dialog .rr-credit-list-heading { margin-top: 0; }
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+.rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > span {
+  min-height: 72px;
+  box-sizing: border-box;
+}
+.rr-receivable-dialog .rr-credit-row,
+.rr-receivable-dialog .rr-credit-list-heading {
+  grid-template-columns: 62px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0;
+}
+.rr-receivable-dialog .rr-credit-row { align-items: center; padding: 5px 7px; }
+.rr-receivable-dialog .rr-credit-row > .editor-field { min-width: 0; }
+.rr-receivable-dialog .rr-credit-amount-cell { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.rr-receivable-dialog .rr-credit-amount-cell .editor-field { min-width: 0; display: block; }
+.rr-receivable-dialog .rr-credit-row input[type="date"],
+.rr-receivable-dialog .rr-credit-amount-cell input[type="number"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 5px 4px;
+  min-height: 34px;
+  color: #171717;
+}
+.rr-receivable-dialog .rr-credit-row > .editor-field,
+.rr-receivable-dialog .rr-credit-row > .rr-credit-amount-cell {
+  padding: 0 5px;
+  border-left: 1px solid #e1e3e5;
+}
+.rr-receivable-dialog .rr-credit-row input:focus-visible {
+  outline: 2px solid #677c8d;
+  outline-offset: -2px;
+}
+.rr-receivable-dialog .rr-credit-adjust-future {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 1px 4px;
+  font-size: 11px;
+  line-height: 1.15;
+  color: #444;
+  white-space: normal;
+  cursor: pointer;
+}
+.rr-receivable-dialog .rr-credit-adjust-future input[type="checkbox"] {
+  flex: 0 0 15px;
+  width: 15px;
+  height: 15px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+}
+@media (max-width: 850px) {
+  .rr-receivable-dialog .rr-credit-layout { grid-template-columns: minmax(0,1fr); }
+  .rr-receivable-dialog .rr-credit-table-side { grid-column: 1; grid-row: 2; }
+  .rr-receivable-dialog .rr-credit-layout > .rr-credit-totals { grid-column: 1; grid-row: 1; }
+}
+
+/* Checkbox discreto na própria linha da primeira parcela, sem quarta coluna. */
+.rr-receivable-dialog .rr-credit-amount-cell {flex-direction:row;align-items:center;gap:5px;}
+.rr-receivable-dialog .rr-credit-amount-cell .editor-field {flex:1 1 0;min-width:0;}
+.rr-receivable-dialog .rr-credit-amount-cell .rr-credit-adjust-future {flex:0 0 104px;margin:0;font-size:10px;}
+@media (max-width: 1100px) {
+ .rr-receivable-dialog .rr-credit-amount-cell {flex-wrap:wrap;}
+ .rr-receivable-dialog .rr-credit-amount-cell .rr-credit-adjust-future {flex-basis:100%;}
+}
