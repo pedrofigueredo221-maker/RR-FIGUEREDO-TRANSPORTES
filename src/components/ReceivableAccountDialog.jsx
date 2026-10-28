@@ -94,9 +94,9 @@ export default function ReceivableAccountDialog({
   };
 
   return (
-    <FormDialog label={account ? "Editar conta a receber" : "Nova conta a receber"} onClose={onCancel}>
+    <FormDialog label="Conta a Receber" onClose={onCancel}>
       <form className="record-editor rr-receivable-dialog" onSubmit={save}>
-        <h3>{account ? "Editar conta a receber" : "Nova conta a receber"}</h3>
+        <h3 className="rr-receivable-heading">Conta a Receber</h3>
         {error && <p className="error-banner" role="alert">{error}</p>}
         <div className="editor-grid rr-receivable-fields">
           <label className="editor-field rr-receivable-title">
