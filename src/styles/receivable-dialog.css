@@ -1430,3 +1430,24 @@
   font-size: 14px;
   line-height: 1.2;
 }
+
+
+/* Cabeçalho do parcelamento: tipografia 15px, foco neutro e controles mais espaçados. */
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count,
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count > span {
+  font-size: 15px;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions .rr-credit-adjust-future,
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions .rr-credit-adjust-future span {
+  font-size: 15px;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions {
+  gap: 22.5px;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count select:focus,
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count select:focus-visible {
+  outline: 2px solid #454545;
+  outline-offset: 2px;
+  box-shadow: none;
+  border-color: #777;
+}
