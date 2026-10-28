@@ -728,3 +728,26 @@
 .rr-receivable-detached-panel .rr-receivable-history tbody tr:last-child td {
   border-bottom: 0;
 }
+
+
+/* Cabeçalho de LANÇAMENTOS RECEBIDOS: padrão das grids do sistema. */
+.rr-receivable-detached-panel .rr-receivable-history table thead,
+.rr-receivable-detached-panel .rr-receivable-history table thead tr,
+.rr-receivable-detached-panel .rr-receivable-history table thead th {
+  background-color: #303234;
+  color: #fff;
+}
+.rr-receivable-detached-panel .rr-receivable-history table thead th {
+  padding: 12px 6px;
+  text-align: center;
+  font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+  border-right: 1px solid #626466;
+  border-bottom: 2px solid #111;
+}
+.rr-receivable-detached-panel .rr-receivable-history table thead th:last-child {
+  text-align: center;
+  border-right: 0;
+}
