@@ -1338,3 +1338,29 @@
     justify-content: flex-start;
   }
 }
+
+
+/* Parcelas: 52px fixos por linha, campos internos de 50px (receber e pagar). */
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row {
+  flex: 0 0 52px;
+  height: 52px;
+  min-height: 52px;
+  max-height: 52px;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > strong,
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > .editor-field,
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row > .rr-credit-amount-cell {
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row input[type="date"],
+.rr-receivable-dialog .rr-credit-rows .rr-credit-row input[type="number"] {
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  line-height: 50px;
+}
+.rr-receivable-dialog .rr-credit-rows .rr-credit-index {
+  line-height: 50px;
+}
