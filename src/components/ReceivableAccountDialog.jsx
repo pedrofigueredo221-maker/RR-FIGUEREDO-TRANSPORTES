@@ -55,13 +55,13 @@ export default function ReceivableAccountDialog({
     ? { paid, balance: Math.max(0, (cents(effectiveTotal) - cents(paid)) / 100) }
     : accountTotals(effectiveTotal, draft.receipts);
   const setCreditCount = (count) => {
-    setInstallmentCount(count);
     setError("");
     if (count === 1) {
       if (draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
         setError("Não é possível remover parcelas que já foram recebidas.");
         return;
       }
+      setInstallmentCount(1);
       setDraft((previous) => ({ ...previous, creditInstallments: [], installmentPrincipal: null }));
       return;
     }
@@ -72,6 +72,7 @@ export default function ReceivableAccountDialog({
     try {
       const principal = outstandingPrincipal;
       const items = createCreditPlan(principal, count, draft.due);
+      setInstallmentCount(count);
       setDraft((previous) => ({ ...previous, creditInstallments: items, installmentPrincipal: principal }));
     } catch (cause) {
       setError(cause.message);
