@@ -455,3 +455,76 @@
   .rr-receivable-dialog .rr-credit-row > strong { grid-column: 1 / -1; }
   .rr-receivable-dialog .rr-credit-row button { grid-column: 1 / -1; }
 }
+
+
+/* Identidade visual exclusiva do parcelamento: grafite, branco e cinza. */
+.rr-receivable-dialog .rr-credit-plan {
+  background: #f2f3f4;
+  border: 1px solid #c7cbcf;
+  border-top: 4px solid #262626;
+  box-shadow: 0 2px 9px rgba(0, 0, 0, .045);
+}
+.rr-receivable-dialog .rr-credit-notice {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border-left: 3px solid #262626;
+  background: #e6e8ea;
+  color: #262626;
+  border-radius: 4px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+.rr-receivable-dialog .rr-credit-notice strong { white-space: nowrap; }
+.rr-receivable-dialog .rr-credit-list-heading {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: 12px;
+  margin-top: 18px;
+  background: #262626;
+  color: #fff;
+  font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif;
+  font-size: 13px;
+  text-align: center;
+  border-bottom: 3px solid #000;
+  border-radius: 7px 7px 0 0;
+}
+.rr-receivable-dialog .rr-credit-rows { margin-top: 0; gap: 0; }
+.rr-receivable-dialog .rr-credit-row {
+  border-radius: 0;
+  border-top: 0;
+  min-width: 0;
+}
+.rr-receivable-dialog .rr-credit-row:last-child { border-radius: 0 0 7px 7px; }
+.rr-receivable-dialog .rr-credit-index {
+  align-self: center;
+  text-align: center;
+  color: #262626;
+  font-size: 13px;
+}
+.rr-receivable-dialog .rr-credit-totals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.rr-receivable-dialog .rr-credit-totals > span {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid #cfd3d6;
+  border-radius: 8px;
+  background: #e8ebed;
+  color: #404040;
+  font-size: 12px;
+}
+.rr-receivable-dialog .rr-credit-totals strong { color: #171717; font-size: 18px; }
+.rr-receivable-dialog .rr-credit-totals .rr-credit-interest strong { color: #a22b2b; }
+@media (max-width: 680px) {
+  .rr-receivable-dialog .rr-credit-list-heading { display: none; }
+  .rr-receivable-dialog .rr-credit-row { border-top: 1px solid #d6d6d6; }
+  .rr-receivable-dialog .rr-credit-totals { grid-template-columns: 1fr; }
+  .rr-receivable-dialog .rr-credit-notice { align-items: flex-start; flex-direction: column; }
+}
