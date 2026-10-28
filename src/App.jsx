@@ -1,16 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { config, demoMode, supabase } from "./services/supabaseRuntime.js";
+import { normalizeAppState } from "./services/appState.js";
 import PainelInicial from "./screens/PainelInicial.jsx";
 import EditablePage from "./EditablePage.jsx";
 import Relatorios from "./screens/Relatorios.jsx";
 import { DEMO_DATA, DEMO_STORAGE_KEY } from "./demo/demoData.js";
 import { pages, titles } from "./app/navigation.js";
 
-const config = window.APP_CONFIG || {};
-const demoMode = new URLSearchParams(window.location.search).get("demo") === "1";
-const supabase = !demoMode && config.SUPABASE_URL && config.SUPABASE_ANON_KEY
-  ? createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })
-  : null;
 const iconPaths = {
   grid: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
   truck: <><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7" /><circle cx="7" cy="18" r="2" /><circle cx="18" cy="18" r="2" /></>,
@@ -113,15 +109,7 @@ export default function App() {
       if (error) throw error;
       if (!row || !row.data || typeof row.data !== "object") throw new Error("O registro public.app_state (id=1) não foi encontrado ou não está visível pelas políticas RLS. Nenhum dado foi criado ou sobrescrito.");
       setVersion(Number(row.version) || 0);
-      setData({
-        ...row.data,
-        freights: Array.isArray(row.data.freights) ? row.data.freights : [],
-        expenses: Array.isArray(row.data.expenses) ? row.data.expenses : [],
-        receivables: Array.isArray(row.data.receivables) ? row.data.receivables : [],
-        employees: Array.isArray(row.data.employees) ? row.data.employees : [],
-        trucks: Array.isArray(row.data.trucks) ? row.data.trucks : [],
-        categories: Array.isArray(row.data.categories) ? row.data.categories : []
-      });
+      setData(normalizeAppState(row.data));
     } catch (error) { setDataError(error?.message || "Não foi possível carregar os dados do Supabase."); }
     finally { setLoadingData(false); }
   }, [session, demoMode]);
