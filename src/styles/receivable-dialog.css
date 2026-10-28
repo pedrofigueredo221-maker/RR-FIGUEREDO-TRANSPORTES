@@ -376,3 +376,82 @@
 .rr-receivable-dialog .rr-receivable-metric strong { color: #171717; }
 .rr-receivable-dialog .rr-receivable-metric .rr-receivable-paid { color: #147a43; }
 .rr-receivable-dialog .rr-receivable-metric .rr-receivable-balance { color: #bd282e; }
+
+
+/* Parcelamento de crédito: mantém o padrão neutro do formulário. */
+.rr-receivable-dialog .rr-credit-plan {
+  margin: 24px 0;
+  padding: 18px;
+  border: 1px solid #cfd3d6;
+  border-radius: 10px;
+  background: #f4f5f6;
+}
+.rr-receivable-dialog .rr-credit-plan h4 {
+  margin: 0 0 14px;
+  color: #262626;
+}
+.rr-receivable-dialog .rr-credit-count {
+  display: flex;
+  flex-direction: column;
+  max-width: 220px;
+  gap: 8px;
+}
+.rr-receivable-dialog .rr-credit-count select,
+.rr-receivable-dialog .rr-credit-row input {
+  background: #fff;
+  color: #171717;
+  border: 1px solid #b9c0c5;
+  border-radius: 8px;
+  min-height: 40px;
+  padding: 8px 12px;
+}
+.rr-receivable-dialog .rr-credit-rows {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+.rr-receivable-dialog .rr-credit-row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+}
+.rr-receivable-dialog .rr-credit-row .editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rr-receivable-dialog .rr-credit-receive {
+  background: #262626;
+  border: 1px solid #262626;
+  border-radius: 8px;
+  color: #fff;
+  padding: 10px 12px;
+  min-height: 40px;
+  cursor: pointer;
+}
+.rr-receivable-dialog .rr-credit-receive:disabled {
+  background: #e8ebed;
+  border-color: #c5c5c5;
+  color: #555;
+  cursor: default;
+}
+.rr-receivable-dialog .rr-credit-totals {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+  font-weight: 600;
+}
+@media (max-width: 680px) {
+  .rr-receivable-dialog .rr-credit-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .rr-receivable-dialog .rr-credit-row > strong { grid-column: 1 / -1; }
+  .rr-receivable-dialog .rr-credit-row button { grid-column: 1 / -1; }
+}
