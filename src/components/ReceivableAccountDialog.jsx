@@ -37,6 +37,7 @@ export default function ReceivableAccountDialog({
   }));
   const [entry, setEntry] = useState({ date: today(), method: "PIX", amount: "" });
   const [error, setError] = useState("");
+  const [entryOpen, setEntryOpen] = useState(false);
   const existingPaid = freightLinked ? Math.round(Number(account?.received || 0) * 100) / 100 : 0;
   const receiptSum = draft.receipts.reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100;
   const legacyPaid = freightLinked ? Math.max(0, Math.round((existingPaid - (account?.receipts || []).reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100) * 100) / 100) : 0;
@@ -58,6 +59,7 @@ export default function ReceivableAccountDialog({
       });
       setDraft((previous) => ({ ...previous, receipts }));
       setEntry({ date: today(), method: "PIX", amount: "" });
+      setEntryOpen(false);
       setError("");
     } catch (cause) {
       setError(cause.message);
@@ -92,9 +94,9 @@ export default function ReceivableAccountDialog({
   };
 
   return (
-    <FormDialog label={account ? "Editar conta a receber" : "Nova conta a receber"} onClose={onCancel}>
+    <FormDialog label="Conta a Receber" onClose={onCancel}>
       <form className="record-editor rr-receivable-dialog" onSubmit={save}>
-        <h3>{account ? "Editar conta a receber" : "Nova conta a receber"}</h3>
+        <h3 className="rr-receivable-heading">Conta a Receber</h3>
         {error && <p className="error-banner" role="alert">{error}</p>}
         <div className="editor-grid rr-receivable-fields">
           <label className="editor-field rr-receivable-title">
@@ -123,13 +125,13 @@ export default function ReceivableAccountDialog({
         <div className="rr-account-ledger rr-receivable-ledger">
           <h4>RESUMO FINANCEIRO</h4>
           <div className="rr-receivable-summary">
-            <div><span>Valor total</span><strong>{money(Number(draft.value) || 0)}</strong></div>
-            <div><span>Recebido</span><strong className="rr-receivable-paid">{money(totals.paid)}</strong></div>
-            <div><span>Saldo pendente</span><strong className="rr-receivable-balance">{money(totals.balance)}</strong></div>
+            <div className="rr-receivable-metric"><span>Valor total</span><strong>{money(Number(draft.value) || 0)}</strong></div>
+            <div className="rr-receivable-metric"><span>Recebido</span><strong className="rr-receivable-paid">{money(totals.paid)}</strong></div>
+            <div className="rr-receivable-metric"><span>Saldo pendente</span><strong className="rr-receivable-balance">{money(totals.balance)}</strong></div>
           </div>
-          {freightLinked && <p>Conta vinculada ao frete: o valor total e a data da viagem são controlados no cadastro do frete.</p>}
-          <h4>LANÇAMENTOS RECEBIDOS</h4>
-          {legacyPaid > 0 && <p>Recebimentos anteriores ao histórico detalhado: {money(legacyPaid)}</p>}
+          {freightLinked && <p className="rr-receivable-linked-note">Conta vinculada ao frete: o valor total e a data da viagem são controlados no cadastro do frete.</p>}
+          <div className="rr-receivable-history-heading"><h4>LANÇAMENTOS RECEBIDOS</h4><span>{draft.receipts.length} lançamento(s)</span></div>
+          {legacyPaid > 0 && <p className="rr-receivable-legacy-note">Recebimentos anteriores ao histórico detalhado: {money(legacyPaid)}</p>}
           <div className="rr-receivable-history">
             <table>
               <thead><tr><th>Data</th><th>Meio</th><th>Valor</th></tr></thead>
@@ -148,8 +150,10 @@ export default function ReceivableAccountDialog({
           </div>
           {totals.balance > 0 && (
             <>
-              <h4>NOVO LANÇAMENTO</h4>
-              <div className="editor-grid rr-receivable-entry-fields">
+              <button type="button" className="primary-button rr-receivable-add" disabled={saving} aria-expanded={entryOpen} onClick={() => { setEntryOpen((open) => !open); setError(""); }}>
+                {entryOpen ? "Cancelar lançamento" : "+ Adicionar lançamento"}
+              </button>
+              {entryOpen && <div className="editor-grid rr-receivable-entry-fields">
                 <label className="editor-field">
                   Data do lançamento
                   <input type="date" value={entry.date} onChange={(event) => setEntry((previous) => ({ ...previous, date: event.target.value }))} />
@@ -164,16 +168,16 @@ export default function ReceivableAccountDialog({
                   Valor do lançamento (R$)
                   <input type="number" min="0.01" step="0.01" value={entry.amount} onChange={(event) => setEntry((previous) => ({ ...previous, amount: event.target.value }))} />
                 </label>
-              </div>
-              <button type="button" className="primary-button rr-receivable-add" disabled={saving} onClick={addEntry}>
-                + Adicionar lançamento
-              </button>
+              </div>}
+              {entryOpen && <button type="button" className="secondary-button rr-receivable-confirm" disabled={saving} onClick={addEntry}>
+                Confirmar lançamento
+              </button>}
             </>
           )}
         </div>
-        <div className="editor-actions">
+        <div className="editor-actions rr-receivable-actions">
           <button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button>
-          <button type="submit" className="primary-button" disabled={saving}>{saving ? "Salvando…" : "Salvar conta a receber"}</button>
+          <button type="submit" className="primary-button rr-receivable-save" disabled={saving}>{saving ? "Salvando…" : "Salvar Conta"}</button>
         </div>
       </form>
     </FormDialog>
