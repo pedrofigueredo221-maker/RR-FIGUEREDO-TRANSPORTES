@@ -1,5 +1,6 @@
-/** Rótulos compartilhados entre a tabela VIAGENS e o formulário FRETE.
- *  Apenas apresentação: não altera propriedades, dados ou cálculos.
+/**
+ * Rótulos compartilhados entre a tabela VIAGENS e o formulário FRETE.
+ * Apenas apresentação: não altera propriedades, dados ou cálculos.
  */
 export const FREIGHT_LABELS = Object.freeze({
   date: "Data",
@@ -10,5 +11,5 @@ export const FREIGHT_LABELS = Object.freeze({
   commission: "Comissão",
   profit: "Lucro",
   payment: "Pagamento",
-  actions: "Ações"
+  actions: "Ações",
 });
