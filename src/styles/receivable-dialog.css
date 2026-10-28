@@ -146,3 +146,11 @@
   color: #000;
   font-size: 14px;
 }
+
+/* Botão Salvar Conta com o mesmo cinza do título e menu lateral. */
+.rr-receivable-dialog .rr-receivable-save,
+.rr-receivable-dialog .rr-receivable-save:hover {
+  background-color: #262626;
+  border-color: #262626;
+  color: #fff;
+}
