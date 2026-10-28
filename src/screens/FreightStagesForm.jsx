@@ -12,7 +12,7 @@ function inputField(label, value, change, { type = "text", required = false, rea
       : <input type={type} value={value ?? ""} onChange={(e) => change(e.target.value)} placeholder={placeholder} required={required} readOnly={readOnly} min={type === "number" ? "0" : undefined} step={type === "number" ? "any" : undefined} onWheel={type === "number" ? (e) => e.currentTarget.blur() : undefined} />}
   </label>;
 }
-function Stage({ stage, title, update }) {
+function Stage({ stage, title, update, loaded = false }) {
   const km = stage.kmStart !== "" && stage.kmEnd !== "" && n(stage.kmEnd) >= n(stage.kmStart) ? n(stage.kmEnd) - n(stage.kmStart) : null;
   const average = km !== null && n(stage.liters) > 0 ? km / n(stage.liters) : null;
   const price = stage.fuelTotal !== "" && n(stage.liters) > 0 ? n(stage.fuelTotal) / n(stage.liters) : null;
@@ -23,7 +23,7 @@ function Stage({ stage, title, update }) {
       {inputField("Data", stage.date, patch("date"), { type: "date", required: true })}
       <MunicipalityField label="Origem" value={stage.origin} onChange={patch("origin")} required placeholder="Cidade - UF" />
       <MunicipalityField label="Destino" value={stage.destination} onChange={patch("destination")} required placeholder="Cidade - UF" />
-      {inputField("KM inicial", stage.kmStart, patch("kmStart"), { type: "number", required: true })}
+      {inputField("KM inicial", stage.kmStart, patch("kmStart"), { type: "number", required: true, readOnly: loaded })}
       {inputField("KM final", stage.kmEnd, patch("kmEnd"), { type: "number", required: true })}
       {inputField("KM rodado", km === null ? "" : String(km), () => {}, { readOnly: true })}
       {inputField("Diesel (litros)", stage.liters, patch("liters"), { type: "number", required: true })}
@@ -52,7 +52,13 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       deductToll: employee?.deductToll === true
     }));
   };
-  const updateStage = (key) => (field, next) => setValue((current) => ({ ...current, [key]: { ...current[key], [field]: next } }));
+  const updateStage = (key) => (field, next) => setValue((current) => {
+    const updated = { ...current, [key]: { ...current[key], [field]: next } };
+    if (key === "emptyTrip" && field === "kmEnd") {
+      updated.loadedTrip = { ...current.loadedTrip, kmStart: next };
+    }
+    return updated;
+  });
   const truck = trucks.find((item) => item.name === value.truck);
   const totalFuel = stages.reduce((sum, item) => sum + n(value[item.key]?.fuelTotal), 0);
   const totalToll = stages.reduce((sum, item) => sum + n(value[item.key]?.toll), 0);
@@ -75,8 +81,9 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
     return ["date", "origin", "destination", "kmStart", "kmEnd", "liters", "fuelTotal", "toll"].every((field) => String(s[field] ?? "").trim() !== "")
       && n(s.kmEnd) >= n(s.kmStart) && n(s.liters) > 0;
   });
+  const matchingStageKm = String(value.loadedTrip?.kmStart ?? "") === String(value.emptyTrip?.kmEnd ?? "");
   const validDates = !value.emptyTrip?.date || !value.loadedTrip?.date || value.loadedTrip.date >= value.emptyTrip.date;
-  return <form className="record-editor freight-editor freight-stages-editor" onSubmit={(e) => { e.preventDefault(); if (validStages && validDates) onSubmit(); }}>
+  return <form className="record-editor freight-editor freight-stages-editor" onSubmit={(e) => { e.preventDefault(); if (validStages && validDates && matchingStageKm) onSubmit(); }}>
     <div className="editor-heading"><h3>{editing ? "EDITAR FRETE" : "ADICIONAR FRETE"}</h3><button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button></div>
     <div className="freight-stage-top">
       {inputField("Motorista", value.driver, selectDriver, { required: true, options: drivers })}
@@ -84,7 +91,8 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       {inputField("Caminhão", value.truck, (v) => patch("truck", v), { required: true, options: truckOptions })}
       {inputField("Placa", truck?.plate || "", () => {}, { readOnly: true })}
     </div>
-    <div className="freight-stages-pair">{stages.map(({ key, title }) => <Stage key={key} title={title} stage={value[key] || {}} update={updateStage(key)} />)}</div>
+    <div className="freight-stages-pair">{stages.map(({ key, title }) => <Stage key={key} title={title} stage={value[key] || {}} update={updateStage(key)} loaded={key === "loadedTrip"} />)}</div>
+    {!matchingStageKm && <p className="freight-stage-error">O KM inicial da viagem carregada deve ser igual ao KM final da viagem vazia.</p>}
     {!validDates && <p className="freight-stage-error">A data da viagem carregada não pode ser anterior à data da viagem vazia.</p>}
     <section className="freight-stage-finance"><h4>Dados financeiros</h4><div className="freight-stage-finance-grid">
       {inputField("Custo total da viagem (R$)", validCostInputs(value) ? freightCost(calculation).toFixed(2) : "", () => {}, { readOnly: true })}
@@ -99,6 +107,6 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
     </div></section>
     <section className="freight-stage-summary"><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-grid"><div><span>Valor do frete</span><strong>{money(n(value.value))}</strong></div><div><span>Adiantamento do cliente</span><strong>{money(n(value.received))}</strong></div>{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{money(amount)}</strong></div>)}</div></section>
     <p className="receipt-sync-note">Uma operação, um recebível e uma comissão. Os custos das duas etapas são somados uma única vez.</p>
-    <div className="editor-actions"><button type="submit" className="primary-button" disabled={saving || !validStages || !validDates}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
+    <div className="editor-actions"><button type="submit" className="primary-button" disabled={saving || !validStages || !validDates || !matchingStageKm}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
   </form>;
 }

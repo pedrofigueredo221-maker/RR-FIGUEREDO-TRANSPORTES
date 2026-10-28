@@ -5,3 +5,23 @@
 }
 \n
 \n
+
+/* Alinha os três campos da linha Diesel / Valor abastecido / Média. */
+.freight-stages-editor .freight-stage-grid > .editor-field {
+  min-width: 0;
+}
+.freight-stages-editor .freight-stage-grid > .editor-field > span {
+  display: flex;
+  align-items: flex-end;
+  min-height: 2.5em;
+  line-height: 1.25;
+}
+.freight-stages-editor .freight-stage-grid > .editor-field > input,
+.freight-stages-editor .freight-stage-grid > .editor-field > select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.freight-stages-editor .freight-stage-grid > .editor-field:nth-child(8) > span {
+  letter-spacing: -0.02em;
+}
