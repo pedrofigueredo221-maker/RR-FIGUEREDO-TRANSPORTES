@@ -384,7 +384,7 @@ export default function ReceivableAccountDialog({
           <button type="submit" className="primary-button rr-receivable-save" disabled={saving}>{saving ? "SALVANDO…" : "SALVAR CONTA"}</button>
         </div>
       </form>
-      {sidebarAvailable && createPortal(<aside ref={sidebarRef} className="rr-receivable-detached-panel" aria-label={payable ? "Resumo financeiro e lançamentos pagos" : "Resumo financeiro e lançamentos recebidos"}>{financialSidebar}</aside>, document.body)}
+      {sidebarAvailable && createPortal(<aside ref={sidebarRef} className={`rr-receivable-detached-panel${payable ? " rr-payable-detached-panel" : ""}`} aria-label={payable ? "Resumo financeiro e lançamentos pagos" : "Resumo financeiro e lançamentos recebidos"}>{financialSidebar}</aside>, document.body)}
     </FormDialog>
   );
 }
