@@ -930,3 +930,30 @@
  .rr-receivable-dialog .rr-credit-amount-cell {flex-wrap:wrap;}
  .rr-receivable-dialog .rr-credit-amount-cell .rr-credit-adjust-future {flex-basis:100%;}
 }
+
+
+/* TELAS LATERAIS: cinza ainda mais claro (#edf0f2). */
+.rr-receivable-detached-panel { background:#edf0f2; border-color:#d5dade; }
+.rr-receivable-detached-panel .rr-receivable-summary-freight {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.rr-receivable-detached-panel .rr-receivable-summary-freight .rr-receivable-metric:nth-child(3) {
+  grid-column:1;
+  border-right:1px solid #c6cdd2;
+  border-bottom:0;
+}
+.rr-receivable-detached-panel .rr-receivable-summary-freight .rr-receivable-linked-note {
+  grid-column:2;
+  align-self:stretch;
+  display:flex;
+  align-items:center;
+  margin:0;
+  padding:10px;
+  border:0;
+  border-radius:0;
+  font-size:11px;
+  line-height:1.4;
+  color:#303234;
+  overflow-wrap:anywhere;
+}
