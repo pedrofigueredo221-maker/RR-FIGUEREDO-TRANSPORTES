@@ -159,3 +159,65 @@
 .rr-receivable-dialog .rr-receivable-entry-fields {
   margin-top: 10px;
 }
+
+
+/* Contraste refinado para o formulário de contas a receber.
+   Escopo exclusivo deste modal; não modifica Login ou Menu Lateral. */
+.rr-receivable-dialog {
+  color: #171717;
+}
+.rr-receivable-dialog .rr-receivable-heading {
+  color: #262626;
+  font-weight: 700;
+}
+.rr-receivable-dialog .rr-receivable-fields input,
+.rr-receivable-dialog .rr-receivable-fields select,
+.rr-receivable-dialog .rr-receivable-entry-fields input,
+.rr-receivable-dialog .rr-receivable-entry-fields select {
+  background-color: #e8ebed;
+  border: 1px solid #b9c0c5;
+  color: #151515;
+}
+.rr-receivable-dialog .rr-receivable-fields input:disabled {
+  background-color: #dfe3e5;
+  color: #454545;
+}
+.rr-receivable-dialog .rr-receivable-fields input:focus,
+.rr-receivable-dialog .rr-receivable-fields select:focus,
+.rr-receivable-dialog .rr-receivable-entry-fields input:focus,
+.rr-receivable-dialog .rr-receivable-entry-fields select:focus {
+  border-color: #555;
+  outline: 2px solid #777;
+  outline-offset: 1px;
+}
+.rr-receivable-dialog .rr-receivable-metric {
+  background: #303438;
+  border-color: #303438;
+}
+.rr-receivable-dialog .rr-receivable-metric span {
+  color: #e6e6e6;
+}
+.rr-receivable-dialog .rr-receivable-metric strong {
+  color: #fff;
+}
+.rr-receivable-dialog .rr-receivable-metric .rr-receivable-paid {
+  color: #79dca0;
+}
+.rr-receivable-dialog .rr-receivable-metric .rr-receivable-balance {
+  color: #ff8585;
+}
+.rr-receivable-dialog .rr-receivable-history th {
+  background: #262626;
+  color: #fff;
+  border-color: #262626;
+}
+.rr-receivable-dialog .rr-receivable-history td {
+  background: #fff;
+  color: #222;
+}
+.rr-receivable-dialog .rr-receivable-save,
+.rr-receivable-dialog .rr-receivable-save:hover {
+  background: #262626;
+  border-color: #262626;
+  color: #fff;
+}
