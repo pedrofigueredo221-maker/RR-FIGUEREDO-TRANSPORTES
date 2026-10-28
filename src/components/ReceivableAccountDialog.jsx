@@ -228,12 +228,12 @@ export default function ReceivableAccountDialog({
   }, []);
   const financialSidebar = (        <div className="rr-account-ledger rr-receivable-ledger">
           <h4>RESUMO FINANCEIRO</h4>
-          <div className="rr-receivable-summary">
+          <div className={`rr-receivable-summary${freightLinked ? " rr-receivable-summary-freight" : ""}`}>
             <div className="rr-receivable-metric"><span>Valor total</span><strong>{money(Number(draft.value) || 0)}</strong></div>
             <div className="rr-receivable-metric"><span>Recebido</span><strong className="rr-receivable-paid">{money(totals.paid)}</strong></div>
             <div className="rr-receivable-metric"><span>Saldo pendente</span><strong className="rr-receivable-balance">{money(totals.balance)}</strong></div>
+            {freightLinked && <p className="rr-receivable-linked-note">Conta vinculada ao frete: o valor total e a data da viagem são controlados no cadastro do frete.</p>}
           </div>
-          {freightLinked && <p className="rr-receivable-linked-note">Conta vinculada ao frete: o valor total e a data da viagem são controlados no cadastro do frete.</p>}
           <div className="rr-receivable-history-heading"><h4>LANÇAMENTOS RECEBIDOS</h4><span>{draft.receipts.length} lançamento(s)</span></div>
           {legacyPaid > 0 && <p className="rr-receivable-legacy-note">Recebimentos anteriores ao histórico detalhado: {money(legacyPaid)}</p>}
           <div className="rr-receivable-history">
