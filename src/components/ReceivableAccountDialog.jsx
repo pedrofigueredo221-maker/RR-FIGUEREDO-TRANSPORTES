@@ -44,6 +44,7 @@ export default function ReceivableAccountDialog({
   const [entryOpen, setEntryOpen] = useState(false);
   const [installmentCount, setInstallmentCount] = useState(() => account?.creditInstallments?.length || account?.receivableCreditInstallments?.length || 1);
   const [adjustFutureInstallments, setAdjustFutureInstallments] = useState(false);
+  const [recalculateInstallments, setRecalculateInstallments] = useState(false);
   const existingPaid = freightLinked ? Math.round(Number(account?.received || 0) * 100) / 100 : 0;
   const receiptSum = draft.receipts.reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100;
   const legacyPaid = freightLinked ? Math.max(0, Math.round((existingPaid - (account?.receipts || []).reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100) * 100) / 100) : 0;
@@ -83,6 +84,7 @@ export default function ReceivableAccountDialog({
     }
   };
   const updateInstallment = (id, field, value) => {
+    setRecalculateInstallments(false);
     setDraft((previous) => {
       const first = previous.creditInstallments[0];
       const propagate = adjustFutureInstallments && field === "amount" && first?.id === id;
@@ -96,6 +98,20 @@ export default function ReceivableAccountDialog({
       };
     });
     setError("");
+  };
+  const toggleRecalculateInstallments = (checked) => {
+    if (!checked) { setRecalculateInstallments(false); return; }
+    if (draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
+      setError("Não é possível recalcular parcelas que já possuem recebimentos.");
+      return;
+    }
+    try {
+      const amounts = createCreditPlan(planPrincipal, draft.creditInstallments.length, draft.creditInstallments[0]?.due || draft.due);
+      setDraft((previous) => ({ ...previous, creditInstallments: previous.creditInstallments.map((item, index) => ({ ...item, amount: amounts[index].amount })) }));
+      setAdjustFutureInstallments(false);
+      setRecalculateInstallments(true);
+      setError("");
+    } catch (cause) { setError(cause.message); }
   };
   const toggleAdjustFutureInstallments = (checked) => {
     if (checked && draft.creditInstallments[0] && !installmentPaid(draft.creditInstallments[0], draft.receipts)) {
@@ -293,7 +309,7 @@ export default function ReceivableAccountDialog({
           </label>
         </div>
         {isCredit(draft.paymentMethod) && <section className="rr-credit-plan">
-          <h4>PARCELAMENTO NO CRÉDITO</h4>
+          <div className="rr-credit-plan-heading"><h4>PARCELAMENTO NO CRÉDITO</h4>
           <label className="editor-field rr-credit-count">
             Quantidade de parcelas
             <select value={installmentCount} onChange={(event) => setCreditCount(Number(event.target.value))}>
@@ -301,10 +317,14 @@ export default function ReceivableAccountDialog({
                 <option key={count} value={count}>{count}x</option>
               )}
             </select>
-          </label>
+          </label></div>
           {installmentCount === 1 && <p>Pagamento em 1x: utilize o lançamento normal de data e valor.</p>}
           {hasCreditPlan && <div className="rr-credit-layout">
             <div className="rr-credit-table-side">
+            <div className="rr-credit-table-actions">
+              <label className="rr-credit-adjust-future"><input type="checkbox" checked={adjustFutureInstallments} disabled={installmentPaid(draft.creditInstallments[0], draft.receipts)} onChange={(event) => toggleAdjustFutureInstallments(event.target.checked)} /><span>Ajustar futuras parcelas</span></label>
+              <label className="rr-credit-adjust-future"><input type="checkbox" checked={recalculateInstallments} disabled={draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))} onChange={(event) => toggleRecalculateInstallments(event.target.checked)} /><span>Recalcular as parcelas (0% juros)</span></label>
+            </div>
             <div className="rr-credit-list-heading"><span>PARCELA</span><span>VENCIMENTO</span><span>VALOR</span></div>
             <div className="rr-credit-rows">
               {draft.creditInstallments.map((item, index) => {
@@ -317,10 +337,6 @@ export default function ReceivableAccountDialog({
                   <div className="rr-credit-amount-cell"><label className="editor-field" aria-label={`Valor da parcela ${index + 1}`}>
                     <input aria-label={`Valor da parcela ${index + 1}`} type="number" min="0.01" step="0.01" value={item.amount} disabled={received} onChange={(event) => updateInstallment(item.id, "amount", event.target.value)} />
                   </label>
-                  {index === 0 && <label className="rr-credit-adjust-future">
-                    <input type="checkbox" checked={adjustFutureInstallments} disabled={received} onChange={(event) => toggleAdjustFutureInstallments(event.target.checked)} />
-                    <span>Ajustar futuras parcelas</span>
-                  </label>}
                   </div>
                 </div>;
               })}

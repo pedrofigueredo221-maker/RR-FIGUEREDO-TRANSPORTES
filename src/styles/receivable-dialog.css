@@ -992,3 +992,97 @@
   -webkit-appearance: none;
   margin: 0;
 }
+
+
+/* Parcelamento: título e seletor alinhados horizontalmente. */
+.rr-receivable-dialog .rr-credit-plan-heading {
+  display:flex;
+  align-items:center;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+.rr-receivable-dialog .rr-credit-plan-heading > h4 {margin:0;}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count {
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  gap:10px;
+  margin:0;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count select {width:150px;min-width:120px;}
+/* Resumo com altura fixa baseada em cinco parcelas, sem esticar com mais parcelas. */
+@media (min-width:851px) {
+  .rr-receivable-dialog .rr-credit-layout {align-items:start;}
+  .rr-receivable-dialog .rr-credit-layout > .rr-credit-totals {
+    height:320px;
+    min-height:320px;
+    max-height:320px;
+    justify-content:space-between;
+  }
+  .rr-receivable-dialog .rr-credit-layout > .rr-credit-totals > span {flex:1 1 0;}
+}
+/* Respiro entre linhas de parcelas e entre controles do bloco. */
+.rr-receivable-dialog .rr-credit-row {
+  min-height:64px;
+  padding-top:15px;
+  padding-bottom:15px;
+}
+.rr-receivable-dialog .rr-credit-layout {margin-top:20px;}
+@media (max-width:680px) {
+  .rr-receivable-dialog .rr-credit-plan-heading {align-items:flex-start;}
+  .rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count {flex-wrap:wrap;}
+}
+
+
+/* Controles do parcelamento acima da grid, no canto superior direito. */
+.rr-receivable-dialog .rr-credit-table-actions {
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  min-height:32px;
+  margin-bottom:8px;
+}
+.rr-receivable-dialog .rr-credit-table-actions .rr-credit-adjust-future {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin:0;
+  flex:0 1 auto;
+  font-size:11px;
+  color:#303234;
+  white-space:normal;
+}
+.rr-receivable-dialog .rr-credit-table-actions input[type="checkbox"] {
+  width:15px;
+  height:15px;
+  min-height:0;
+  margin:0;
+  padding:0;
+  flex:0 0 15px;
+}
+
+
+/* Aviso de juros em fretes vinculados: faixa horizontal compacta em toda a largura. */
+.rr-receivable-dialog .rr-credit-layout > .error-banner {
+  grid-column: 1 / -1;
+  grid-row: auto;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 9px 12px;
+  min-height: 0;
+  height: auto;
+  line-height: 1.35;
+  text-align: left;
+  align-self: start;
+}
+
+/* Título PARCELAMENTO NO CRÉDITO: aumento de 8px sobre o tamanho padrão de 16px. */
+.rr-receivable-dialog .rr-credit-plan-heading > h4 {
+  font-size: 24px;
+  line-height: 1.2;
+}
