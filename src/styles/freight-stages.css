@@ -375,3 +375,29 @@
     color: #147a43;
   }
 }
+
+
+/* Padrão TELAS LATERAIS: superfície grafite e contraste legível. */
+@media (min-width: 1500px) {
+  .freight-detached-summary .freight-stage-summary {
+    background: #303234;
+    color: #fff;
+    border-color: #303234;
+  }
+  .freight-detached-summary .freight-stage-summary h4,
+  .freight-detached-summary .freight-stage-summary-grid strong {
+    color: #fff;
+  }
+  .freight-detached-summary .freight-stage-summary-grid span {
+    color: #e1e3e5;
+  }
+  .freight-detached-summary .freight-stage-summary-grid > div {
+    border-top-color: #666a6d;
+  }
+  .freight-detached-summary .freight-stage-summary-grid strong.freight-stage-cost {
+    color: #ff6464;
+  }
+  .freight-detached-summary .freight-stage-summary-grid strong.freight-stage-profit {
+    color: #4ade80;
+  }
+}
