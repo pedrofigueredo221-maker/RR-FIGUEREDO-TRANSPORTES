@@ -552,3 +552,28 @@
   .rr-receivable-dialog .rr-credit-row > strong { grid-column: auto; }
   .rr-receivable-dialog .rr-credit-row > .editor-field:last-child { grid-column: 2; }
 }
+
+
+/* Opção exclusiva da primeira parcela: discreta, junto ao valor, sem nova coluna. */
+.rr-receivable-dialog .rr-credit-adjust-future {
+  grid-column: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: -4px;
+  font-size: 13px;
+  line-height: 1.2;
+  color: #262626;
+  cursor: pointer;
+}
+.rr-receivable-dialog .rr-credit-adjust-future input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  flex: 0 0 auto;
+}
+@media (max-width: 680px) {
+  .rr-receivable-dialog .rr-credit-adjust-future { grid-column: 2; }
+}
