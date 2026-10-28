@@ -310,11 +310,11 @@ export default function ReceivableAccountDialog({
                 const received = installmentPaid(item, draft.receipts);
                 return <div className="rr-credit-row" key={item.id}>
                   <strong className="rr-credit-index">{String(index + 1).padStart(2, "0")} / {String(draft.creditInstallments.length).padStart(2, "0")}</strong>
-                  <label className="editor-field">Vencimento
-                    <input type="date" value={item.due} disabled={received} onChange={(event) => updateInstallment(item.id, "due", event.target.value)} />
+                  <label className="editor-field" aria-label={`Vencimento da parcela ${index + 1}`}>
+                    <input aria-label={`Vencimento da parcela ${index + 1}`} type="date" value={item.due} disabled={received} onChange={(event) => updateInstallment(item.id, "due", event.target.value)} />
                   </label>
-                  <label className="editor-field">Valor (R$)
-                    <input type="number" min="0.01" step="0.01" value={item.amount} disabled={received} onChange={(event) => updateInstallment(item.id, "amount", event.target.value)} />
+                  <label className="editor-field" aria-label={`Valor da parcela ${index + 1}`}>
+                    <input aria-label={`Valor da parcela ${index + 1}`} type="number" min="0.01" step="0.01" value={item.amount} disabled={received} onChange={(event) => updateInstallment(item.id, "amount", event.target.value)} />
                   </label>
                   {index === 0 && <label className="rr-credit-adjust-future">
                     <input type="checkbox" checked={adjustFutureInstallments} disabled={received} onChange={(event) => toggleAdjustFutureInstallments(event.target.checked)} />
