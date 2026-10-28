@@ -1,0 +1,27 @@
+/* Layout exclusivo do formulário de contas a receber; não afeta Login ou Menu Lateral. */
+.rr-receivable-dialog { width: 100%; }
+.rr-receivable-dialog .rr-receivable-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
+.rr-receivable-dialog .rr-receivable-title { grid-column: 1 / -1; }
+.rr-receivable-dialog .editor-field input,
+.rr-receivable-dialog .editor-field select { width: 100%; box-sizing: border-box; }
+.rr-receivable-dialog .rr-receivable-ledger { margin-top: 20px; }
+.rr-receivable-dialog .rr-receivable-ledger > h4 { margin: 20px 0 14px; font-size: 15px; }
+.rr-receivable-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 18px 6px 24px; border-bottom: 1px solid #e5e5e5; }
+.rr-receivable-summary > div { display: flex; flex-direction: column; gap: 8px; }
+.rr-receivable-summary span { color: #666; font-size: 14px; }
+.rr-receivable-summary strong { font-size: 16px; color: #202020; }
+.rr-receivable-summary .rr-receivable-paid { color: #13944d; }
+.rr-receivable-summary .rr-receivable-balance { color: #c52c2c; }
+.rr-receivable-history { overflow-x: auto; }
+.rr-receivable-history table { width: 100%; border-collapse: collapse; }
+.rr-receivable-history th, .rr-receivable-history td { padding: 12px 6px; text-align: left; }
+.rr-receivable-history th:last-child, .rr-receivable-history td:last-child { text-align: right; }
+.rr-receivable-entry-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.rr-receivable-entry-fields > :last-child { grid-column: 1 / -1; }
+.rr-receivable-dialog .rr-receivable-add { width: 100%; margin-top: 14px; background: #141414; color: #fff; }
+@media (max-width: 640px) {
+  .rr-receivable-dialog .rr-receivable-fields, .rr-receivable-entry-fields { grid-template-columns: 1fr; }
+  .rr-receivable-entry-fields > :last-child { grid-column: auto; }
+  .rr-receivable-summary { gap: 8px; }
+  .rr-receivable-summary strong { font-size: 14px; }
+}
