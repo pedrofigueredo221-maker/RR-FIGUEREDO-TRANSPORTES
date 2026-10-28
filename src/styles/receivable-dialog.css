@@ -1086,3 +1086,77 @@
   font-size: 24px;
   line-height: 1.2;
 }
+
+
+/* Cabeçalho do crédito: título, quantidade e dois checkboxes na mesma linha. */
+.rr-receivable-dialog .rr-credit-plan-heading {
+  display:grid;
+  grid-template-columns:minmax(0, 2.4fr) minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
+  align-items:center;
+  column-gap:16px;
+  row-gap:8px;
+  margin-bottom:20px;
+}
+.rr-receivable-dialog .rr-credit-plan-heading > h4 {
+  margin:0 8px 0 0;
+  font-size:24px;
+  line-height:1.2;
+  white-space:nowrap;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count {
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  max-width:none;
+  margin:0;
+  color:#111;
+  font-size:13px;
+  line-height:1.2;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count > span {
+  display:block;
+  max-width:90px;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count select {
+  width:75px;
+  min-width:75px;
+  flex:0 0 75px;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions {
+  display:contents;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-adjust-future {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin:0;
+  font-size:13px;
+  line-height:1.2;
+  color:#000;
+  white-space:normal;
+  min-width:0;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-adjust-future span {color:#000;}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-adjust-future input[type="checkbox"] {
+  width:15px;
+  height:15px;
+  min-height:0;
+  flex:0 0 15px;
+  margin:0;
+}
+@media (max-width:1000px) {
+  .rr-receivable-dialog .rr-credit-plan-heading {
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions {
+    display:flex;
+    align-items:center;
+    gap:16px;
+    min-height:0;
+    margin:0;
+  }
+}
