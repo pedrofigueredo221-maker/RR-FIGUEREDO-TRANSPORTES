@@ -62,7 +62,7 @@ export default function ReceivableAccountDialog({
     setError("");
     if (count === 1) {
       if (draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
-        setError("Não é possível remover parcelas que já foram recebidas.");
+        setError(payable ? "Não é possível remover parcelas que já foram pagas." : "Não é possível remover parcelas que já foram recebidas.");
         return;
       }
       setInstallmentCount(1);
@@ -71,7 +71,7 @@ export default function ReceivableAccountDialog({
       return;
     }
     if (draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
-      setError("Não é possível alterar a quantidade após receber uma parcela.");
+      setError(payable ? "Não é possível alterar a quantidade após pagar uma parcela." : "Não é possível alterar a quantidade após receber uma parcela.");
       return;
     }
     try {
@@ -103,7 +103,7 @@ export default function ReceivableAccountDialog({
   const toggleRecalculateInstallments = (checked) => {
     if (!checked) { setRecalculateInstallments(false); return; }
     if (draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
-      setError("Não é possível recalcular parcelas que já possuem recebimentos.");
+      setError(payable ? "Não é possível recalcular parcelas que já possuem pagamentos." : "Não é possível recalcular parcelas que já possuem recebimentos.");
       return;
     }
     try {
@@ -272,7 +272,7 @@ export default function ReceivableAccountDialog({
         </div>);
   return (
     <FormDialog label={payable ? "Conta a Pagar" : "Conta a Receber"} onClose={onCancel}>
-      <form ref={dialogFormRef} className="record-editor rr-receivable-dialog" onSubmit={save}>
+      <form ref={dialogFormRef} className={`record-editor rr-receivable-dialog${payable ? " rr-payable-dialog" : ""}`} onSubmit={save}>
         <h3 className="rr-receivable-heading">{payable ? "Conta a Pagar" : "Conta a Receber"}</h3>
         {error && <p className="error-banner" role="alert">{error}</p>}
         <div className="editor-grid rr-receivable-fields">
@@ -297,7 +297,7 @@ export default function ReceivableAccountDialog({
             <select value={draft.paymentMethod} onChange={(event) => {
                 const method = event.target.value;
                 if (!isCredit(method) && draft.creditInstallments.some((item) => installmentPaid(item, draft.receipts))) {
-                  setError("Não é possível remover um parcelamento com parcelas recebidas.");
+                  setError(payable ? "Não é possível remover um parcelamento com parcelas pagas." : "Não é possível remover um parcelamento com parcelas recebidas.");
                   return;
                 }
                 setInstallmentCount(isCredit(method) ? (draft.creditInstallments.length || 1) : 1);
