@@ -157,7 +157,7 @@
 
 /* Espaço entre o botão Cancelar lançamento e os dois rótulos da linha seguinte. */
 .rr-receivable-dialog .rr-receivable-entry-fields {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 
@@ -220,4 +220,28 @@
   background: #262626;
   border-color: #262626;
   color: #fff;
+}
+
+/* Confirmação do lançamento: alinhamento e contraste do padrão do sistema. */
+.rr-receivable-dialog .rr-receivable-confirm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  padding: 11px 20px;
+  min-height: 40px;
+  background-color: #262626;
+  border: 1px solid #262626;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rr-receivable-dialog .rr-receivable-confirm:hover:not(:disabled) {
+  background-color: #404040;
+  border-color: #404040;
+}
+.rr-receivable-dialog .rr-receivable-confirm:disabled {
+  opacity: .55;
+  cursor: not-allowed;
 }
