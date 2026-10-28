@@ -37,6 +37,7 @@ export default function ReceivableAccountDialog({
   }));
   const [entry, setEntry] = useState({ date: today(), method: "PIX", amount: "" });
   const [error, setError] = useState("");
+  const [entryOpen, setEntryOpen] = useState(false);
   const existingPaid = freightLinked ? Math.round(Number(account?.received || 0) * 100) / 100 : 0;
   const receiptSum = draft.receipts.reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100;
   const legacyPaid = freightLinked ? Math.max(0, Math.round((existingPaid - (account?.receipts || []).reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100) * 100) / 100) : 0;
@@ -58,6 +59,7 @@ export default function ReceivableAccountDialog({
       });
       setDraft((previous) => ({ ...previous, receipts }));
       setEntry({ date: today(), method: "PIX", amount: "" });
+      setEntryOpen(false);
       setError("");
     } catch (cause) {
       setError(cause.message);
@@ -148,8 +150,10 @@ export default function ReceivableAccountDialog({
           </div>
           {totals.balance > 0 && (
             <>
-              <h4>NOVO LANÇAMENTO</h4>
-              <div className="editor-grid rr-receivable-entry-fields">
+              <button type="button" className="primary-button rr-receivable-add" disabled={saving} aria-expanded={entryOpen} onClick={() => { setEntryOpen((open) => !open); setError(""); }}>
+                {entryOpen ? "Cancelar lançamento" : "+ Adicionar lançamento"}
+              </button>
+              {entryOpen && <div className="editor-grid rr-receivable-entry-fields">
                 <label className="editor-field">
                   Data do lançamento
                   <input type="date" value={entry.date} onChange={(event) => setEntry((previous) => ({ ...previous, date: event.target.value }))} />
@@ -164,10 +168,10 @@ export default function ReceivableAccountDialog({
                   Valor do lançamento (R$)
                   <input type="number" min="0.01" step="0.01" value={entry.amount} onChange={(event) => setEntry((previous) => ({ ...previous, amount: event.target.value }))} />
                 </label>
-              </div>
-              <button type="button" className="primary-button rr-receivable-add" disabled={saving} onClick={addEntry}>
-                + Adicionar lançamento
-              </button>
+              </div>}
+              {entryOpen && <button type="button" className="secondary-button rr-receivable-confirm" disabled={saving} onClick={addEntry}>
+                Confirmar lançamento
+              </button>}
             </>
           )}
         </div>
