@@ -210,3 +210,32 @@
     gap: 6px;
   }
 }
+
+
+/* Refinamento visual aprovado: quarta coluna compartilhada, rótulos e controles alinhados. */
+@media (min-width: 1051px) {
+  .freight-stages-editor .freight-stage-commission-toll {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 10px;
+    align-items: start;
+  }
+  .freight-stages-editor .freight-stage-commission-toll > .editor-field > span {
+    display: flex;
+    align-items: center;
+    min-height: 18px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .freight-stages-editor .freight-stage-commission-toll .freight-stage-toll-inline {
+    justify-content: flex-start;
+    align-items: center;
+    gap: 6px;
+  }
+  .freight-stages-editor .freight-stage-commission-toll .freight-stage-toll-inline > span {
+    align-self: stretch;
+    font-size: inherit;
+  }
+  .freight-stages-editor .freight-stage-commission-toll .freight-stage-toll-inline input[type="checkbox"] {
+    margin: 5px 0 0;
+  }
+}
