@@ -5,7 +5,9 @@ export const pages = [
   { id: "receivables", label: "Contas a receber", symbol: "arrow-down" },
   { id: "payments", label: "Contas a pagar", symbol: "arrow-up" },
   { id: "reports", label: "Relatórios", symbol: "chart" },
-  { id: "cadastros", label: "Cadastros", symbol: "users" }
+  { id: "cadastros", label: "Cadastros", symbol: "users" },
 ];
 
-export const titles = Object.fromEntries(pages.map((page) => [page.id, page.label]));
+export const titles = Object.fromEntries(
+  pages.map((page) => [page.id, page.label]),
+);
