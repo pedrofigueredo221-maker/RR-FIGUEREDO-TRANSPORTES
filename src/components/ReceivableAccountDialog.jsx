@@ -303,7 +303,8 @@ export default function ReceivableAccountDialog({
             </select>
           </label>
           {installmentCount === 1 && <p>Pagamento em 1x: utilize o lançamento normal de data e valor.</p>}
-          {hasCreditPlan && <>
+          {hasCreditPlan && <div className="rr-credit-layout">
+            <div className="rr-credit-table-side">
             <div className="rr-credit-list-heading"><span>PARCELA</span><span>VENCIMENTO</span><span>VALOR</span></div>
             <div className="rr-credit-rows">
               {draft.creditInstallments.map((item, index) => {
@@ -313,15 +314,17 @@ export default function ReceivableAccountDialog({
                   <label className="editor-field" aria-label={`Vencimento da parcela ${index + 1}`}>
                     <input aria-label={`Vencimento da parcela ${index + 1}`} type="date" value={item.due} disabled={received} onChange={(event) => updateInstallment(item.id, "due", event.target.value)} />
                   </label>
-                  <label className="editor-field" aria-label={`Valor da parcela ${index + 1}`}>
+                  <div className="rr-credit-amount-cell"><label className="editor-field" aria-label={`Valor da parcela ${index + 1}`}>
                     <input aria-label={`Valor da parcela ${index + 1}`} type="number" min="0.01" step="0.01" value={item.amount} disabled={received} onChange={(event) => updateInstallment(item.id, "amount", event.target.value)} />
                   </label>
                   {index === 0 && <label className="rr-credit-adjust-future">
                     <input type="checkbox" checked={adjustFutureInstallments} disabled={received} onChange={(event) => toggleAdjustFutureInstallments(event.target.checked)} />
                     <span>Ajustar futuras parcelas</span>
                   </label>}
+                  </div>
                 </div>;
               })}
+            </div>
             </div>
             <div className="rr-credit-totals">
               <span>VALOR ORIGINAL <strong>{money(planPrincipal)}</strong></span>
@@ -329,7 +332,7 @@ export default function ReceivableAccountDialog({
               <span className={planTotals.interest > 0 ? "rr-credit-interest" : ""}>JUROS <strong>{money(planTotals.interest)} ({planTotals.interestPercent.toFixed(2).replace(".", ",")}%)</strong></span>
             </div>
             {freightLinked && planTotals.interest > 0 && <p className="error-banner">Em fretes vinculados, registre primeiro o acréscimo no valor do frete para permitir o recebimento com juros.</p>}
-          </>}
+          </div>}
         </section>}
         {!sidebarAvailable && financialSidebar}
         <div className="rr-receivable-entry-section">
