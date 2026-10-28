@@ -1167,3 +1167,39 @@
 .rr-payable-dialog .rr-receivable-paid { color: #bd282e; }
 
 .rr-payable-detached-panel .rr-receivable-metric .rr-receivable-paid {color:#bd282e;}
+
+
+/* TELAS LATERAIS: painel financeiro com altura mínima fixa, mantendo rolagem interna. */
+.rr-receivable-detached-panel {
+  min-height: 440px;
+  height: 440px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* Os dois controles de parcelas ficam juntos, lado a lado, na mesma linha. */
+.rr-receivable-dialog .rr-credit-plan-heading {
+  grid-template-columns: minmax(0, 2.5fr) minmax(0, 1.5fr) minmax(220px, 2fr);
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions .rr-credit-adjust-future {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  white-space: normal;
+}
+@media (max-width: 1000px) {
+  .rr-receivable-dialog .rr-credit-plan-heading .rr-credit-table-actions {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+}
