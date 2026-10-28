@@ -411,3 +411,8 @@
 .freight-detached-summary .freight-stage-summary-grid strong.freight-stage-cost {color:#bd282e;}
 .freight-detached-summary .freight-stage-summary-grid strong.freight-stage-profit {color:#147a43;}
 }
+
+/* TELAS LATERAIS: novo cinza-claro suave oficial. */
+@media (min-width:1500px) {
+ .freight-detached-summary .freight-stage-summary {background:#edf0f2;border-color:#d5dade;}
+}
