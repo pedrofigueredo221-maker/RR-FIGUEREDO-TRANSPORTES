@@ -10,6 +10,6 @@ export function normalizeAppState(data) {
     receivables: Array.isArray(data.receivables) ? data.receivables : [],
     employees: Array.isArray(data.employees) ? data.employees : [],
     trucks: Array.isArray(data.trucks) ? data.trucks : [],
-    categories: Array.isArray(data.categories) ? data.categories : []
+    categories: Array.isArray(data.categories) ? data.categories : [],
   };
 }
