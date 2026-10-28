@@ -2,9 +2,11 @@ import { useState } from "react";
 import FormDialog from "./FormDialog.jsx";
 import { PAYMENT_METHODS, accountTotals, addMovement } from "../domain/accountLedger.js";
 import "../styles/accounts-standard.css";
+import "../styles/receivable-dialog.css";
 
 const today = () => new Date().toISOString().slice(0, 10);
 const emptyAccount = () => ({
+  title: "",
   description: "",
   value: "",
   created: today(),
@@ -15,6 +17,7 @@ const emptyAccount = () => ({
 
 export default function ReceivableAccountDialog({
   account,
+  freightLinked = false,
   saving,
   money,
   dateLabel,
@@ -25,11 +28,21 @@ export default function ReceivableAccountDialog({
     ...emptyAccount(),
     ...account,
     value: account ? String(account.value) : "",
+    title: account?.title || account?.receivableTitle || account?.description || account?.customer || "",
+    description: account?.description || account?.receivableNotes || "",
+    due: account?.receivableDue || account?.due || account?.date || today(),
+    created: account?.created || account?.date || today(),
+    paymentMethod: account?.paymentMethod || account?.receivablePaymentMethod || "PIX",
     receipts: [...(account?.receipts || [])],
   }));
   const [entry, setEntry] = useState({ date: today(), method: "PIX", amount: "" });
   const [error, setError] = useState("");
-  const totals = accountTotals(Number(draft.value) || 0, draft.receipts);
+  const existingPaid = freightLinked ? Math.round(Number(account?.received || 0) * 100) / 100 : 0;
+  const receiptSum = draft.receipts.reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100;
+  const legacyPaid = freightLinked ? Math.max(0, Math.round((existingPaid - (account?.receipts || []).reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100) * 100) / 100) : 0;
+  const totals = freightLinked
+    ? { paid: Math.round((legacyPaid + receiptSum) * 100) / 100, balance: Math.max(0, Math.round((Number(draft.value || 0) - legacyPaid - receiptSum) * 100) / 100) }
+    : accountTotals(Number(draft.value) || 0, draft.receipts);
   const change = (field, value) => {
     setDraft((previous) => ({ ...previous, [field]: value }));
     setError("");
@@ -37,7 +50,7 @@ export default function ReceivableAccountDialog({
 
   const addEntry = () => {
     try {
-      const receipts = addMovement(Number(draft.value), draft.receipts, {
+      const receipts = addMovement(Number(draft.value) - legacyPaid, draft.receipts, {
         id: globalThis.crypto?.randomUUID?.() || String(Date.now()),
         date: entry.date,
         method: entry.method,
@@ -54,8 +67,8 @@ export default function ReceivableAccountDialog({
   const save = async (event) => {
     event.preventDefault();
     const value = Number(draft.value);
-    if (!draft.description.trim() || !Number.isFinite(value) || value <= 0 || !draft.created || !draft.due) {
-      setError("Informe descrição, valor total positivo, data e vencimento.");
+    if (!draft.title.trim() || !Number.isFinite(value) || value <= 0 || !draft.created || !draft.due) {
+      setError("Informe título, valor total positivo, data e vencimento.");
       return;
     }
     if (!PAYMENT_METHODS.includes(draft.paymentMethod)) {
@@ -80,21 +93,21 @@ export default function ReceivableAccountDialog({
 
   return (
     <FormDialog label={account ? "Editar conta a receber" : "Nova conta a receber"} onClose={onCancel}>
-      <form className="record-editor" onSubmit={save}>
+      <form className="record-editor rr-receivable-dialog" onSubmit={save}>
         <h3>{account ? "Editar conta a receber" : "Nova conta a receber"}</h3>
         {error && <p className="error-banner" role="alert">{error}</p>}
-        <div className="editor-grid">
-          <label className="editor-field">
-            Descrição
-            <input required value={draft.description} onChange={(event) => change("description", event.target.value)} />
+        <div className="editor-grid rr-receivable-fields">
+          <label className="editor-field rr-receivable-title">
+            Título da conta a receber
+            <input required value={draft.title} onChange={(event) => change("title", event.target.value)} />
           </label>
           <label className="editor-field">
             Valor total (R$)
-            <input required type="number" min="0.01" step="0.01" value={draft.value} onChange={(event) => change("value", event.target.value)} />
+            <input required type="number" min="0.01" step="0.01" disabled={freightLinked} value={draft.value} onChange={(event) => change("value", event.target.value)} />
           </label>
           <label className="editor-field">
             Data da conta
-            <input required type="date" value={draft.created} onChange={(event) => change("created", event.target.value)} />
+            <input required type="date" disabled={freightLinked} value={draft.created} onChange={(event) => change("created", event.target.value)} />
           </label>
           <label className="editor-field">
             Vencimento
@@ -107,26 +120,36 @@ export default function ReceivableAccountDialog({
             </select>
           </label>
         </div>
-
-        <div className="rr-account-ledger">
-          <h4>Resumo financeiro</h4>
-          <p>Valor total: {money(Number(draft.value) || 0)}</p>
-          <p>Recebido: <strong style={{ color: "#188453" }}>{money(totals.paid)}</strong></p>
-          <p>Saldo pendente: <strong style={{ color: "#b63232" }}>{money(totals.balance)}</strong></p>
-          <h4>Lançamentos recebidos</h4>
-          {draft.receipts.length === 0 ? (
-            <p>Nenhum lançamento registrado.</p>
-          ) : (
-            draft.receipts.map((receipt, index) => (
-              <p key={receipt.id || index}>
-                {dateLabel(receipt.date)} · {receipt.method} · {money(receipt.amount)}
-              </p>
-            ))
-          )}
+        <div className="rr-account-ledger rr-receivable-ledger">
+          <h4>RESUMO FINANCEIRO</h4>
+          <div className="rr-receivable-summary">
+            <div><span>Valor total</span><strong>{money(Number(draft.value) || 0)}</strong></div>
+            <div><span>Recebido</span><strong className="rr-receivable-paid">{money(totals.paid)}</strong></div>
+            <div><span>Saldo pendente</span><strong className="rr-receivable-balance">{money(totals.balance)}</strong></div>
+          </div>
+          {freightLinked && <p>Conta vinculada ao frete: o valor total e a data da viagem são controlados no cadastro do frete.</p>}
+          <h4>LANÇAMENTOS RECEBIDOS</h4>
+          {legacyPaid > 0 && <p>Recebimentos anteriores ao histórico detalhado: {money(legacyPaid)}</p>}
+          <div className="rr-receivable-history">
+            <table>
+              <thead><tr><th>Data</th><th>Meio</th><th>Valor</th></tr></thead>
+              <tbody>
+                {draft.receipts.length === 0 ? (
+                  <tr><td colSpan={3}>Nenhum lançamento registrado.</td></tr>
+                ) : draft.receipts.map((receipt, index) => (
+                  <tr key={receipt.id || index}>
+                    <td>{dateLabel(receipt.date)}</td>
+                    <td>{receipt.method || "Não informado"}</td>
+                    <td className="numeric">{money(receipt.amount)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           {totals.balance > 0 && (
             <>
-              <h4>Novo lançamento</h4>
-              <div className="editor-grid">
+              <h4>NOVO LANÇAMENTO</h4>
+              <div className="editor-grid rr-receivable-entry-fields">
                 <label className="editor-field">
                   Data do lançamento
                   <input type="date" value={entry.date} onChange={(event) => setEntry((previous) => ({ ...previous, date: event.target.value }))} />
@@ -142,8 +165,8 @@ export default function ReceivableAccountDialog({
                   <input type="number" min="0.01" step="0.01" value={entry.amount} onChange={(event) => setEntry((previous) => ({ ...previous, amount: event.target.value }))} />
                 </label>
               </div>
-              <button type="button" className="secondary-button" disabled={saving} onClick={addEntry}>
-                Adicionar lançamento
+              <button type="button" className="primary-button rr-receivable-add" disabled={saving} onClick={addEntry}>
+                + Adicionar lançamento
               </button>
             </>
           )}
