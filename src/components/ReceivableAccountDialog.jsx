@@ -175,9 +175,9 @@ export default function ReceivableAccountDialog({
             </>
           )}
         </div>
-        <div className="editor-actions">
+        <div className="editor-actions rr-receivable-actions">
           <button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button>
-          <button type="submit" className="primary-button" disabled={saving}>{saving ? "Salvando…" : "Salvar conta a receber"}</button>
+          <button type="submit" className="primary-button rr-receivable-save" disabled={saving}>{saving ? "Salvando…" : "Salvar Conta"}</button>
         </div>
       </form>
     </FormDialog>
