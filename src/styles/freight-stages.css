@@ -127,7 +127,7 @@
     z-index: 102;
     top: 50%;
     left: calc(50% + 520px);
-    transform: translateY(calc(-50% - 180px));
+    transform: none;
     width: min(360px, calc((100vw - 1040px) / 2 - 12px));
     max-height: min(92vh, 980px);
     overflow-y: auto;
@@ -266,5 +266,51 @@
     white-space: normal;
     overflow-wrap: normal;
     font-size: 11px;
+  }
+}
+
+
+/* Alinha o resumo ao topo real do modal (medido pelo formulário, inclusive após resize). */
+@media (min-width: 1500px) {
+  .freight-detached-summary { transform: none; }
+}
+/* Rótulo em duas linhas, tamanho padrão, checkbox à direita na mesma linha. */
+.freight-stages-editor .freight-stage-commission-toll .freight-stage-toll-inline {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
+.freight-stages-editor .freight-stage-commission-toll .freight-stage-toll-inline > span {
+  display: block;
+  min-height: 0;
+  font-size: inherit;
+  line-height: 1.2;
+  white-space: normal;
+  flex: 0 1 auto;
+}
+.freight-stages-editor .freight-stage-commission-toll .freight-stage-toll-inline > input[type="checkbox"] {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+@media (min-width: 1051px) {
+  .freight-stages-editor .freight-stage-commission-toll .freight-stage-toll-inline {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  .freight-stages-editor .freight-stage-commission-toll .freight-stage-toll-inline > span {
+    font-size: inherit;
+    min-height: 0;
+    white-space: normal;
+  }
+  .freight-stages-editor .freight-stage-commission-toll .freight-stage-toll-inline > input[type="checkbox"] {
+    margin: 0;
   }
 }

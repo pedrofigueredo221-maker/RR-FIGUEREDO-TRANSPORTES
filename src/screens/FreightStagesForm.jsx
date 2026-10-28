@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import MunicipalityField from "../components/MunicipalityField.jsx";
 import { freightCommission, freightCost, freightProfit } from "../domain/freightCalculations.js";
@@ -42,6 +43,23 @@ function validCostInputs(value) {
     && value.value !== "" && value.commissionType !== "" && value.commission !== "";
 }
 export default function FreightStagesForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
+  const detachedSummaryRef = useRef(null);
+  useLayoutEffect(() => {
+    const summaryPanel = detachedSummaryRef.current;
+    const dialog = summaryPanel?.ownerDocument.querySelector(".form-dialog:has(.freight-stages-editor form), .form-dialog:has(form.freight-stages-editor)");
+    if (!summaryPanel || !dialog) return undefined;
+    const align = () => {
+      summaryPanel.style.top = `${Math.max(8, dialog.getBoundingClientRect().top)}px`;
+    };
+    align();
+    const observer = new ResizeObserver(align);
+    observer.observe(dialog);
+    window.addEventListener("resize", align);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", align);
+    };
+  }, []);
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
   const selectDriver = (driverName) => {
     const employee = employees.find((item) => item.name === driverName && item.role === "Motorista");
@@ -107,7 +125,7 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       {inputField("Tipo de comissão", value.commissionType, (v) => patch("commissionType", v), { required: true, options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] })}
       <div className="freight-stage-commission-toll">
         {inputField("Comissão", value.commission, (v) => patch("commission", v), { type: "number", required: true })}
-        <label className="editor-field freight-stage-checkbox freight-stage-toll-inline"><span>Descontar pedágio</span><input type="checkbox" checked={Boolean(value.deductToll)} onChange={(e) => patch("deductToll", e.target.checked)} /></label>
+        <label className="editor-field freight-stage-checkbox freight-stage-toll-inline"><span>Descontar<br />Pedágio</span><input type="checkbox" checked={Boolean(value.deductToll)} onChange={(e) => patch("deductToll", e.target.checked)} /></label>
       </div>
       {inputField("Bônus (R$)", value.bonus, (v) => patch("bonus", v), { type: "number" })}
       {inputField("Outros custos (R$)", value.otherCosts, (v) => patch("otherCosts", v), { type: "number" })}
@@ -118,5 +136,5 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
     {financialSummary("freight-stage-summary-inline")}
     <p className="receipt-sync-note">Uma operação, um recebível e uma comissão. Os custos das duas etapas são somados uma única vez.</p>
     <div className="editor-actions"><button type="submit" className="primary-button" disabled={saving || !validStages || !validDates || !matchingStageKm || !matchingStageCity}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
-  </form>{createPortal(<aside className="freight-detached-summary freight-stages-editor" aria-label="Resumo financeiro do frete">{financialSummary("freight-stage-summary-detached")}</aside>, document.body)}</>;
+  </form>{createPortal(<aside ref={detachedSummaryRef} className="freight-detached-summary freight-stages-editor" aria-label="Resumo financeiro do frete">{financialSummary("freight-stage-summary-detached")}</aside>, document.body)}</>;
 }
