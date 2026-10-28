@@ -1063,3 +1063,20 @@
   padding:0;
   flex:0 0 15px;
 }
+
+
+/* Aviso de juros em fretes vinculados: faixa horizontal compacta em toda a largura. */
+.rr-receivable-dialog .rr-credit-layout > .error-banner {
+  grid-column: 1 / -1;
+  grid-row: auto;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 9px 12px;
+  min-height: 0;
+  height: auto;
+  line-height: 1.35;
+  text-align: left;
+  align-self: start;
+}
