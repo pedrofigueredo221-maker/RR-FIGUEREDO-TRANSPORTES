@@ -1364,3 +1364,21 @@
 .rr-receivable-dialog .rr-credit-rows .rr-credit-index {
   line-height: 50px;
 }
+
+
+/* Nota de conta vinculada: destaque e alinhamento com os demais indicadores do resumo. */
+.rr-receivable-dialog .rr-receivable-summary-freight .rr-receivable-linked-note,
+.rr-receivable-detached-panel .rr-receivable-summary-freight .rr-receivable-linked-note {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 78px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 12px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #242424;
+  text-align: left;
+}
