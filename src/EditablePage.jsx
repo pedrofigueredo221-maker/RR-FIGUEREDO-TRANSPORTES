@@ -71,7 +71,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   };
   const startEdit = (kind, record) => {
     if (readOnly) return;
-    setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0), advance: String(record.advance ?? ""), currentBalance: String(record.currentBalance ?? "") } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
+    setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0), advance: String(record.advance ?? ""), currentBalance: String(Math.max(0, number(record.value) - number(record.received))) } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
   };
   // Ao chegar por duplo clique em outra tela, localiza o registro original
   // e abre o mesmo formulário de edição já utilizado pela listagem.
@@ -125,10 +125,18 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
       const trips = [form.emptyTrip, form.loadedTrip];
       const invalid = trips.some((s) => !["date", "origin", "destination", "kmStart", "kmEnd", "liters", "fuelTotal", "toll"].every((k) => String(s[k] ?? "").trim() !== "") || number(s.kmEnd) < number(s.kmStart) || number(s.liters) <= 0);
       if (invalid || form.loadedTrip.date < form.emptyTrip.date) { setError("Confira as datas, quilômetros e abastecimentos das duas viagens."); return; }
-      if (!form.driver || !form.truck || !form.commissionType || form.commission === "" || form.value === "" || form.received === "") { setError("Preencha todos os campos financeiros obrigatórios."); return; }
+      if (!form.driver || !form.truck || !form.commissionType || form.commission === "" || form.value === "" || (form.received === "" && form.currentBalance === "")) { setError("Preencha todos os campos financeiros obrigatórios."); return; }
     }
     const freightValue = number(form.value);
-    const receivedAtTrip = original ? number(original.received) : number(form.received);
+    const hasReceived = String(form.received ?? "").trim() !== "";
+    const hasBalance = String(form.currentBalance ?? "").trim() !== "";
+    const receivedAtTrip = hasReceived ? number(form.received) : hasBalance ? Math.round((freightValue - number(form.currentBalance)) * 100) / 100 : original ? number(original.received) : 0;
+    if (receivedAtTrip < 0 || (hasBalance && number(form.currentBalance) > freightValue + 0.009)) {
+      setError("O saldo restante deve estar entre zero e o valor do frete."); return;
+    }
+    if (original && Math.abs(receivedAtTrip - number(original.received)) > 0.009) {
+      setError("Este frete possui histórico de recebimentos. Registre alterações de pagamento em Contas a Receber para preservar os lançamentos."); return;
+    }
     if (receivedAtTrip > freightValue + 0.009) {
       setError("O valor do frete não pode ficar abaixo do total já recebido.");
       return;
@@ -144,7 +152,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
       value.toll = number(form.emptyTrip.toll) + number(form.loadedTrip.toll);
       value.dieselPrice = value.liters > 0 ? value.fuelActual / value.liters : 0;
     }
-    if (hasStages) value.currentBalance = Math.max(0, freightValue - number(form.discount) - receivedAtTrip);
+    if (hasStages) value.currentBalance = Math.max(0, freightValue - receivedAtTrip);
     value.fuelEstimated = number(value.liters) * number(value.dieselPrice);
     if (original) {
       value.receipts = Array.isArray(original.receipts) ? original.receipts : [];

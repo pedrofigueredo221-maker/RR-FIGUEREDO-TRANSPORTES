@@ -60,7 +60,12 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       window.removeEventListener("resize", align);
     };
   }, []);
-  const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
+  const patch = (key, next) => setValue((current) => {
+    if (key === "received") return { ...current, received: next, currentBalance: next === "" || current.value === "" ? "" : Math.max(0, n(current.value) - n(next)).toFixed(2) };
+    if (key === "currentBalance") return { ...current, currentBalance: next, received: next === "" || current.value === "" ? "" : Math.max(0, n(current.value) - n(next)).toFixed(2) };
+    if (key === "value") return { ...current, value: next, currentBalance: next === "" || current.received === "" ? "" : Math.max(0, n(next) - n(current.received)).toFixed(2) };
+    return { ...current, [key]: next };
+  });
   const selectDriver = (driverName) => {
     const employee = employees.find((item) => item.name === driverName && item.role === "Motorista");
     setValue((current) => ({
@@ -84,11 +89,16 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
   const truck = trucks.find((item) => item.name === value.truck);
   const totalFuel = stages.reduce((sum, item) => sum + n(value[item.key]?.fuelTotal), 0);
   const totalToll = stages.reduce((sum, item) => sum + n(value[item.key]?.toll), 0);
-  const calculation = { ...value, fuelActual: totalFuel, toll: totalToll };
+  // Em fretes antigos, as etapas podem estar vazias apesar de os custos totais já estarem salvos.
+  // Até que as duas etapas sejam preenchidas, preservar os valores financeiros persistidos.
+  const stagesHaveCosts = stages.every(({ key }) =>
+    value[key] && String(value[key].fuelTotal ?? "").trim() !== "" && String(value[key].toll ?? "").trim() !== ""
+  );
+  const calculation = { ...value, fuelActual: stagesHaveCosts ? totalFuel : n(value.fuelActual), toll: stagesHaveCosts ? totalToll : n(value.toll) };
   const costStage = (key) => n(value[key]?.fuelTotal) + n(value[key]?.toll);
   const summary = [
-    ["Custo viagem vazia", costStage("emptyTrip")],
-    ["Custo viagem carregada", costStage("loadedTrip")],
+    ["Custo viagem vazia", stagesHaveCosts ? costStage("emptyTrip") : null],
+    ["Custo viagem carregada", stagesHaveCosts ? costStage("loadedTrip") : null],
     ["Comissão estimada", freightCommission(calculation)],
     ["Bônus", n(value.bonus)],
     ["Total motorista", freightCommission(calculation) + n(value.bonus)],
@@ -106,7 +116,7 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
   const matchingStageKm = String(value.loadedTrip?.kmStart ?? "") === String(value.emptyTrip?.kmEnd ?? "");
   const matchingStageCity = String(value.loadedTrip?.origin ?? "").trim() === String(value.emptyTrip?.destination ?? "").trim();
   const validDates = !value.emptyTrip?.date || !value.loadedTrip?.date || value.loadedTrip.date >= value.emptyTrip.date;
-  const financialSummary = (className) => <section className={`freight-stage-summary ${className}`}><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-grid"><div><span>Valor do frete</span><strong>{money(n(value.value))}</strong></div><div><span>Adiantamento do cliente</span><strong>{money(n(value.received))}</strong></div>{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{money(amount)}</strong></div>)}</div></section>;
+  const financialSummary = (className) => <section className={`freight-stage-summary ${className}`}><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-grid"><div><span>Valor do frete</span><strong>{money(n(value.value))}</strong></div><div><span>Adiantamento do cliente</span><strong>{money(n(value.received))}</strong></div>{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{amount === null ? "—" : money(amount)}</strong></div>)}</div></section>;
   return <><form className="record-editor freight-editor freight-stages-editor" onSubmit={(e) => { e.preventDefault(); if (validStages && validDates && matchingStageKm && matchingStageCity) onSubmit(); }}>
     <div className="editor-heading"><h3>{editing ? "EDITAR FRETE" : "ADICIONAR FRETE"}</h3><button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button></div>
     <div className="freight-stage-top">
@@ -129,10 +139,11 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       </div>
       {inputField("Bônus (R$)", value.bonus, (v) => patch("bonus", v), { type: "number" })}
       {inputField("Outros custos (R$)", value.otherCosts, (v) => patch("otherCosts", v), { type: "number" })}
-      {inputField("Adiantamento do cliente (R$)", value.received, (v) => patch("received", v), { type: "number", required: true })}
-      {inputField("Saldo restante (R$)", value.value === "" || value.received === "" ? "" : Math.max(0, n(value.value) - n(value.discount) - n(value.received)).toFixed(2), () => {}, { readOnly: true })}
+      {inputField("Adiantamento do cliente (R$)", value.received, (v) => patch("received", v), { type: "number" })}
+      {inputField("Saldo restante (R$)", value.currentBalance, (v) => patch("currentBalance", v), { type: "number" })}
       
     </div></section>
+    {!stagesHaveCosts && editing && <p className="receipt-sync-note">Os custos totais exibidos no resumo são os valores já salvos neste frete. Preencha as duas etapas para atualizar o detalhamento sem perder os custos anteriores.</p>}
     {financialSummary("freight-stage-summary-inline")}
     <p className="receipt-sync-note">Uma operação, um recebível e uma comissão. Os custos das duas etapas são somados uma única vez.</p>
     <div className="editor-actions"><button type="submit" className="primary-button" disabled={saving || !validStages || !validDates || !matchingStageKm || !matchingStageCity}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
