@@ -346,8 +346,8 @@ export default function ReceivableAccountDialog({
             </div>
             <div className="rr-credit-totals">
               <span>VALOR ORIGINAL <strong>{money(planPrincipal)}</strong></span>
-              <span>TOTAL PARCELADO <strong>{money(planTotals.planned)}</strong></span>
-              <span className={planTotals.interest > 0 ? "rr-credit-interest" : ""}>JUROS <strong>{money(planTotals.interest)} ({planTotals.interestPercent.toFixed(2).replace(".", ",")}%)</strong></span>
+              <span className={cents(planTotals.planned) === cents(planPrincipal) ? "rr-credit-total-equal" : "rr-credit-total-different"}>TOTAL PARCELADO <strong>{money(planTotals.planned)}</strong></span>
+              <span className={planTotals.interest > 0 ? "rr-credit-interest" : "rr-credit-no-interest"}>JUROS <strong>{money(planTotals.interest)} ({planTotals.interestPercent.toFixed(2).replace(".", ",")}%)</strong></span>
             </div>
             {freightLinked && planTotals.interest > 0 && <p className="error-banner">Em fretes vinculados, registre primeiro o acréscimo no valor do frete para permitir o recebimento com juros.</p>}
           </div>}
