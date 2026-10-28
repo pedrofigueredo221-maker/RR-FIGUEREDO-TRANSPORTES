@@ -115,7 +115,7 @@
 }
 
 
-/* Painel financeiro independente: fora do modal, fixo no canto superior esquerdo.
+/* Painel financeiro independente: fora do modal, fixo no canto superior direito.
    O formulário continua funcional em resoluções sem espaço lateral suficiente. */
 .freight-detached-summary {
   display: none;
@@ -125,10 +125,11 @@
     display: block;
     position: fixed;
     z-index: 102;
-    top: max(20px, 4vh);
-    left: max(12px, calc((100vw - 1040px) / 2 - 350px));
-    width: 330px;
-    max-height: calc(100vh - 40px);
+    top: 50%;
+    left: calc(50% + 520px + 16px);
+    transform: translateY(-50%);
+    width: min(330px, calc((100vw - 1040px) / 2 - 32px));
+    max-height: min(92vh, 980px);
     overflow-y: auto;
     box-sizing: border-box;
   }
