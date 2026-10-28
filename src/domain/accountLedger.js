@@ -1,5 +1,5 @@
 // Regras compartilhadas para baixas financeiras, sem arredondamento em ponto flutuante.
-export const PAYMENT_METHODS = ["PIX", "Dinheiro", "Crédito", "Débito", "TED", "Boleto"];
+export const PAYMENT_METHODS = ["PIX", "Dinheiro", "TED", "Boleto", "Cartão de crédito", "Débito", "Crédito"];
 export const cents = (value) => Math.round(Number(value) * 100);
 export const amount = (value) => cents(value) / 100;
 
