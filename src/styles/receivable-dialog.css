@@ -312,3 +312,14 @@
   grid-column: 2;
   justify-self: center;
 }
+
+
+/* Resumo financeiro: azul-claro solicitado, sem afetar o padrão global de tabelas. */
+.rr-receivable-dialog .rr-receivable-metric {
+  background-color: #dceefa;
+  border-color: #b6d5e9;
+}
+.rr-receivable-dialog .rr-receivable-metric span { color: #253a49; }
+.rr-receivable-dialog .rr-receivable-metric strong { color: #172c3b; }
+.rr-receivable-dialog .rr-receivable-metric .rr-receivable-paid { color: #147a43; }
+.rr-receivable-dialog .rr-receivable-metric .rr-receivable-balance { color: #bd282e; }
