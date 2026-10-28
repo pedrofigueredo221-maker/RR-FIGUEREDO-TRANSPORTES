@@ -222,12 +222,13 @@ export default function ReceivableAccountDialog({
           </label>
           {installmentCount === 1 && <p>Pagamento em 1x: utilize o lançamento normal de data e valor.</p>}
           {hasCreditPlan && <>
-            <p>As parcelas ficam pendentes até você confirmar o recebimento de cada uma.</p>
+            <div className="rr-credit-notice"><strong>PARCELAS PENDENTES</strong><span>O parcelamento não registra recebimento automático. Confirme cada parcela somente quando o pagamento ocorrer.</span></div>
+            <div className="rr-credit-list-heading"><span>PARCELA</span><span>VENCIMENTO</span><span>VALOR</span><span>RECEBIMENTO</span></div>
             <div className="rr-credit-rows">
               {draft.creditInstallments.map((item, index) => {
                 const received = installmentPaid(item, draft.receipts);
                 return <div className="rr-credit-row" key={item.id}>
-                  <strong>{index + 1}/{draft.creditInstallments.length}</strong>
+                  <strong className="rr-credit-index">{String(index + 1).padStart(2, "0")} / {String(draft.creditInstallments.length).padStart(2, "0")}</strong>
                   <label className="editor-field">Vencimento
                     <input type="date" value={item.due} disabled={received} onChange={(event) => updateInstallment(item.id, "due", event.target.value)} />
                   </label>
@@ -241,8 +242,9 @@ export default function ReceivableAccountDialog({
               })}
             </div>
             <div className="rr-credit-totals">
-              <span>Total das parcelas: <strong>{money(planTotals.planned)}</strong></span>
-              <span>Juros: <strong>{money(planTotals.interest)} ({planTotals.interestPercent.toFixed(2).replace(".", ",")}%)</strong></span>
+              <span>VALOR ORIGINAL <strong>{money(planPrincipal)}</strong></span>
+              <span>TOTAL PARCELADO <strong>{money(planTotals.planned)}</strong></span>
+              <span className={planTotals.interest > 0 ? "rr-credit-interest" : ""}>JUROS <strong>{money(planTotals.interest)} ({planTotals.interestPercent.toFixed(2).replace(".", ",")}%)</strong></span>
             </div>
             {freightLinked && planTotals.interest > 0 && <p className="error-banner">Em fretes vinculados, registre primeiro o acréscimo no valor do frete para permitir o recebimento com juros.</p>}
           </>}
