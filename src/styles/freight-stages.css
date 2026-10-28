@@ -86,3 +86,30 @@
   .freight-stages-editor .receipt-sync-note { margin: 7px 0; }
   .freight-stages-editor .editor-actions { margin-top: 7px; }
 }
+
+
+/* Financeiro compacto: sem barra de título e com pedágio ao lado da comissão. */
+.freight-stages-editor .freight-stage-finance-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding-top: 12px;
+}
+.freight-stages-editor .freight-stage-toll-inline {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 7px;
+  min-width: 0;
+}
+.freight-stages-editor .freight-stage-toll-inline > span {
+  min-height: 0;
+  line-height: 1.2;
+}
+.freight-stages-editor .freight-stage-toll-inline > input[type="checkbox"] {
+  margin: 0 0 7px 2px;
+}
+@media (max-width: 1050px) {
+  .freight-stages-editor .freight-stage-finance-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -99,16 +99,17 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
     {!matchingStageCity && <p className="freight-stage-error">A origem da viagem carregada deve ser igual ao destino da viagem vazia.</p>}
     {!matchingStageKm && <p className="freight-stage-error">O KM inicial da viagem carregada deve ser igual ao KM final da viagem vazia.</p>}
     {!validDates && <p className="freight-stage-error">A data da viagem carregada não pode ser anterior à data da viagem vazia.</p>}
-    <section className="freight-stage-finance"><h4>Dados financeiros</h4><div className="freight-stage-finance-grid">
+    <section className="freight-stage-finance"><div className="freight-stage-finance-grid">
       {inputField("Custo total da viagem (R$)", validCostInputs(value) ? freightCost(calculation).toFixed(2) : "", () => {}, { readOnly: true })}
       {inputField("Descontos gerais (R$)", value.discount, (v) => patch("discount", v), { type: "number" })}
       {inputField("Tipo de comissão", value.commissionType, (v) => patch("commissionType", v), { required: true, options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] })}
       {inputField("Comissão (% ou R$)", value.commission, (v) => patch("commission", v), { type: "number", required: true })}
+      <label className="editor-field freight-stage-checkbox freight-stage-toll-inline"><span>Descontar pedágio</span><input type="checkbox" checked={Boolean(value.deductToll)} onChange={(e) => patch("deductToll", e.target.checked)} /></label>
       {inputField("Bônus (R$)", value.bonus, (v) => patch("bonus", v), { type: "number" })}
       {inputField("Outros custos (R$)", value.otherCosts, (v) => patch("otherCosts", v), { type: "number" })}
       {inputField("Adiantamento do cliente (R$)", value.received, (v) => patch("received", v), { type: "number", required: true })}
       {inputField("Saldo restante (R$)", value.value === "" || value.received === "" ? "" : Math.max(0, n(value.value) - n(value.discount) - n(value.received)).toFixed(2), () => {}, { readOnly: true })}
-      <label className="editor-field freight-stage-checkbox"><span>Descontar pedágio da base da comissão</span><input type="checkbox" checked={Boolean(value.deductToll)} onChange={(e) => patch("deductToll", e.target.checked)} /></label>
+      
     </div></section>
     <section className="freight-stage-summary"><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-grid"><div><span>Valor do frete</span><strong>{money(n(value.value))}</strong></div><div><span>Adiantamento do cliente</span><strong>{money(n(value.received))}</strong></div>{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{money(amount)}</strong></div>)}</div></section>
     <p className="receipt-sync-note">Uma operação, um recebível e uma comissão. Os custos das duas etapas são somados uma única vez.</p>
