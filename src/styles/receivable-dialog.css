@@ -35,3 +35,108 @@
 /* Cabeçalho único para inclusão e edição. */
 .rr-receivable-dialog .rr-receivable-heading { text-align: center; font-size: calc(1em + 2px); margin-bottom: 10px; }
 .rr-receivable-dialog .rr-receivable-title { margin-top: 25px; }
+
+
+/* Resumo e histórico: escopo restrito ao modal de Contas a Receber. */
+.rr-receivable-dialog .rr-receivable-ledger {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid #e4e7e7;
+}
+.rr-receivable-dialog .rr-receivable-ledger > h4 {
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.rr-receivable-dialog .rr-receivable-summary {
+  padding: 0 0 22px;
+  gap: 12px;
+  border-bottom: 1px solid #e4e7e7;
+}
+.rr-receivable-dialog .rr-receivable-metric {
+  min-width: 0;
+  padding: 18px 16px;
+  border: 1px solid #e1e5e4;
+  border-radius: 10px;
+  background: #f7f9f8;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.rr-receivable-dialog .rr-receivable-metric span {
+  font-size: 13px;
+  color: #515d59;
+}
+.rr-receivable-dialog .rr-receivable-metric strong {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.rr-receivable-dialog .rr-receivable-paid { color: #14804b; }
+.rr-receivable-dialog .rr-receivable-balance { color: #c12e32; }
+.rr-receivable-dialog .rr-receivable-linked-note,
+.rr-receivable-dialog .rr-receivable-legacy-note {
+  margin: 16px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #58635e;
+}
+.rr-receivable-dialog .rr-receivable-history-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 12px;
+}
+.rr-receivable-dialog .rr-receivable-history-heading h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.rr-receivable-dialog .rr-receivable-history-heading span {
+  font-size: 12px;
+  color: #68716e;
+}
+.rr-receivable-dialog .rr-receivable-history {
+  border: 1px solid #e1e5e4;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin-bottom: 18px;
+}
+.rr-receivable-dialog .rr-receivable-history table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+.rr-receivable-dialog .rr-receivable-history th {
+  padding: 13px 16px;
+  background: #f0f3f2;
+  color: #34423d;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 1px solid #e1e5e4;
+}
+.rr-receivable-dialog .rr-receivable-history td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #edf0ef;
+  font-size: 13px;
+}
+.rr-receivable-dialog .rr-receivable-history tbody tr:last-child td {
+  border-bottom: 0;
+}
+.rr-receivable-dialog .rr-receivable-history th:last-child,
+.rr-receivable-dialog .rr-receivable-history td:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .rr-receivable-dialog .rr-receivable-summary { gap: 8px; }
+  .rr-receivable-dialog .rr-receivable-metric { padding: 12px 9px; }
+  .rr-receivable-dialog .rr-receivable-metric strong { font-size: 15px; }
+  .rr-receivable-dialog .rr-receivable-metric span { font-size: 11px; }
+  .rr-receivable-dialog .rr-receivable-history th,
+  .rr-receivable-dialog .rr-receivable-history td { padding: 12px 9px; }
+}
