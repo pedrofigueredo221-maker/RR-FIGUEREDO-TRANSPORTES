@@ -1,19 +1,83 @@
 /* Contas a pagar e receber: apresentação corporativa consistente, sem pílulas. */
-.rr-accounts .rr-account-status{font-weight:700;text-align:center;vertical-align:middle;white-space:nowrap;border-left:1px solid #d6dce0;border-right:1px solid #d6dce0}
+.rr-accounts .rr-account-status {
+  font-weight:700;
+  text-align:center;
+  vertical-align:middle;
+  white-space:nowrap;
+  border-left:1px solid #d6dce0;
+  border-right:1px solid #d6dce0;
+}
 .rr-accounts .rr-account-status-pago,.rr-accounts .rr-account-status-paga,.rr-accounts .rr-account-status-recebida,
-.rr-accounts tbody tr:hover .rr-account-status-pago,.rr-accounts tbody tr:hover .rr-account-status-paga{background:#e8f5ec;color:#24653c}
-.rr-accounts .rr-account-status-parcial,.rr-accounts tbody tr:hover .rr-account-status-parcial{background:#fff4db;color:#815b19}
+.rr-accounts tbody tr:hover .rr-account-status-pago,.rr-accounts tbody tr:hover .rr-account-status-paga {
+  background:#e8f5ec;
+  color:#24653c;
+}
+.rr-accounts .rr-account-status-parcial,.rr-accounts tbody tr:hover .rr-account-status-parcial {
+  background:#fff4db;
+  color:#815b19;
+}
 .rr-accounts .rr-account-status-pendente,.rr-accounts .rr-account-status-em-aberto,
-.rr-accounts tbody tr:hover .rr-account-status-pendente,.rr-accounts tbody tr:hover .rr-account-status-em-aberto{background:#fff0ef;color:#963b35}
-.rr-accounts .rr-account-actions{display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
-.rr-accounts .rr-account-actions button{width:34px;min-width:34px;height:32px;padding:0;font-size:17px;line-height:1;border-radius:5px}
+.rr-accounts tbody tr:hover .rr-account-status-pendente,.rr-accounts tbody tr:hover .rr-account-status-em-aberto {
+  background:#fff0ef;
+  color:#963b35;
+}
+.rr-accounts .rr-account-actions {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  white-space:nowrap;
+}
+.rr-accounts .rr-account-actions button {
+  width:34px;
+  min-width:34px;
+  height:32px;
+  padding:0;
+  font-size:17px;
+  line-height:1;
+  border-radius:5px;
+}
 
 /* Filtros financeiros: alinhamento corporativo e botões centralizados. */
-.rr-accounts .rr-account-filter-bar{display:flex;align-items:end;justify-content:flex-end;gap:16px;flex-wrap:wrap;margin:12px 0 18px}
-.rr-accounts .rr-account-filter-bar label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#232b30}
-.rr-accounts .rr-account-filter-bar select{min-width:170px;padding:9px 12px;border:1px solid #c6cdd1;border-radius:6px;background:#fff;color:#182026}
-.rr-accounts td:has(.rr-account-actions){text-align:center;vertical-align:middle}
-.rr-accounts .record-editor .primary-button{margin-inline:auto}
-.rr-accounts .rr-payment-history{margin-top:6px;text-align:left;font-weight:400}
-.rr-accounts .rr-payment-history summary{cursor:pointer;font-size:12px;text-decoration:underline}
+.rr-accounts .rr-account-filter-bar {
+  display:flex;
+  align-items:end;
+  justify-content:flex-end;
+  gap:16px;
+  flex-wrap:wrap;
+  margin:12px 0 18px;
+}
+.rr-accounts .rr-account-filter-bar label {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-size:13px;
+  font-weight:700;
+  color:#232b30;
+}
+.rr-accounts .rr-account-filter-bar select {
+  min-width:170px;
+  padding:9px 12px;
+  border:1px solid #c6cdd1;
+  border-radius:6px;
+  background:#fff;
+  color:#182026;
+}
+.rr-accounts td:has(.rr-account-actions) {
+  text-align:center;
+  vertical-align:middle;
+}
+.rr-accounts .record-editor .primary-button {
+  margin-inline:auto;
+}
+.rr-accounts .rr-payment-history {
+  margin-top:6px;
+  text-align:left;
+  font-weight:400;
+}
+.rr-accounts .rr-payment-history summary {
+  cursor:pointer;
+  font-size:12px;
+  text-decoration:underline;
+}
 @media(max-width:700px){.rr-accounts .rr-account-filter-bar{justify-content:stretch}.rr-accounts .rr-account-filter-bar label{flex:1;min-width:130px}}
