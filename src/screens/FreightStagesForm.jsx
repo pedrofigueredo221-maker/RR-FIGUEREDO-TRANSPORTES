@@ -60,7 +60,12 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       window.removeEventListener("resize", align);
     };
   }, []);
-  const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
+  const patch = (key, next) => setValue((current) => {
+    if (key === "received") return { ...current, received: next, currentBalance: next === "" || current.value === "" ? "" : Math.max(0, n(current.value) - n(next)).toFixed(2) };
+    if (key === "currentBalance") return { ...current, currentBalance: next, received: next === "" || current.value === "" ? "" : Math.max(0, n(current.value) - n(next)).toFixed(2) };
+    if (key === "value") return { ...current, value: next, currentBalance: next === "" || current.received === "" ? "" : Math.max(0, n(next) - n(current.received)).toFixed(2) };
+    return { ...current, [key]: next };
+  });
   const selectDriver = (driverName) => {
     const employee = employees.find((item) => item.name === driverName && item.role === "Motorista");
     setValue((current) => ({
@@ -134,8 +139,8 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       </div>
       {inputField("Bônus (R$)", value.bonus, (v) => patch("bonus", v), { type: "number" })}
       {inputField("Outros custos (R$)", value.otherCosts, (v) => patch("otherCosts", v), { type: "number" })}
-      {inputField("Adiantamento do cliente (R$)", value.received, (v) => patch("received", v), { type: "number", required: true })}
-      {inputField("Saldo restante (R$)", value.value === "" || value.received === "" ? "" : Math.max(0, n(value.value) - n(value.discount) - n(value.received)).toFixed(2), () => {}, { readOnly: true })}
+      {inputField("Adiantamento do cliente (R$)", value.received, (v) => patch("received", v), { type: "number" })}
+      {inputField("Saldo restante (R$)", value.currentBalance, (v) => patch("currentBalance", v), { type: "number" })}
       
     </div></section>
     {!stagesHaveCosts && editing && <p className="receipt-sync-note">Os custos totais exibidos no resumo são os valores já salvos neste frete. Preencha as duas etapas para atualizar o detalhamento sem perder os custos anteriores.</p>}
