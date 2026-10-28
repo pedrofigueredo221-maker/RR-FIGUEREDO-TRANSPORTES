@@ -138,6 +138,7 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       {inputField("Saldo restante (R$)", value.value === "" || value.received === "" ? "" : Math.max(0, n(value.value) - n(value.discount) - n(value.received)).toFixed(2), () => {}, { readOnly: true })}
       
     </div></section>
+    {!stagesHaveCosts && editing && <p className="receipt-sync-note">Os custos totais exibidos no resumo são os valores já salvos neste frete. Preencha as duas etapas para atualizar o detalhamento sem perder os custos anteriores.</p>}
     {financialSummary("freight-stage-summary-inline")}
     <p className="receipt-sync-note">Uma operação, um recebível e uma comissão. Os custos das duas etapas são somados uma única vez.</p>
     <div className="editor-actions"><button type="submit" className="primary-button" disabled={saving || !validStages || !validDates || !matchingStageKm || !matchingStageCity}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
