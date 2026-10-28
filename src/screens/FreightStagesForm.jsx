@@ -105,8 +105,10 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       {inputField("Custo total da viagem (R$)", validCostInputs(value) ? freightCost(calculation).toFixed(2) : "", () => {}, { readOnly: true })}
       {inputField("Descontos gerais (R$)", value.discount, (v) => patch("discount", v), { type: "number" })}
       {inputField("Tipo de comissão", value.commissionType, (v) => patch("commissionType", v), { required: true, options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] })}
-      {inputField("Comissão (% ou R$)", value.commission, (v) => patch("commission", v), { type: "number", required: true })}
-      <label className="editor-field freight-stage-checkbox freight-stage-toll-inline"><span>Descontar pedágio</span><input type="checkbox" checked={Boolean(value.deductToll)} onChange={(e) => patch("deductToll", e.target.checked)} /></label>
+      <div className="freight-stage-commission-toll">
+        {inputField("Comissão (% ou R$)", value.commission, (v) => patch("commission", v), { type: "number", required: true })}
+        <label className="editor-field freight-stage-checkbox freight-stage-toll-inline"><span>Descontar pedágio</span><input type="checkbox" checked={Boolean(value.deductToll)} onChange={(e) => patch("deductToll", e.target.checked)} /></label>
+      </div>
       {inputField("Bônus (R$)", value.bonus, (v) => patch("bonus", v), { type: "number" })}
       {inputField("Outros custos (R$)", value.otherCosts, (v) => patch("otherCosts", v), { type: "number" })}
       {inputField("Adiantamento do cliente (R$)", value.received, (v) => patch("received", v), { type: "number", required: true })}
