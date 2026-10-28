@@ -311,7 +311,7 @@ export default function ReceivableAccountDialog({
         {isCredit(draft.paymentMethod) && <section className="rr-credit-plan">
           <div className="rr-credit-plan-heading"><h4>PARCELAMENTO NO CRÉDITO</h4>
           <label className="editor-field rr-credit-count">
-            Quantidade de parcelas
+            <span>Quantidade de<br/>parcelas</span>
             <select value={installmentCount} onChange={(event) => setCreditCount(Number(event.target.value))}>
               {Array.from({ length: 18 }, (_, index) => index + 1).map((count) =>
                 <option key={count} value={count}>{count}x</option>
