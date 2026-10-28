@@ -295,3 +295,20 @@
     text-align: center;
   }
 }
+
+/* Rodapé: ocupar toda a largura para encostar Salvar Conta à direita. */
+.rr-receivable-dialog .rr-receivable-actions {
+  width: 100%;
+  box-sizing: border-box;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+}
+.rr-receivable-dialog .rr-receivable-actions > .rr-receivable-save {
+  grid-column: 3;
+  justify-self: end;
+  margin-left: auto;
+  margin-right: 0;
+}
+.rr-receivable-dialog .rr-receivable-actions > .rr-receivable-confirm {
+  grid-column: 2;
+  justify-self: center;
+}
