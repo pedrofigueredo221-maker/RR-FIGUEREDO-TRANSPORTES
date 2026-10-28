@@ -4,21 +4,13 @@ import PainelInicial from "./screens/PainelInicial.jsx";
 import EditablePage from "./EditablePage.jsx";
 import Relatorios from "./screens/Relatorios.jsx";
 import { DEMO_DATA, DEMO_STORAGE_KEY } from "./demo/demoData.js";
+import { pages, titles } from "./app/navigation.js";
 
 const config = window.APP_CONFIG || {};
 const demoMode = new URLSearchParams(window.location.search).get("demo") === "1";
 const supabase = !demoMode && config.SUPABASE_URL && config.SUPABASE_ANON_KEY
   ? createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })
   : null;
-const pages = [
-  { id: "dashboard", label: "Balanço Geral", symbol: "grid" },
-  { id: "freights", label: "Fretes", symbol: "truck" },
-  { id: "expenses", label: "Despesas e manutenção", symbol: "tool" },
-  { id: "receivables", label: "Contas a receber", symbol: "arrow-down" },
-  { id: "payments", label: "Contas a pagar", symbol: "arrow-up" },
-  { id: "reports", label: "Relatórios", symbol: "chart" },
-  { id: "cadastros", label: "Cadastros", symbol: "users" }
-];
 const iconPaths = {
   grid: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
   truck: <><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7" /><circle cx="7" cy="18" r="2" /><circle cx="18" cy="18" r="2" /></>,
@@ -31,7 +23,6 @@ const iconPaths = {
 function MenuIcon({ name }) {
   return <span className="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">{iconPaths[name]}</svg></span>;
 }
-const titles = Object.fromEntries(pages.map((page) => [page.id, page.label]));
 const screenComponents = {
   dashboard: PainelInicial,
   freights: EditablePage,
