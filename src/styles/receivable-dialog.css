@@ -157,7 +157,7 @@
 
 /* Espaço entre o botão Cancelar lançamento e os dois rótulos da linha seguinte. */
 .rr-receivable-dialog .rr-receivable-entry-fields {
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 
@@ -244,4 +244,54 @@
 .rr-receivable-dialog .rr-receivable-confirm:disabled {
   opacity: .55;
   cursor: not-allowed;
+}
+
+/* Ações na mesma linha: cancelar à esquerda, confirmar no centro, salvar à direita. */
+.rr-receivable-dialog .rr-receivable-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin-top: 15px;
+}
+.rr-receivable-dialog .rr-receivable-cancel {
+  grid-column: 1;
+  justify-self: start;
+  background: #b3262d;
+  border: 1px solid #b3262d;
+  color: #fff;
+  font-weight: 600;
+}
+.rr-receivable-dialog .rr-receivable-cancel:hover:not(:disabled) {
+  background: #941f25;
+  border-color: #941f25;
+  color: #fff;
+}
+.rr-receivable-dialog .rr-receivable-confirm {
+  grid-column: 2;
+  justify-self: center;
+  margin-top: 0;
+  background: #262626;
+  border-color: #262626;
+  color: #fff;
+}
+.rr-receivable-dialog .rr-receivable-save {
+  grid-column: 3;
+  justify-self: end;
+  background: #262626;
+  border-color: #262626;
+  color: #fff;
+}
+@media (max-width: 600px) {
+  .rr-receivable-dialog .rr-receivable-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .rr-receivable-dialog .rr-receivable-actions button {
+    max-width: 100%;
+    padding: 10px 5px;
+    font-size: 11px;
+    white-space: normal;
+    text-align: center;
+  }
 }
