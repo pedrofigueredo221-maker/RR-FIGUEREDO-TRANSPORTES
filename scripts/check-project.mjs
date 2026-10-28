@@ -10,6 +10,8 @@ const requiredFiles = [
   "index.html",
   "redefinir-senha.html",
   "src/main.jsx",
+  "src/app/bootstrap.jsx",
+  "src/app/navigation.js",
   "reset-main.jsx",
   "src/App.jsx",
   "src/PasswordReset.jsx",
@@ -29,6 +31,8 @@ const resetHtml = read("redefinir-senha.html");
 const vite = read("vite.config.js");
 const app = read("src/App.jsx");
 const main = read("src/main.jsx");
+const bootstrap = read("src/app/bootstrap.jsx");
+const navigation = read("src/app/navigation.js");
 const resetMain = read("reset-main.jsx");
 const globalStyles = read("src/styles.css");
 const screenStyles = read("src/styles/screens.css");
@@ -37,7 +41,10 @@ const editablePage = read("src/EditablePage.jsx");
 
 if (!mainHtml.includes('src="/src/main.jsx"')) failures.push("A entrada principal não carrega src/main.jsx.");
 if (!resetHtml.includes("./reset-main.jsx")) failures.push("A página de recuperação não carrega reset-main.jsx.");
-if (!main.includes("./styles.css") || !main.includes("./styles/screens.css")) failures.push("A entrada React principal não importa os dois arquivos CSS esperados.");
+if (!main.includes("./app/bootstrap.jsx") || !main.includes("mountApplication")) failures.push("A entrada React deve delegar a montagem ao bootstrap.");
+if (!bootstrap.includes("../styles.css") || !bootstrap.includes("../styles/screens.css")) failures.push("O bootstrap React deve importar os dois arquivos CSS na ordem original.");
+if (!bootstrap.includes("../App.jsx") || !bootstrap.includes("StrictMode")) failures.push("O bootstrap deve montar App em StrictMode.");
+if (!app.includes("./app/navigation.js") || !navigation.includes("export const pages") || !navigation.includes("export const titles")) failures.push("A navegação deve ser importada do módulo compartilhado.");
 if (!resetMain.includes("./src/styles.css") || !resetMain.includes("./src/styles/screens.css")) failures.push("A página de recuperação não compartilha os estilos React.");
 if (!vite.includes('"redefinir-senha.html"')) failures.push("O build Vite não inclui a página React de recuperação.");
 if (!app.includes("redefinir-senha.html")) failures.push("O fluxo de recuperação de senha não aponta para a página React publicada.");
