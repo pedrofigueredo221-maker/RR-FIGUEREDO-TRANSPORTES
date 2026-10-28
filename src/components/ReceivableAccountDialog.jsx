@@ -42,6 +42,7 @@ export default function ReceivableAccountDialog({
   const [error, setError] = useState("");
   const [entryOpen, setEntryOpen] = useState(false);
   const [installmentCount, setInstallmentCount] = useState(() => account?.creditInstallments?.length || account?.receivableCreditInstallments?.length || 1);
+  const [adjustFutureInstallments, setAdjustFutureInstallments] = useState(false);
   const existingPaid = freightLinked ? Math.round(Number(account?.received || 0) * 100) / 100 : 0;
   const receiptSum = draft.receipts.reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100;
   const legacyPaid = freightLinked ? Math.max(0, Math.round((existingPaid - (account?.receipts || []).reduce((sum, receipt) => sum + Math.round(Number(receipt.amount || 0) * 100), 0) / 100) * 100) / 100) : 0;
@@ -62,6 +63,7 @@ export default function ReceivableAccountDialog({
         return;
       }
       setInstallmentCount(1);
+      setAdjustFutureInstallments(false);
       setDraft((previous) => ({ ...previous, creditInstallments: [], installmentPrincipal: null }));
       return;
     }
@@ -73,18 +75,38 @@ export default function ReceivableAccountDialog({
       const principal = outstandingPrincipal;
       const items = createCreditPlan(principal, count, draft.due);
       setInstallmentCount(count);
+      setAdjustFutureInstallments(false);
       setDraft((previous) => ({ ...previous, creditInstallments: items, installmentPrincipal: principal }));
     } catch (cause) {
       setError(cause.message);
     }
   };
   const updateInstallment = (id, field, value) => {
-    setDraft((previous) => ({
-      ...previous,
-      creditInstallments: previous.creditInstallments.map((item) =>
-        item.id === id && !installmentPaid(item, previous.receipts) ? { ...item, [field]: value } : item
-      ),
-    }));
+    setDraft((previous) => {
+      const first = previous.creditInstallments[0];
+      const propagate = adjustFutureInstallments && field === "amount" && first?.id === id;
+      return {
+        ...previous,
+        creditInstallments: previous.creditInstallments.map((item, index) => {
+          if (installmentPaid(item, previous.receipts)) return item;
+          if (item.id === id || (propagate && index > 0)) return { ...item, [field]: value };
+          return item;
+        }),
+      };
+    });
+    setError("");
+  };
+  const toggleAdjustFutureInstallments = (checked) => {
+    if (checked && draft.creditInstallments[0] && !installmentPaid(draft.creditInstallments[0], draft.receipts)) {
+      const firstAmount = draft.creditInstallments[0].amount;
+      setDraft((previous) => ({
+        ...previous,
+        creditInstallments: previous.creditInstallments.map((item, index) =>
+          index > 0 && !installmentPaid(item, previous.receipts) ? { ...item, amount: firstAmount } : item
+        ),
+      }));
+    }
+    setAdjustFutureInstallments(checked);
     setError("");
   };
   const change = (field, value) => {
@@ -183,6 +205,7 @@ export default function ReceivableAccountDialog({
                   return;
                 }
                 setInstallmentCount(isCredit(method) ? (draft.creditInstallments.length || 1) : 1);
+                setAdjustFutureInstallments(false);
                 setDraft((previous) => ({ ...previous, paymentMethod: method, creditInstallments: isCredit(method) ? previous.creditInstallments : [], installmentPrincipal: isCredit(method) ? previous.installmentPrincipal : null }));
                 setError("");
               }}>
@@ -214,6 +237,10 @@ export default function ReceivableAccountDialog({
                   <label className="editor-field">Valor (R$)
                     <input type="number" min="0.01" step="0.01" value={item.amount} disabled={received} onChange={(event) => updateInstallment(item.id, "amount", event.target.value)} />
                   </label>
+                  {index === 0 && <label className="rr-credit-adjust-future">
+                    <input type="checkbox" checked={adjustFutureInstallments} disabled={received} onChange={(event) => toggleAdjustFutureInstallments(event.target.checked)} />
+                    <span>Ajustar futuras parcelas</span>
+                  </label>}
                 </div>;
               })}
             </div>
