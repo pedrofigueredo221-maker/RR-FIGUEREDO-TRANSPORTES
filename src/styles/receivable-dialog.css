@@ -1451,3 +1451,23 @@
   box-shadow: none;
   border-color: #777;
 }
+
+
+/* Quantidade de parcelas: título em duas linhas e seletor sem anel visual. */
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count > span {
+  max-width: 115px;
+  width: 115px;
+  flex: 0 0 115px;
+  white-space: normal;
+  line-height: 1.2;
+}
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count select,
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count select:hover,
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count select:focus,
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count select:focus-visible,
+.rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count select:active {
+  outline: none;
+  outline-offset: 0;
+  box-shadow: none;
+  border-color: #b8c0c8;
+}
