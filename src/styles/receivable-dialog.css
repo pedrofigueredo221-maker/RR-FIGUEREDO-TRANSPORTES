@@ -751,3 +751,76 @@
   text-align: center;
   border-right: 0;
 }
+
+
+/* Padrão TELAS LATERAIS: grafite em todo o painel externo de recebimentos. */
+.rr-receivable-detached-panel {
+  background: #303234;
+  color: #fff;
+  border-color: #303234;
+  border-radius: 10px;
+}
+.rr-receivable-detached-panel .rr-receivable-ledger > h4,
+.rr-receivable-detached-panel .rr-receivable-history-heading h4,
+.rr-receivable-detached-panel .rr-receivable-metric strong,
+.rr-receivable-detached-panel .rr-receivable-linked-note,
+.rr-receivable-detached-panel .rr-receivable-history-heading > span,
+.rr-receivable-detached-panel .rr-receivable-legacy-note {
+  color: #fff;
+}
+.rr-receivable-detached-panel .rr-receivable-metric span { color: #e1e3e5; }
+.rr-receivable-detached-panel .rr-receivable-ledger > h4,
+.rr-receivable-detached-panel .rr-receivable-summary,
+.rr-receivable-detached-panel .rr-receivable-metric,
+.rr-receivable-detached-panel .rr-receivable-metric:nth-child(odd),
+.rr-receivable-detached-panel .rr-receivable-linked-note,
+.rr-receivable-detached-panel .rr-receivable-history-heading {
+  border-color: #666a6d;
+}
+.rr-receivable-detached-panel .rr-receivable-metric .rr-receivable-paid { color: #4ade80; }
+.rr-receivable-detached-panel .rr-receivable-metric .rr-receivable-balance { color: #ff7777; }
+.rr-receivable-detached-panel .rr-receivable-history tbody td { color: #171717; }
+
+/* Padrão TABELAS: parcelamento do crédito, cabeçalho grafite com
+   separadores verticais, base preta e linhas brancas de dados. */
+.rr-receivable-dialog .rr-credit-list-heading {
+  background: #303234;
+  color: #fff;
+  font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  border-bottom: 2px solid #111;
+  border-radius: 9px 9px 0 0;
+  padding: 0 12px;
+  gap: 0;
+}
+.rr-receivable-dialog .rr-credit-list-heading > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 9px;
+  border-right: 1px solid #626466;
+  box-sizing: border-box;
+}
+.rr-receivable-dialog .rr-credit-list-heading > span:last-child { border-right: 0; }
+.rr-receivable-dialog .rr-credit-row {
+  background: #fff;
+  border: 0;
+  border-bottom: 1px solid #d6dade;
+  border-radius: 0;
+}
+.rr-receivable-dialog .rr-credit-row:last-child {
+  border-bottom: 1px solid #d6dade;
+  border-radius: 0 0 9px 9px;
+}
+.rr-receivable-dialog .rr-credit-rows {
+  border-left: 1px solid #d6dade;
+  border-right: 1px solid #d6dade;
+  border-radius: 0 0 9px 9px;
+  overflow: hidden;
+}
+@media (max-width: 680px) {
+  .rr-receivable-dialog .rr-credit-list-heading { display: none; }
+  .rr-receivable-dialog .rr-credit-row { border-bottom: 1px solid #d6dade; }
+}
