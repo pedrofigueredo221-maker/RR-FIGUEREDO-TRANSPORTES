@@ -345,3 +345,33 @@
     margin: 0;
   }
 }
+
+
+/* PR #165: resumo financeiro lateral de Fretes com fundo branco e texto preto.
+   Preserva as cores semânticas de custo e lucro, colunas e cálculos. */
+@media (min-width: 1500px) {
+  .freight-detached-summary .freight-stage-summary {
+    background: #fff;
+    color: #171717;
+    border: 1px solid #d5d9dd;
+    border-radius: 10px;
+  }
+  .freight-detached-summary .freight-stage-summary h4 {
+    color: #171717;
+  }
+  .freight-detached-summary .freight-stage-summary-grid > div {
+    border-top-color: #d6dade;
+  }
+  .freight-detached-summary .freight-stage-summary-grid span {
+    color: #444;
+  }
+  .freight-detached-summary .freight-stage-summary-grid strong {
+    color: #171717;
+  }
+  .freight-detached-summary .freight-stage-summary-grid strong.freight-stage-cost {
+    color: #c52c2c;
+  }
+  .freight-detached-summary .freight-stage-summary-grid strong.freight-stage-profit {
+    color: #147a43;
+  }
+}
