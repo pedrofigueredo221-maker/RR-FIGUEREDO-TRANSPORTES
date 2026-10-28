@@ -59,6 +59,15 @@ if (freightForm.includes("Intl.NumberFormat")) failures.push("FreightForm deve r
 if (editablePage.includes("Intl.NumberFormat") || editablePage.includes("const dateLabel =")) failures.push("EditablePage deve reutilizar os formatadores compartilhados.");
 if (!freightForm.includes("freightCost(calculationInput)")) failures.push("O resumo de frete deve usar a função de domínio freightCost.");
 
+
+// Regressões de modularização: componentes consolidados não devem voltar a ser importados.
+// Os arquivos legados ainda existentes podem ser removidos depois da validação do CI.
+const dashboard = read("src/screens/PainelInicial.jsx");
+if (editablePage.includes('from "./screens/ContasAPagar.jsx"')) failures.push("Contas a pagar deve reutilizar Despesas diretamente, sem wrapper intermediário.");
+if (!editablePage.includes('if (page === "payments") return <Despesas controller={controller} />;')) failures.push("A tela de contas a pagar deve preservar o controlador de Despesas.");
+if (dashboard.includes('from "../components/StatCard.jsx"')) failures.push("O cartão exclusivo do painel deve permanecer junto ao PainelInicial.");
+if (!dashboard.includes("function StatCard(")) failures.push("O cartão do painel deve preservar sua implementação local.");
+
 const legacyPaths = [
   "react-app",
   "app.js",
