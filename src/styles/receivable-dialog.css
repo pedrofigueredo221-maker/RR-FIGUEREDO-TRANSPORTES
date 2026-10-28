@@ -154,3 +154,8 @@
   border-color: #262626;
   color: #fff;
 }
+
+/* Espaço entre o botão Cancelar lançamento e os dois rótulos da linha seguinte. */
+.rr-receivable-dialog .rr-receivable-entry-fields {
+  margin-top: 10px;
+}
