@@ -295,3 +295,14 @@
     text-align: center;
   }
 }
+
+
+/* Contraste do resumo financeiro: azul-claro solicitado, sem mudar cálculos. */
+.rr-receivable-dialog .rr-receivable-metric {
+  background-color: #dceefa;
+  border-color: #b6d5e9;
+}
+.rr-receivable-dialog .rr-receivable-metric span { color: #253a49; }
+.rr-receivable-dialog .rr-receivable-metric strong { color: #172c3b; }
+.rr-receivable-dialog .rr-receivable-metric .rr-receivable-paid { color: #147a43; }
+.rr-receivable-dialog .rr-receivable-metric .rr-receivable-balance { color: #bd282e; }
