@@ -31,3 +31,7 @@
 .rr-receivable-dialog .rr-receivable-actions > :first-child { justify-self: start; grid-column: 1; }
 .rr-receivable-dialog .rr-receivable-save { grid-column: 2; justify-self: center; }
 @media (max-width: 420px) { .rr-receivable-dialog .rr-receivable-actions { grid-template-columns: auto 1fr auto; } }
+
+/* Cabeçalho único para inclusão e edição. */
+.rr-receivable-dialog .rr-receivable-heading { text-align: center; font-size: calc(1em + 2px); margin-bottom: 10px; }
+.rr-receivable-dialog .rr-receivable-title { margin-top: 10px; }
