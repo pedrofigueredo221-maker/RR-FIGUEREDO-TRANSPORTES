@@ -358,3 +358,21 @@
 .rr-receivable-dialog .rr-receivable-history thead th:nth-child(1) { width: 30%; }
 .rr-receivable-dialog .rr-receivable-history thead th:nth-child(2) { width: 45%; }
 .rr-receivable-dialog .rr-receivable-history thead th:nth-child(3) { width: 25%; }
+
+
+/* Campos brancos e cartões do resumo em cinza neutro, conforme referência. */
+.rr-receivable-dialog .rr-receivable-fields input,
+.rr-receivable-dialog .rr-receivable-fields select,
+.rr-receivable-dialog .rr-receivable-entry-fields input,
+.rr-receivable-dialog .rr-receivable-entry-fields select {
+  background-color: #fff;
+  color: #151515;
+}
+.rr-receivable-dialog .rr-receivable-metric {
+  background-color: #e8ebed;
+  border-color: #b9c0c5;
+}
+.rr-receivable-dialog .rr-receivable-metric span { color: #404040; }
+.rr-receivable-dialog .rr-receivable-metric strong { color: #171717; }
+.rr-receivable-dialog .rr-receivable-metric .rr-receivable-paid { color: #147a43; }
+.rr-receivable-dialog .rr-receivable-metric .rr-receivable-balance { color: #bd282e; }
