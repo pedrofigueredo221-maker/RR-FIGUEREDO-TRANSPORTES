@@ -1033,3 +1033,33 @@
   .rr-receivable-dialog .rr-credit-plan-heading {align-items:flex-start;}
   .rr-receivable-dialog .rr-credit-plan-heading .rr-credit-count {flex-wrap:wrap;}
 }
+
+
+/* Controles do parcelamento acima da grid, no canto superior direito. */
+.rr-receivable-dialog .rr-credit-table-actions {
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  min-height:32px;
+  margin-bottom:8px;
+}
+.rr-receivable-dialog .rr-credit-table-actions .rr-credit-adjust-future {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin:0;
+  flex:0 1 auto;
+  font-size:11px;
+  color:#303234;
+  white-space:normal;
+}
+.rr-receivable-dialog .rr-credit-table-actions input[type="checkbox"] {
+  width:15px;
+  height:15px;
+  min-height:0;
+  margin:0;
+  padding:0;
+  flex:0 0 15px;
+}
