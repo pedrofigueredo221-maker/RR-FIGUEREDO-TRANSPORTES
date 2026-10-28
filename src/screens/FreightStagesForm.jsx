@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import MunicipalityField from "../components/MunicipalityField.jsx";
 import { freightCommission, freightCost, freightProfit } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
@@ -87,7 +88,8 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
   const matchingStageKm = String(value.loadedTrip?.kmStart ?? "") === String(value.emptyTrip?.kmEnd ?? "");
   const matchingStageCity = String(value.loadedTrip?.origin ?? "").trim() === String(value.emptyTrip?.destination ?? "").trim();
   const validDates = !value.emptyTrip?.date || !value.loadedTrip?.date || value.loadedTrip.date >= value.emptyTrip.date;
-  return <form className="record-editor freight-editor freight-stages-editor" onSubmit={(e) => { e.preventDefault(); if (validStages && validDates && matchingStageKm && matchingStageCity) onSubmit(); }}>
+  const financialSummary = (className) => <section className={`freight-stage-summary ${className}`}><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-grid"><div><span>Valor do frete</span><strong>{money(n(value.value))}</strong></div><div><span>Adiantamento do cliente</span><strong>{money(n(value.received))}</strong></div>{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{money(amount)}</strong></div>)}</div></section>;
+  return <><form className="record-editor freight-editor freight-stages-editor" onSubmit={(e) => { e.preventDefault(); if (validStages && validDates && matchingStageKm && matchingStageCity) onSubmit(); }}>
     <div className="editor-heading"><h3>{editing ? "EDITAR FRETE" : "ADICIONAR FRETE"}</h3><button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button></div>
     <div className="freight-stage-top">
       {inputField("Motorista", value.driver, selectDriver, { required: true, options: drivers })}
@@ -111,8 +113,8 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       {inputField("Saldo restante (R$)", value.value === "" || value.received === "" ? "" : Math.max(0, n(value.value) - n(value.discount) - n(value.received)).toFixed(2), () => {}, { readOnly: true })}
       
     </div></section>
-    <section className="freight-stage-summary"><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-grid"><div><span>Valor do frete</span><strong>{money(n(value.value))}</strong></div><div><span>Adiantamento do cliente</span><strong>{money(n(value.received))}</strong></div>{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{money(amount)}</strong></div>)}</div></section>
+    {financialSummary("freight-stage-summary-inline")}
     <p className="receipt-sync-note">Uma operação, um recebível e uma comissão. Os custos das duas etapas são somados uma única vez.</p>
     <div className="editor-actions"><button type="submit" className="primary-button" disabled={saving || !validStages || !validDates || !matchingStageKm || !matchingStageCity}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
-  </form>;
+  </form>{createPortal(<aside className="freight-detached-summary freight-stages-editor" aria-label="Resumo financeiro do frete">{financialSummary("freight-stage-summary-detached")}</aside>, document.body)}</>;
 }
