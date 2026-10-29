@@ -143,9 +143,7 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
     {!matchingStageCity && <p className="freight-stage-error">A origem da viagem carregada deve ser igual ao destino da viagem vazia.</p>}
     {!matchingStageKm && <p className="freight-stage-error">O KM inicial da viagem carregada deve ser igual ao KM final da viagem vazia.</p>}
     {!validDates && <p className="freight-stage-error">A data da viagem carregada não pode ser anterior à data da viagem vazia.</p>}
-    {!stagesHaveCosts && editing && <p className="receipt-sync-note">Os custos totais exibidos no resumo são os valores já salvos neste frete. Preencha as duas etapas para atualizar o detalhamento sem perder os custos anteriores.</p>}
     {financialSummary("freight-stage-summary-inline")}
-    <p className="receipt-sync-note">Uma operação, um recebível e uma comissão. Os custos das duas etapas são somados uma única vez.</p>
     <div className="editor-actions"><button type="submit" className="primary-button" disabled={saving || !validStages || !validDates || !matchingStageKm || !matchingStageCity}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
   </form>{createPortal(<aside ref={summaryRef} className="freight-detached-summary freight-stages-editor" aria-label="Resumo financeiro do frete">{financialSummary("freight-stage-summary-detached")}</aside>, document.body)}</>;
 }
