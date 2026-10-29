@@ -416,3 +416,50 @@
 @media (min-width:1500px) {
  .freight-detached-summary .freight-stage-summary {background:#edf0f2;border-color:#d5dade;}
 }
+
+/* Fretes: etapas empilhadas e financeiro junto aos dados principais.
+   Mantém quatro colunas no topo e três colunas dentro de cada etapa. */
+.freight-stages-editor .freight-stages-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+.freight-stages-editor .freight-stage-top {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px 10px;
+  align-items: end;
+  margin: 14px 0 18px;
+}
+.freight-stages-editor .freight-stage-top > .editor-field,
+.freight-stages-editor .freight-stage-top > .freight-stage-commission-toll {
+  min-width: 0;
+}
+.freight-stages-editor .freight-stage-top > .editor-field > span {
+  display: flex;
+  align-items: flex-end;
+  min-height: 2.4em;
+  line-height: 1.2;
+}
+.freight-stages-editor .freight-stage-top > .editor-field input,
+.freight-stages-editor .freight-stage-top > .editor-field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.freight-stages-editor .freight-stage-top .freight-stage-commission-toll {
+  align-self: end;
+}
+.freight-stages-editor .freight-stage-summary-inline {
+  display: block;
+}
+@media (max-width: 1050px) {
+  .freight-stages-editor .freight-stage-top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .freight-stages-editor .freight-stage-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
