@@ -593,3 +593,24 @@
     margin-top: 20px;
   }
 }
+
+/* Fretes: reduzir somente a largura do modal em 20% (1040px -> 832px).
+   Altura, padding vertical, espaçamentos verticais e linhas não são alterados. */
+@media (min-width: 1051px) {
+  .form-dialog:has(> .freight-stages-editor) {
+    width: min(832px, 100%);
+    max-width: 832px;
+  }
+  .freight-stages-editor .freight-stage-top,
+  .freight-stages-editor .freight-stage-grid,
+  .freight-stages-editor .freight-stage-finance-grid {
+    min-width: 0;
+  }
+}
+@media (min-width: 1500px) {
+  /* Manter o resumo lateral junto à nova borda direita do formulário. */
+  .freight-detached-summary {
+    left: calc(50% + 416px);
+    width: min(360px, calc((100vw - 832px) / 2 - 12px));
+  }
+}
