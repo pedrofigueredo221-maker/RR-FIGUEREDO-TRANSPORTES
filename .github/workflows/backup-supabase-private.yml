@@ -1,4 +1,4 @@
-name: Backup criptografado do Supabase para repositório privado
+name: Backup criptografado do Supabase no projeto R&R
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: rr-supabase-private-backup
+  group: rr-supabase-same-repository-backup
   cancel-in-progress: false
 
 jobs:
@@ -20,11 +20,9 @@ jobs:
       - name: Verificar segredos obrigatórios
         env:
           DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-          BACKUP_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
           BACKUP_PASSWORD: ${{ secrets.BACKUP_ENCRYPTION_PASSPHRASE }}
         run: |
           test -n "$DB_URL" || { echo "Falta SUPABASE_DB_URL"; exit 1; }
-          test -n "$BACKUP_TOKEN" || { echo "Falta BACKUP_REPO_TOKEN"; exit 1; }
           test -n "$BACKUP_PASSWORD" || { echo "Falta BACKUP_ENCRYPTION_PASSPHRASE"; exit 1; }
       - name: Criar dump PostgreSQL e criptografar antes de enviar
         env:
@@ -37,23 +35,10 @@ jobs:
           test -s "$RUNNER_TEMP/rr-backup/supabase.dump"
           gpg --batch --yes --pinentry-mode loopback --passphrase-fd 3 --symmetric --cipher-algo AES256 --output "$RUNNER_TEMP/rr-backup/supabase.dump.gpg" "$RUNNER_TEMP/rr-backup/supabase.dump" 3<<<"$BACKUP_PASSWORD"
           rm -f "$RUNNER_TEMP/rr-backup/supabase.dump"
-      - name: Armazenar apenas backup criptografado no repositório privado
-        env:
-          BACKUP_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
-        run: |
-          set -euo pipefail
-          git config --global user.name "R&R Backup Bot"
-          git config --global user.email "backup-bot@users.noreply.github.com"
-          git clone "https://x-access-token:${BACKUP_TOKEN}@github.com/pedrofigueredo221-maker/RR-FIGUEREDO-BACKUP.git" "$RUNNER_TEMP/rr-private-repo"
-          cd "$RUNNER_TEMP/rr-private-repo"
-          git remote set-url origin "https://github.com/pedrofigueredo221-maker/RR-FIGUEREDO-BACKUP.git"
-          git switch automated-backups 2>/dev/null || git switch -c automated-backups
-          mkdir -p snapshots
-          stamp="$(date -u +%Y-%m-%dT%H-%M-%SZ)"
-          cp "$RUNNER_TEMP/rr-backup/supabase.dump.gpg" "snapshots/${stamp}.dump.gpg"
-          ls -1t snapshots/*.dump.gpg | tail -n +31 | xargs -r rm --
-          git add snapshots
-          if ! git diff --cached --quiet; then
-            git commit -m "backup: Supabase ${stamp} (criptografado)"
-            git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$BACKUP_TOKEN" | base64 -w0)" push origin automated-backups
-          fi
+      - name: Publicar backup criptografado como artefato privado deste projeto
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-backup-${{ github.run_id }}
+          path: ${{ runner.temp }}/rr-backup/supabase.dump.gpg
+          retention-days: 30
+          if-no-files-found: error
