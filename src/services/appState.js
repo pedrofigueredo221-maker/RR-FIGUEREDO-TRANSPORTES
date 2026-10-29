@@ -6,6 +6,7 @@ export function normalizeAppState(data) {
   return {
     ...data,
     freights: Array.isArray(data.freights) ? data.freights : [],
+    fuelings: Array.isArray(data.fuelings) ? data.fuelings : [],
     expenses: Array.isArray(data.expenses) ? data.expenses : [],
     receivables: Array.isArray(data.receivables) ? data.receivables : [],
     employees: Array.isArray(data.employees) ? data.employees : [],
