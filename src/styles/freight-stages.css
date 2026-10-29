@@ -463,3 +463,58 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Fretes compactos: somente apresentação, sem mudar campos ou cálculos. */
+@media (min-width: 1051px) {
+  .freight-stages-editor .freight-stage-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 7px 8px;
+    padding: 0 10px 10px;
+  }
+  .freight-stages-editor .freight-stage-grid > .editor-field {
+    grid-column: auto;
+    min-width: 0;
+  }
+  .freight-stages-editor .freight-stage-grid > .editor-field > span {
+    display: flex;
+    align-items: flex-end;
+    min-height: 2.3em;
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+  .freight-stages-editor .freight-stage-grid > .editor-field :is(input, select) {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .freight-stages-editor .freight-stage-top {
+    gap: 7px 9px;
+    margin: 7px 0 10px;
+  }
+  .freight-stages-editor .freight-stages-pair { gap: 10px; }
+  .freight-stages-editor .freight-stage h4 {
+    padding: 7px 11px;
+    margin-bottom: 7px;
+  }
+  .freight-stages-editor .editor-field { gap: 3px; }
+  .freight-stages-editor .editor-field :is(input, select) {
+    min-height: 32px;
+  }
+  .freight-stages-editor .freight-stage-summary-inline { margin-top: 12px; }
+  .freight-stages-editor .receipt-sync-note { margin: 5px 0; }
+}
+@media (min-width: 1500px) {
+  .freight-detached-summary {
+    display: block;
+    position: fixed;
+    z-index: 102;
+    top: 10%;
+    left: calc(50% + 520px);
+    width: min(360px, calc((100vw - 1040px) / 2 - 12px));
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .freight-stages-editor .freight-stage-summary-inline {
+    display: none;
+  }
+}
