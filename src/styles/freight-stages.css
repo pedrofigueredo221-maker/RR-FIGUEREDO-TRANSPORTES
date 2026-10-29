@@ -564,3 +564,16 @@
   opacity: .55;
   cursor: not-allowed;
 }
+
+/* Alinhar o topo do resumo lateral ao topo do modal de Fretes.
+   A posição usa a mesma referência vertical do modal centralizado
+   (max-height: 96vh), evitando o deslocamento causado por top: 10%. */
+@media (min-width: 1500px) {
+  .freight-detached-summary {
+    top: 2vh;
+    margin-top: 0;
+  }
+  .freight-detached-summary .freight-stage-summary {
+    margin-top: 0;
+  }
+}
