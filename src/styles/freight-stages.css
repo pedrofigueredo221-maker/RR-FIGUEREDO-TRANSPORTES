@@ -594,12 +594,12 @@
   }
 }
 
-/* Fretes: definir largura do modal em 800px.
+/* Fretes: definir largura do modal em 920px.
    Altura, padding vertical, espaçamentos verticais e linhas não são alterados. */
 @media (min-width: 1051px) {
   .form-dialog:has(> .freight-stages-editor) {
-    width: min(800px, 100%);
-    max-width: 800px;
+    width: min(920px, 100%);
+    max-width: 920px;
   }
   .freight-stages-editor .freight-stage-top,
   .freight-stages-editor .freight-stage-grid,
@@ -610,8 +610,8 @@
 @media (min-width: 1500px) {
   /* Manter o resumo lateral junto à nova borda direita do formulário. */
   .freight-detached-summary {
-    left: calc(50% + 400px);
-    width: min(360px, calc((100vw - 800px) / 2 - 12px));
+    left: calc(50% + 460px);
+    width: min(360px, calc((100vw - 920px) / 2 - 12px));
   }
 }
 
@@ -625,4 +625,9 @@
   .freight-detached-summary .freight-stage-summary {
     margin-top: 0 !important;
   }
+}
+
+/* Fretes: 30px entre os campos finais e a área do botão Salvar. */
+.freight-stages-editor .editor-actions {
+  margin-top: 30px;
 }
