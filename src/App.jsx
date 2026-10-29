@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { config, demoMode, supabase } from "./services/supabaseRuntime.js";
 import { normalizeAppState } from "./services/appState.js";
 import PainelInicial from "./screens/PainelInicial.jsx";
@@ -97,9 +97,13 @@ export default function App() {
     return () => { active = false; listener.subscription.unsubscribe(); };
   }, []);
 
-  const loadData = useCallback(async () => {
+  const pendingLoad = useRef(null);
+  const loadedVersion = useRef(null);
+  const loadData = useCallback(async ({ silent = false } = {}) => {
+    if (pendingLoad.current) return pendingLoad.current;
+    const request = (async () => {
     if ((!supabase && !demoMode) || !session) return;
-    setLoadingData(true); setDataError("");
+    if (!silent) { setLoadingData(true); setDataError(""); }
     try {
       if (demoMode) {
         const saved = window.localStorage.getItem(DEMO_STORAGE_KEY);
@@ -111,17 +115,25 @@ export default function App() {
       const { data: row, error } = await supabase.from("app_state").select("data,version").eq("id", 1).maybeSingle();
       if (error) throw error;
       if (!row || !row.data || typeof row.data !== "object") throw new Error("O registro public.app_state (id=1) não foi encontrado ou não está visível pelas políticas RLS. Nenhum dado foi criado ou sobrescrito.");
-      setVersion(Number(row.version) || 0);
-      setData(normalizeAppState(row.data));
+      const nextVersion = Number(row.version) || 0;
+      if (loadedVersion.current !== nextVersion) {
+        loadedVersion.current = nextVersion;
+        setVersion(nextVersion);
+        setData(normalizeAppState(row.data));
+      }
     } catch (error) { setDataError(error?.message || "Não foi possível carregar os dados do Supabase."); }
-    finally { setLoadingData(false); }
+    finally { if (!silent) setLoadingData(false); }
+    })();
+    pendingLoad.current = request;
+    try { return await request; }
+    finally { if (pendingLoad.current === request) pendingLoad.current = null; }
   }, [session, demoMode]);
 
-  useEffect(() => { if (session) loadData(); else { setDataError(""); setVersion(0); setData({ freights: [], expenses: [], receivables: [], employees: [], trucks: [], categories: [] }); } }, [session, loadData]);
+  useEffect(() => { if (session) loadData(); else { loadedVersion.current = null; setDataError(""); setVersion(0); setData({ freights: [], expenses: [], receivables: [], employees: [], trucks: [], categories: [] }); } }, [session, loadData]);
 
   useEffect(() => {
     if (!session || demoMode) return undefined;
-    const refresh = () => { if (!document.hidden) loadData(); };
+    const refresh = () => { if (!document.hidden) loadData({ silent: true }); };
     const interval = window.setInterval(refresh, 15000);
     document.addEventListener("visibilitychange", refresh);
     return () => { window.clearInterval(interval); document.removeEventListener("visibilitychange", refresh); };
@@ -152,6 +164,7 @@ export default function App() {
       const nextVersion = expectedVersion + 1;
       window.localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(next));
       window.localStorage.setItem(`${DEMO_STORAGE_KEY}:version`, String(nextVersion));
+      loadedVersion.current = nextVersion;
       setData(next); setVersion(nextVersion); setDataError("");
       return;
     }
@@ -167,7 +180,8 @@ export default function App() {
       throw new Error("Outro computador alterou os dados primeiro. Atualizei a consulta e fechei o formulário; abra o registro novamente para conferir os valores.");
     }
     setData(next);
-    setVersion(Number(updated[0].version) || expectedVersion + 1);
+    loadedVersion.current = Number(updated[0].version) || expectedVersion + 1;
+    setVersion(loadedVersion.current);
     setDataError("");
   }, [session, version, loadData, data, demoMode, readOnly]);
 
