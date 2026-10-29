@@ -125,3 +125,25 @@
   background: #fce2e2 !important;
   border-color: #e45b5b !important;
 }
+
+/* Padrão oficial de títulos de subtelas operacionais.
+   Referência: ADICIONAR / EDITAR FRETE. Escopo apenas de modais,
+   sem interferir na tela de Login ou no Menu Lateral. */
+.form-dialog-backdrop .form-dialog .editor-heading > h3,
+.form-dialog-backdrop .form-dialog .rr-receivable-heading,
+.form-dialog-backdrop .form-dialog .employee-modal-header > h2 {
+  color: #111 !important;
+  text-transform: uppercase !important;
+  text-align: left !important;
+  font-family: Calibri, "Segoe UI", Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-top: 0;
+}
+.form-dialog-backdrop .form-dialog .rr-receivable-heading {
+  margin-bottom: 22px;
+}
+.form-dialog-backdrop .form-dialog .employee-modal-header {
+  text-align: left;
+}
