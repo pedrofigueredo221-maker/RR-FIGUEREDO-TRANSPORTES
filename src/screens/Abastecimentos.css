@@ -65,18 +65,18 @@
  * Escopo intencionalmente limitado à área de conteúdo e aos modais:
  * não modifica a Tela de Login nem o Menu Lateral (telas congeladas).
  */
-:where(#react-root :not(.login-page):not(.sidebar)) input[type="number"] {
+:where(.content-area, .form-dialog-backdrop, .rr-receivable-detached-panel, .rr-payable-detached-panel) input[type="number"] {
   -moz-appearance: textfield !important;
   appearance: textfield !important;
 }
-:where(#react-root :not(.login-page):not(.sidebar)) input[type="number"]::-webkit-inner-spin-button,
-:where(#react-root :not(.login-page):not(.sidebar)) input[type="number"]::-webkit-outer-spin-button {
+:where(.content-area, .form-dialog-backdrop, .rr-receivable-detached-panel, .rr-payable-detached-panel) input[type="number"]::-webkit-inner-spin-button,
+:where(.content-area, .form-dialog-backdrop, .rr-receivable-detached-panel, .rr-payable-detached-panel) input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none !important;
   appearance: none !important;
   margin: 0 !important;
   display: none !important;
 }
-:where(#react-root :not(.login-page):not(.sidebar)) :is(input, select, textarea):is(:focus, :focus-visible, :active) {
+:where(.content-area, .form-dialog-backdrop, .rr-receivable-detached-panel, .rr-payable-detached-panel) :is(input, select, textarea):is(:focus, :focus-visible, :active) {
   outline: none !important;
   outline-offset: 0 !important;
   box-shadow: none !important;
