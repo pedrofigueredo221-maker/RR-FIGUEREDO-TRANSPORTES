@@ -577,3 +577,19 @@
     margin-top: 0;
   }
 }
+
+/* Três intervalos solicitados: 20px cada, apenas no formulário de Fretes. */
+@media (min-width: 1051px) {
+  /* 1. Campos financeiros -> VIAGEM VAZIA */
+  .freight-stages-editor .freight-stage-top {
+    margin-bottom: 20px;
+  }
+  /* 2. VIAGEM VAZIA -> VIAGEM CARREGADA */
+  .freight-stages-editor .freight-stages-pair {
+    row-gap: 20px;
+  }
+  /* 3. VIAGEM CARREGADA -> textos informativos */
+  .freight-stages-editor .freight-stages-pair + .receipt-sync-note {
+    margin-top: 20px;
+  }
+}
