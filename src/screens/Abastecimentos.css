@@ -275,3 +275,34 @@
   .content-area .rr-fuelings .fueling-summary { grid-template-columns: 1fr; }
   .content-area .rr-fuelings .fueling-table-panel { padding: 14px; }
 }
+
+/* Fundo e separação de subtelas conforme Balanço Geral.
+   O fundo cinza fica atrás de painéis brancos independentes. */
+.content-area .rr-fuelings.rr-operational-page {
+  background: #f3f5f8;
+  border: 0;
+  box-shadow: none;
+  padding: 24px;
+  border-radius: 0;
+}
+.content-area .rr-fuelings .fueling-page-heading,
+.content-area .rr-fuelings .fueling-filter-panel {
+  background: #fff;
+  border: 1px solid #dedfe2;
+  border-radius: 14px;
+  padding: 18px 22px;
+}
+.content-area .rr-fuelings .fueling-page-heading {
+  margin-bottom: 16px;
+}
+.content-area .rr-fuelings .fueling-filter-panel .fueling-filters {
+  margin: 0;
+}
+.content-area .rr-fuelings .fueling-summary {
+  margin: 22px 0;
+}
+@media (max-width: 700px) {
+  .content-area .rr-fuelings.rr-operational-page { padding: 12px; }
+  .content-area .rr-fuelings .fueling-page-heading,
+  .content-area .rr-fuelings .fueling-filter-panel { padding: 14px; }
+}
