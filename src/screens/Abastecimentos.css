@@ -8,3 +8,52 @@
 .content-area .rr-fuelings .page-filters.fueling-filters>.secondary-button,
 .content-area .rr-fuelings .page-filters.fueling-filters>.rr-refresh-button{height:42px;min-height:42px;align-self:flex-end}
 @media(max-width:700px){.content-area .rr-fuelings .page-filters.fueling-filters>input,.content-area .rr-fuelings .page-filters.fueling-filters>select{width:100%}.content-area .rr-fuelings .page-filters.fueling-filters>.rr-period-range{width:100%}}
+
+
+/* Abastecimentos: três colunas compactas, sem alterar a largura do modal. */
+.rr-fuelings .fueling-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.rr-fuelings .fueling-editor-grid .editor-field {
+  min-width: 0;
+}
+.rr-fuelings .fueling-editor-grid .editor-field input,
+.rr-fuelings .fueling-editor-grid .editor-field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+/* Remover spinners dos campos numéricos, inclusive no hover. */
+.rr-fuelings .fueling-editor-grid input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.rr-fuelings .fueling-editor-grid input[type="number"]::-webkit-inner-spin-button,
+.rr-fuelings .fueling-editor-grid input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+/* Foco neutro: sem anel verde ou sombra colorida. */
+.rr-fuelings .fueling-editor-grid input:focus,
+.rr-fuelings .fueling-editor-grid input:focus-visible,
+.rr-fuelings .fueling-editor-grid select:focus,
+.rr-fuelings .fueling-editor-grid select:focus-visible,
+.rr-fuelings .fueling-editor-grid textarea:focus,
+.rr-fuelings .fueling-editor-grid textarea:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border-color: #b9c0c6;
+}
+@media (max-width: 700px) {
+  .rr-fuelings .fueling-editor-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 460px) {
+  .rr-fuelings .fueling-editor-grid {
+    grid-template-columns: 1fr;
+  }
+}
