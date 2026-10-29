@@ -125,3 +125,32 @@
   background: #fce2e2 !important;
   border-color: #e45b5b !important;
 }
+
+/* Abastecimentos: contraste grafite e campos obrigatórios na inclusão/edição. */
+.form-dialog-backdrop .fueling-record-editor {
+  background: #f3f4f5;
+  color: #111;
+}
+.form-dialog-backdrop .fueling-record-editor .fueling-editor-heading {
+  background: #303438;
+  color: #fff;
+  margin: -2px -2px 18px;
+  padding: 15px 17px;
+  border-radius: 7px;
+}
+.form-dialog-backdrop .fueling-record-editor .fueling-editor-heading h3 {
+  color: #fff !important;
+  text-transform: uppercase;
+}
+.form-dialog-backdrop .fueling-record-editor .fueling-editor-heading .secondary-button {
+  background: #fff;
+  color: #111;
+}
+.form-dialog-backdrop .fueling-record-editor .fueling-editor-grid .fueling-required-empty :is(input, select) {
+  background: #fce2e2 !important;
+  border-color: #e45b5b !important;
+}
+.form-dialog-backdrop .fueling-record-editor .fueling-editor-grid .editor-field > span,
+.form-dialog-backdrop .fueling-record-editor .fueling-editor-grid .editor-field {
+  color: #111;
+}
