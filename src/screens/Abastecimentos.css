@@ -179,3 +179,40 @@
 .form-dialog-backdrop .fueling-record-editor .fueling-editor-grid .editor-field {
   color: #111;
 }
+
+/* PADRÃO OFICIAL — BOTÃO PARA SALVAR DADOS
+   Referência visual: SALVAR CONTA em Contas a Receber/Pagar.
+   Aplica-se apenas aos formulários operacionais, não ao Login/Menu. */
+.form-dialog-backdrop .record-editor .editor-actions {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 16px;
+  padding: 0;
+}
+.form-dialog-backdrop .record-editor .editor-actions > button.primary-button {
+  width: auto;
+  min-width: 0;
+  min-height: 38px;
+  margin: 0;
+  padding: 0 14px;
+  border: 1px solid #262626;
+  border-radius: 9px;
+  background: #262626;
+  color: #fff;
+  font-family: Calibri, "Segoe UI", Arial, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+}
+.form-dialog-backdrop .record-editor .editor-actions > button.primary-button:not(:disabled):hover {
+  background: #383838;
+  border-color: #383838;
+}
+.form-dialog-backdrop .record-editor .editor-actions > button.primary-button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
