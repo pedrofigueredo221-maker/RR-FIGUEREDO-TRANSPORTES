@@ -82,3 +82,46 @@
   box-shadow: none !important;
   border-color: #b9c0c6 !important;
 }
+
+
+/* Identidade visual compartilhada das telas operacionais.
+   Somente aparência: cada tela conserva suas próprias colunas e responsividade.
+   Login e menu lateral não participam destes seletores. */
+:where(.content-area, .form-dialog-backdrop) :is(.record-editor, .rr-receivable-dialog, .rr-payable-dialog) {
+  color: #17191b;
+}
+:where(.content-area, .form-dialog-backdrop) :is(.record-editor, .rr-receivable-dialog, .rr-payable-dialog) .editor-field > span,
+:where(.content-area, .form-dialog-backdrop) :is(.record-editor, .rr-receivable-dialog, .rr-payable-dialog) .editor-field,
+:where(.content-area, .form-dialog-backdrop) :is(.record-editor, .rr-receivable-dialog, .rr-payable-dialog) label {
+  color: #111;
+}
+:where(.content-area, .form-dialog-backdrop) :is(.record-editor, .rr-receivable-dialog, .rr-payable-dialog) :is(input:not([type="checkbox"]), select, textarea):not(:disabled):not([readonly]) {
+  background-color: #fff;
+  color: #17191b;
+  border-color: #b9c1c8;
+}
+:where(.content-area, .form-dialog-backdrop) :is(.record-editor, .rr-receivable-dialog, .rr-payable-dialog) :is(input, textarea)[readonly],
+:where(.content-area, .form-dialog-backdrop) :is(.record-editor, .rr-receivable-dialog, .rr-payable-dialog) :is(input, select, textarea):disabled {
+  background-color: #eceff1;
+  color: #444;
+}
+:where(.content-area, .form-dialog-backdrop) :is(.record-editor, .rr-receivable-dialog, .rr-payable-dialog) :is(input, select, textarea):focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #b9c1c8 !important;
+}
+:where(.content-area, .form-dialog-backdrop) :is(.record-editor, .rr-receivable-dialog, .rr-payable-dialog) .primary-button:not(:disabled) {
+  background: #292929;
+  border-color: #292929;
+  color: #fff;
+}
+:where(.content-area, .form-dialog-backdrop) :is(.record-editor, .rr-receivable-dialog, .rr-payable-dialog) .secondary-button {
+  background: #fff;
+  border-color: #cdd3d8;
+  color: #17191b;
+}
+/* Não sobrescrever estados obrigatórios vazios, erros e indicadores financeiros. */
+:where(.content-area, .form-dialog-backdrop) .freight-required-empty :is(input, select):not([readonly]) {
+  background: #fce2e2 !important;
+  border-color: #e45b5b !important;
+}
