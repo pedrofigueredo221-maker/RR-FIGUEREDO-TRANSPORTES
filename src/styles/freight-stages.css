@@ -589,7 +589,7 @@
     row-gap: 20px;
   }
   /* 3. VIAGEM CARREGADA -> textos informativos */
-  .freight-stages-editor .freight-stages-pair + .receipt-sync-note {
+  .freight-stages-editor .freight-stages-pair ~ .receipt-sync-note:first-of-type {
     margin-top: 20px;
   }
 }
