@@ -614,3 +614,15 @@
     width: min(360px, calc((100vw - 800px) / 2 - 12px));
   }
 }
+
+/* O painel flutuante deve iniciar na mesma linha superior do modal.
+   A coordenada exata é aplicada pelo componente após medir o modal. */
+@media (min-width: 1500px) {
+  .freight-detached-summary {
+    margin-top: 0 !important;
+    transform: none;
+  }
+  .freight-detached-summary .freight-stage-summary {
+    margin-top: 0 !important;
+  }
+}
