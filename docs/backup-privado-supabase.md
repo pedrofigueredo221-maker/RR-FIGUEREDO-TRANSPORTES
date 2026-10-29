@@ -3,7 +3,7 @@
 ## Arquitetura
 - Produção: Supabase PostgreSQL. Continua sendo a única origem de gravação do ERP.
 - Cópia: repositório **privado** `pedrofigueredo221-maker/RR-FIGUEREDO-BACKUP`, branch `automated-backups`, snapshots `*.dump.gpg` criptografados.
-- Frequência: a cada 6 horas (GitHub Actions pode atrasar execuções). Mantém até 30 snapshots na branch; histórico Git ainda pode conter versões antigas.
+- Frequência: a cada 2 horas (GitHub Actions pode atrasar execuções). Mantém até 30 snapshots (aproximadamente 60 horas de cópias em execução regular) na branch; histórico Git ainda pode conter versões antigas.
 - Não é um segundo banco PostgreSQL ativo, nem substitui um backup externo independente do GitHub.
 
 ## Configuração manual obrigatória
