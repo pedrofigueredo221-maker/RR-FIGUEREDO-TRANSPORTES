@@ -224,3 +224,54 @@
   max-width: 206px;
   white-space: nowrap;
 }
+
+/* PADRÃO DE PAINÉIS OPERACIONAIS — referência visual: Balanço Geral.
+   Cards independentes dos filtros, tabela em painel próprio e atualização no cabeçalho.
+   Classes reutilizáveis para futuras telas, sem atingir Login ou Menu Lateral. */
+.content-area .rr-operational-metrics,
+.content-area .rr-fuelings .fueling-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 22px 0;
+}
+.content-area .rr-operational-metrics > div,
+.content-area .rr-fuelings .fueling-summary > div {
+  background: #fff;
+  border: 1px solid #d9dfe2;
+  border-radius: 14px;
+  padding: 18px 20px;
+  min-width: 0;
+  gap: 12px;
+}
+.content-area .rr-operational-metrics strong,
+.content-area .rr-fuelings .fueling-summary strong {
+  font-size: 23px;
+  color: #16233a;
+}
+.content-area .rr-operational-table-panel,
+.content-area .rr-fuelings .fueling-table-panel {
+  background: #fff;
+  border: 1px solid #d9dfe2;
+  border-radius: 14px;
+  padding: 22px;
+  margin-top: 20px;
+}
+.content-area .rr-operational-table-heading,
+.content-area .rr-fuelings .fueling-table-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.content-area .rr-operational-table-heading h3,
+.content-area .rr-fuelings .fueling-table-heading h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #111;
+}
+@media (max-width: 700px) {
+  .content-area .rr-fuelings .fueling-summary { grid-template-columns: 1fr; }
+  .content-area .rr-fuelings .fueling-table-panel { padding: 14px; }
+}
