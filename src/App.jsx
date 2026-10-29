@@ -4,12 +4,14 @@ import { normalizeAppState } from "./services/appState.js";
 import PainelInicial from "./screens/PainelInicial.jsx";
 import EditablePage from "./EditablePage.jsx";
 import Relatorios from "./screens/Relatorios.jsx";
+import Abastecimentos from "./screens/Abastecimentos.jsx";
 import { DEMO_DATA, DEMO_STORAGE_KEY } from "./demo/demoData.js";
 import { pages, titles } from "./app/navigation.js";
 
 const iconPaths = {
   grid: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
   truck: <><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7" /><circle cx="7" cy="18" r="2" /><circle cx="18" cy="18" r="2" /></>,
+  fuel: <><path d="M4 4h9v17H4zM6 8h5M13 7h3l3 4v7a2 2 0 0 1-4 0v-4" /></>,
   tool: <><path d="M14 6a5 5 0 0 0-6 6l-5 5a2 2 0 0 0 3 3l5-5a5 5 0 0 0 6-6l-3 3-3-3z" /></>,
   "arrow-down": <><path d="M4 5h16M4 11h16M4 17h10M17 14v7m-3-3 3 3 3-3" /></>,
   "arrow-up": <><path d="M4 5h16M4 11h16M4 17h10M17 21v-7m-3 3 3-3 3 3" /></>,
@@ -22,6 +24,7 @@ function MenuIcon({ name }) {
 const screenComponents = {
   dashboard: PainelInicial,
   freights: EditablePage,
+  fuelings: Abastecimentos,
   expenses: EditablePage,
   receivables: EditablePage,
   payments: EditablePage,
@@ -62,7 +65,7 @@ export default function App() {
   const [authReady, setAuthReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [authError, setAuthError] = useState("");
-  const [data, setData] = useState({ freights: [], expenses: [], receivables: [], employees: [], trucks: [], categories: [] });
+  const [data, setData] = useState({ freights: [], fuelings: [], expenses: [], receivables: [], employees: [], trucks: [], categories: [] });
   const [version, setVersion] = useState(0);
   const [dataError, setDataError] = useState("");
   const [loadingData, setLoadingData] = useState(false);
@@ -133,6 +136,7 @@ export default function App() {
       ...data,
       ...nextData,
       freights: Array.isArray(nextData.freights) ? nextData.freights : [],
+      fuelings: Array.isArray(nextData.fuelings) ? nextData.fuelings : [],
       expenses: Array.isArray(nextData.expenses) ? nextData.expenses : [],
       receivables: Array.isArray(nextData.receivables) ? nextData.receivables : [],
       employees: Array.isArray(nextData.employees) ? nextData.employees : [],
