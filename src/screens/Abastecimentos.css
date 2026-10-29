@@ -216,3 +216,11 @@
   opacity: .55;
   cursor: not-allowed;
 }
+
+/* Abastecimentos: coluna TANQUE COMPLETO 25% mais estreita (275px -> ~206px).
+   Apenas a tabela de consulta; formulário e dados permanecem intactos. */
+.rr-fuelings .table-scroll table :is(th, td):nth-child(8) {
+  width: 206px;
+  max-width: 206px;
+  white-space: nowrap;
+}
