@@ -50,7 +50,7 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
     const summary = summaryRef.current;
     if (!modal || !summary) return undefined;
     const alignSummary = () => {
-      summary.style.top = `${Math.max(0, modal.getBoundingClientRect().top)}px`;
+      summary.style.setProperty("top", `${Math.max(0, modal.getBoundingClientRect().top)}px`, "important");
     };
     alignSummary();
     const observer = typeof ResizeObserver !== "undefined" ? new ResizeObserver(alignSummary) : null;
