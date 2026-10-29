@@ -631,3 +631,9 @@
 .freight-stages-editor .editor-actions {
   margin-top: 30px;
 }
+
+/* Fretes: remover somente a linha divisória acima do botão Salvar. */
+.form-dialog-backdrop .freight-stages-editor .editor-actions {
+  border-top: none;
+  box-shadow: none;
+}
