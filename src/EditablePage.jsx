@@ -71,6 +71,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   };
   const startEdit = (kind, record) => {
     if (readOnly) return;
+    if (kind === "expense" && record.fuelingId) { setError("Despesa gerada por abastecimento. Edite o registro na tela ABASTECIMENTOS."); return; }
     setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0), advance: String(record.advance ?? ""), currentBalance: String(Math.max(0, number(record.value) - number(record.received))) } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
   };
   // Ao chegar por duplo clique em outra tela, localiza o registro original
@@ -101,6 +102,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
       setError("Este frete já possui recebimentos registrados. Preserve o histórico financeiro; não é possível excluí-lo por esta tela.");
       return;
     }
+    if (key === "expenses" && record.fuelingId) { setError("Exclua o registro na tela ABASTECIMENTOS para manter o vínculo financeiro."); return; }
     if (key === "expenses" && (record.installments || []).some((item) => number(item.paid) > 0 || (item.payments || []).length > 0)) {
       setError("Esta despesa já possui pagamentos registrados. Preserve o histórico financeiro; não é possível excluí-la por esta tela.");
       return;
@@ -162,6 +164,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     return commit({ ...data, freights: editingId ? allFreights.map((f) => f.id === editingId ? value : f) : [value, ...allFreights] });
   };
   const saveExpense = () => {
+    if (editingId && allExpenses.find(item => item.id === editingId)?.fuelingId) { setError("Edite esta despesa pela tela ABASTECIMENTOS."); return; }
     const value = number(form.value);
     const count = Math.max(1, Math.min(120, Math.floor(number(form.installmentsCount) || 1)));
     const old = allExpenses.find((e) => e.id === editingId);
