@@ -1,5 +1,3 @@
-import { useLayoutEffect, useRef } from "react";
-import { createPortal } from "react-dom";
 import MunicipalityField from "../components/MunicipalityField.jsx";
 import { freightCommission, freightCost, freightProfit } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
@@ -43,23 +41,6 @@ function validCostInputs(value) {
     && value.value !== "" && value.commissionType !== "" && value.commission !== "";
 }
 export default function FreightStagesForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
-  const detachedSummaryRef = useRef(null);
-  useLayoutEffect(() => {
-    const summaryPanel = detachedSummaryRef.current;
-    const dialog = summaryPanel?.ownerDocument.querySelector(".form-dialog:has(.freight-stages-editor form), .form-dialog:has(form.freight-stages-editor)");
-    if (!summaryPanel || !dialog) return undefined;
-    const align = () => {
-      summaryPanel.style.top = `${Math.max(8, dialog.getBoundingClientRect().top)}px`;
-    };
-    align();
-    const observer = new ResizeObserver(align);
-    observer.observe(dialog);
-    window.addEventListener("resize", align);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", align);
-    };
-  }, []);
   const patch = (key, next) => setValue((current) => {
     if (key === "received") return { ...current, received: next, currentBalance: next === "" || current.value === "" ? "" : Math.max(0, n(current.value) - n(next)).toFixed(2) };
     if (key === "currentBalance") return { ...current, currentBalance: next, received: next === "" || current.value === "" ? "" : Math.max(0, n(current.value) - n(next)).toFixed(2) };
@@ -117,19 +98,13 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
   const matchingStageCity = String(value.loadedTrip?.origin ?? "").trim() === String(value.emptyTrip?.destination ?? "").trim();
   const validDates = !value.emptyTrip?.date || !value.loadedTrip?.date || value.loadedTrip.date >= value.emptyTrip.date;
   const financialSummary = (className) => <section className={`freight-stage-summary ${className}`}><h4>RESUMO FINANCEIRO</h4><div className="freight-stage-summary-grid"><div><span>Valor do frete</span><strong>{money(n(value.value))}</strong></div><div><span>Adiantamento do cliente</span><strong>{money(n(value.received))}</strong></div>{summary.map(([label, amount]) => <div key={label}><span>{label}</span><strong className={label === "Custo total da viagem" ? "freight-stage-cost" : label === "Lucro estimado" ? "freight-stage-profit" : ""}>{amount === null ? "—" : money(amount)}</strong></div>)}</div></section>;
-  return <><form className="record-editor freight-editor freight-stages-editor" onSubmit={(e) => { e.preventDefault(); if (validStages && validDates && matchingStageKm && matchingStageCity) onSubmit(); }}>
+  return <form className="record-editor freight-editor freight-stages-editor" onSubmit={(e) => { e.preventDefault(); if (validStages && validDates && matchingStageKm && matchingStageCity) onSubmit(); }}>
     <div className="editor-heading"><h3>{editing ? "EDITAR FRETE" : "ADICIONAR FRETE"}</h3><button type="button" className="secondary-button" onClick={onCancel}>Cancelar</button></div>
     <div className="freight-stage-top">
       {inputField("Motorista", value.driver, selectDriver, { required: true, options: drivers })}
       {inputField("Valor do frete (R$)", value.value, (v) => patch("value", v), { type: "number", required: true })}
       {inputField("Caminhão", value.truck, (v) => patch("truck", v), { required: true, options: truckOptions })}
       {inputField("Placa", truck?.plate || "", () => {}, { readOnly: true })}
-    </div>
-    <div className="freight-stages-pair">{stages.map(({ key, title }) => <Stage key={key} title={title} stage={value[key] || {}} update={updateStage(key)} loaded={key === "loadedTrip"} />)}</div>
-    {!matchingStageCity && <p className="freight-stage-error">A origem da viagem carregada deve ser igual ao destino da viagem vazia.</p>}
-    {!matchingStageKm && <p className="freight-stage-error">O KM inicial da viagem carregada deve ser igual ao KM final da viagem vazia.</p>}
-    {!validDates && <p className="freight-stage-error">A data da viagem carregada não pode ser anterior à data da viagem vazia.</p>}
-    <section className="freight-stage-finance"><div className="freight-stage-finance-grid">
       {inputField("Custo total da viagem (R$)", validCostInputs(value) ? freightCost(calculation).toFixed(2) : "", () => {}, { readOnly: true })}
       {inputField("Descontos gerais (R$)", value.discount, (v) => patch("discount", v), { type: "number" })}
       {inputField("Tipo de comissão", value.commissionType, (v) => patch("commissionType", v), { required: true, options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] })}
@@ -142,10 +117,15 @@ export default function FreightStagesForm({ value, setValue, onSubmit, onCancel,
       {inputField("Adiantamento do cliente (R$)", value.received, (v) => patch("received", v), { type: "number" })}
       {inputField("Saldo restante (R$)", value.currentBalance, (v) => patch("currentBalance", v), { type: "number" })}
       
-    </div></section>
+
+    </div>
+    <div className="freight-stages-pair">{stages.map(({ key, title }) => <Stage key={key} title={title} stage={value[key] || {}} update={updateStage(key)} loaded={key === "loadedTrip"} />)}</div>
+    {!matchingStageCity && <p className="freight-stage-error">A origem da viagem carregada deve ser igual ao destino da viagem vazia.</p>}
+    {!matchingStageKm && <p className="freight-stage-error">O KM inicial da viagem carregada deve ser igual ao KM final da viagem vazia.</p>}
+    {!validDates && <p className="freight-stage-error">A data da viagem carregada não pode ser anterior à data da viagem vazia.</p>}
     {!stagesHaveCosts && editing && <p className="receipt-sync-note">Os custos totais exibidos no resumo são os valores já salvos neste frete. Preencha as duas etapas para atualizar o detalhamento sem perder os custos anteriores.</p>}
     {financialSummary("freight-stage-summary-inline")}
     <p className="receipt-sync-note">Uma operação, um recebível e uma comissão. Os custos das duas etapas são somados uma única vez.</p>
     <div className="editor-actions"><button type="submit" className="primary-button" disabled={saving || !validStages || !validDates || !matchingStageKm || !matchingStageCity}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
-  </form>{createPortal(<aside ref={detachedSummaryRef} className="freight-detached-summary freight-stages-editor" aria-label="Resumo financeiro do frete">{financialSummary("freight-stage-summary-detached")}</aside>, document.body)}</>;
+  </form>;
 }
